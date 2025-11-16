@@ -10,6 +10,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection(),
+  ]
 
     // Inicializa Firebase con tu configuración
     provideFirebaseApp(() => initializeApp({
