@@ -1,9 +1,9 @@
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBIKPcp_KnlDW8HLH11QNTg7LqPphsQFzc",
-  authDomain: "control-de-asistencia-7304f.firebaseapp.com",
-  projectId: "control-de-asistencia-7304f",
-  storageBucket: "control-de-asistencia-7304f.firebasestorage.app",
-  messagingSenderId: "400313593190",
-  appId: "1:400313593190:web:91237f0f9215e14cbf2ca7"
+  apiKey: "AIzaSyAPgXG-UMdkt4b-Y0V1P5JOoWBL0xZWHKc",
+  authDomain: "control-de-asistencia-41bb2.firebaseapp.com",
+  projectId: "control-de-asistencia-41bb2",
+  storageBucket: "control-de-asistencia-41bb2.firebasestorage.app",
+  messagingSenderId: "119048846960",
+  appId: "1:119048846960:web:6cf06438bb6c6aaf73feb5"
 };
