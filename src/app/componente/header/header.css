@@ -1,0 +1,338 @@
+/* ===== VARIABLES ===== */
+:root {
+    --primary: #0a2342;
+    --primary-light: #1a3658;
+    --accent: #f0c419;
+    --secondary: #718096;
+    --card-bg: #ffffff;
+    --text-light: #ffffff;
+    --radius: 8px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== HEADER STYLES ===== */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+    z-index: 999;
+    border-bottom: 3px solid var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+/* ===== LOGO ===== */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+    box-shadow: 0 2px 4px rgba(10, 35, 66, 0.2);
+}
+
+.brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+}
+
+/* ===== NAVIGATION ===== */
+.nav {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.nav ul {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.interest-card {
+    background-color: rgba(10, 35, 66, 0.05);
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.interest-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(240, 196, 25, 0.15);
+}
+
+.interest-card a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+    text-decoration: none;
+    color: var(--secondary);
+    gap: 0.2rem;
+    white-space: nowrap;
+    transition: var(--transition);
+}
+
+/* ===== ICONOS ===== */
+.interest-card i {
+    font-size: 1.3rem;
+    color: var(--primary);
+    transition: var(--transition);
+}
+
+.interest-card:hover i {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+.interest-card span {
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+/* ===== ESTILO CUANDO ESTÁ ACTIVO ===== */
+.interest-card a.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(10, 35, 66, 0.3);
+    transform: translateY(-2px);
+}
+
+.interest-card a.active i {
+    color: white;
+    transform: scale(1.15);
+}
+
+.interest-card a.active span {
+    color: white;
+}
+
+/* Efecto suave cuando se pasa del estado normal a activo */
+.interest-card a,
+.interest-card a i,
+.interest-card a span {
+    transition: all 0.25s ease-in-out;
+}
+
+/* ===== USER ACTIONS ===== */
+.user-actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
+.btn-login, .btn-register {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.2rem;
+    background: transparent;
+    color: var(--primary);
+}
+
+/* Tooltip para mostrar el texto al hacer hover */
+.btn-login::after, .btn-register::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: rgb(255, 255, 255);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    z-index: 1000;
+}
+
+.btn-login::after {
+    content: "Notificaciones";
+}
+
+.btn-register::after {
+    content: "Usuario";
+}
+
+/* Flecha del tooltip */
+.btn-login::before, .btn-register::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-bottom-color: var(--primary);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.btn-login:hover, .btn-register:hover {
+    background: var(--primary);
+    color: var(--text-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 35, 66, 0.2);
+}
+
+.btn-login:hover::after, .btn-register:hover::after,
+.btn-login:hover::before, .btn-register:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Indicador de notificaciones */
+.btn-login {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid var(--card-bg);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .header {
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+
+    .brand {
+        font-size: 1.2rem;
+    }
+
+    .logo img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .logo {
+        order: 1;
+    }
+
+    .nav {
+        order: 3;
+        flex-basis: 100%;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .nav ul {
+        gap: 0.3rem;
+    }
+
+    .interest-card a {
+        padding: 0.5rem 0.8rem;
+    }
+
+    .user-actions {
+        order: 2;
+        gap: 0.5rem;
+    }
+
+    .btn-login, .btn-register {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0.8rem;
+    }
+
+    .logo img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .brand {
+        font-size: 1.1rem;
+    }
+
+    .interest-card a {
+        padding: 0.4rem 0.6rem;
+    }
+
+    .interest-card i {
+        font-size: 1.1rem;
+    }
+
+    .interest-card span {
+        font-size: 0.7rem;
+    }
+
+    .btn-login, .btn-register {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .notification-badge {
+        width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+    }
+}
+
+/* Añadir padding al body para compensar el header fixed */
+body {
+    padding-top: 80px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+}

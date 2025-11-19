@@ -1,0 +1,151 @@
+.admin-asistencias {
+  padding: 2rem;
+  background: #f4f6f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Título */
+.admin-asistencias h2 {
+  font-size: 1.6rem;
+  color: #0a2342;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #f0c419;
+  padding-left: 0.5rem;
+}
+
+/* Barra de acciones */
+.toolbar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn.primary {
+  background: #f0c419;
+  color: #0a2342;
+  border: none;
+}
+
+.btn.primary:hover {
+  background: #d4a017;
+}
+
+.btn.secondary {
+  background: transparent;
+  border: 1px solid #0a2342;
+  color: #0a2342;
+}
+
+.btn.secondary:hover {
+  background: #0a2342;
+  color: #fff;
+}
+
+.btn.filter {
+  background: #0a2342;
+  color: #fff;
+  border: none;
+}
+
+.btn.filter:hover {
+  background: #082030;
+}
+
+/* Filtros */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filters label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.filters input {
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Tabla */
+.table-container {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.8rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.admin-table th {
+  background: #0a2342;
+  color: #fff;
+  font-weight: 600;
+}
+
+.admin-table tr:hover {
+  background: #f9f9f9;
+}
+
+/* Estados */
+.status {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.status.present {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.status.absent {
+  background: #c62828;
+  color: #fff;
+}
+
+/* Botones de acción */
+.btn-action {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 0 0.3rem;
+  transition: transform 0.2s ease;
+}
+
+.btn-action.edit {
+  color: #1976d2;
+}
+
+.btn-action.delete {
+  color: #c62828;
+}
+
+.btn-action:hover {
+  transform: scale(1.2);
+}

@@ -1,0 +1,66 @@
+<section class="admin-asistencias">
+  <h2>Panel de Asistencias</h2>
+
+  <!-- Barra de acciones -->
+  <div class="toolbar">
+    <button class="btn primary">➕ Nueva Asistencia</button>
+    <button class="btn secondary">📥 Exportar Excel</button>
+    <button class="btn secondary">📄 Exportar PDF</button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters">
+    <label>
+      Fecha:
+      <input type="date">
+    </label>
+    <label>
+      Usuario:
+      <input type="text" placeholder="Buscar usuario...">
+    </label>
+    <button class="btn filter">🔍 Filtrar</button>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-container">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Fecha</th>
+          <th>Entrada</th>
+          <th>Salida</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#001</td>
+          <td>Ana Pérez</td>
+          <td>18/11/2025</td>
+          <td>08:05</td>
+          <td>17:00</td>
+          <td><span class="status present">Presente</span></td>
+          <td>
+            <button class="btn-action edit">✏️</button>
+            <button class="btn-action delete">🗑️</button>
+          </td>
+        </tr>
+        <tr>
+          <td>#002</td>
+          <td>Carlos Gómez</td>
+          <td>18/11/2025</td>
+          <td>--</td>
+          <td>--</td>
+          <td><span class="status absent">Ausente</span></td>
+          <td>
+            <button class="btn-action edit">✏️</button>
+            <button class="btn-action delete">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

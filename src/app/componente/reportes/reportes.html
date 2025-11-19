@@ -1,0 +1,67 @@
+<section class="admin-reportes">
+  <h2>Panel de Reportes</h2>
+
+  <!-- Barra de acciones -->
+  <div class="toolbar">
+    <button class="btn primary">📥 Exportar Excel</button>
+    <button class="btn secondary">📄 Exportar PDF</button>
+    <button class="btn secondary">🖨️ Imprimir</button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters">
+    <label>
+      Rango de fechas:
+      <input type="date"> -
+      <input type="date">
+    </label>
+    <label>
+      Usuario:
+      <input type="text" placeholder="Buscar usuario...">
+    </label>
+    <label>
+      Estado:
+      <select>
+        <option value="">Todos</option>
+        <option value="presente">Presente</option>
+        <option value="ausente">Ausente</option>
+        <option value="tarde">Tarde</option>
+      </select>
+    </label>
+    <button class="btn filter">🔍 Generar Reporte</button>
+  </div>
+
+  <!-- Tabla de reportes -->
+  <div class="table-container">
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Fecha</th>
+          <th>Entrada</th>
+          <th>Salida</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#001</td>
+          <td>Ana Pérez</td>
+          <td>18/11/2025</td>
+          <td>08:05</td>
+          <td>17:00</td>
+          <td><span class="status present">Presente</span></td>
+        </tr>
+        <tr>
+          <td>#002</td>
+          <td>Carlos Gómez</td>
+          <td>18/11/2025</td>
+          <td>--</td>
+          <td>--</td>
+          <td><span class="status absent">Ausente</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

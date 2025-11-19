@@ -1,0 +1,49 @@
+.footer {
+  background: #0a2342; /* azul corporativo */
+  color: #fff;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.footer-left h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #f0c419; /* dorado elegante */
+}
+
+.footer-left p {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+}
+
+.footer-center ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-center a {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+.footer-center a:hover {
+  color: #f0c419;
+}
+
+.footer-right p {
+  margin: 0.3rem 0;
+  font-size: 0.85rem;
+  text-align: right;
+}
