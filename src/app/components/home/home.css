@@ -1,6 +1,7 @@
 /* Contenedor principal */
 .home {
   padding: 2rem;
+  padding-top: 6rem; /* Espacio para el header fijo */
   background: #f4f6f9;
   font-family: 'Segoe UI', sans-serif;
 }
@@ -10,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #0a2342; /* azul corporativo */
+  background: #0a2342;
   color: #fff;
   padding: 2rem;
   border-radius: 10px;
@@ -24,7 +25,7 @@
 .hero-text h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: #f0c419; /* dorado elegante */
+  color: #f0c419;
 }
 
 .hero-text p {
