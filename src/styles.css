@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+    --primary: #0a2342;
+    --primary-light: #1a3658;
+    --primary-dark: #051626;
+    --accent: #f0c419;
+    --accent-hover: #d4ab15;
+    --secondary: #718096;
+    --card-bg: #ffffff;
+    --text-light: #ffffff;
+    --text-dark: #2d3748;
+    --border-light: #e2e8f0;
+    --radius: 8px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    padding-top: 100px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+}
