@@ -1,23 +1,73 @@
 <section class="admin-stats">
   <h2>Panel de Estadísticas</h2>
 
-  <!-- Resumen en tarjetas -->
+  <!-- Filtros de fecha -->
+  <div class="filters-stats">
+    <label>
+      Período:
+      <select>
+        <option value="hoy">Hoy</option>
+        <option value="semana">Esta Semana</option>
+        <option value="mes" selected>Este Mes</option>
+        <option value="anio">Este Año</option>
+      </select>
+    </label>
+    <label>
+      Desde:
+      <input type="date" value="2025-11-01">
+    </label>
+    <label>
+      Hasta:
+      <input type="date" value="2025-11-20">
+    </label>
+    <button class="btn-filter">🔍 Actualizar</button>
+  </div>
+
+  <!-- Resumen en tarjetas principales -->
   <div class="cards">
     <div class="card">
+      <div class="card-icon">👥</div>
       <h3>Total Usuarios</h3>
       <p class="value">120</p>
+      <span class="card-subtitle">Registrados activos</span>
     </div>
     <div class="card">
+      <div class="card-icon">✅</div>
       <h3>Asistencias Hoy</h3>
       <p class="value success">95</p>
+      <span class="card-subtitle">+5 vs ayer</span>
     </div>
     <div class="card">
+      <div class="card-icon">❌</div>
       <h3>Faltas Hoy</h3>
       <p class="value danger">25</p>
+      <span class="card-subtitle">-2 vs ayer</span>
     </div>
     <div class="card">
+      <div class="card-icon">📊</div>
       <h3>Porcentaje Asistencia</h3>
-      <p class="value warning">79%</p>
+      <p class="value warning">79.2%</p>
+      <span class="card-subtitle">Del mes actual</span>
+    </div>
+  </div>
+
+  <!-- Tarjetas adicionales de resumen -->
+  <div class="cards-secondary">
+    <div class="card-small">
+      <h4>Tardanzas Este Mes</h4>
+      <p class="value-small">38</p>
+    </div>
+    <div class="card-small">
+      <h4>Promedio Horas/Día</h4>
+      <p class="value-small">8.2h</p>
+    </div>
+    <div class="card-small">
+      <h4>Días Laborables</h4>
+      <p class="value-small">22</p>
+    </div>
+    <div class="card-small">
+      <h4>Mejor Asistencia</h4>
+      <p class="value-small">98%</p>
     </div>
   </div>
 
@@ -25,11 +75,142 @@
   <div class="charts">
     <div class="chart-box">
       <h3>📊 Asistencia Semanal</h3>
-      <canvas id="chartSemanal"></canvas>
+      <p class="chart-description">Comparativa de asistencias por día</p>
+      <canvas id="chartSemanal" width="400" height="200"></canvas>
+      <!-- Simulación visual de gráfico -->
+      <div class="chart-placeholder">
+        <div class="bar" style="height: 85%;" title="Lunes: 102"></div>
+        <div class="bar" style="height: 92%;" title="Martes: 110"></div>
+        <div class="bar" style="height: 78%;" title="Miércoles: 94"></div>
+        <div class="bar" style="height: 88%;" title="Jueves: 105"></div>
+        <div class="bar" style="height: 95%;" title="Viernes: 114"></div>
+      </div>
+      <div class="chart-labels">
+        <span>Lun</span>
+        <span>Mar</span>
+        <span>Mié</span>
+        <span>Jue</span>
+        <span>Vie</span>
+      </div>
     </div>
+
     <div class="chart-box">
       <h3>📈 Tendencia Mensual</h3>
-      <canvas id="chartMensual"></canvas>
+      <p class="chart-description">Evolución de asistencias mes a mes</p>
+      <canvas id="chartMensual" width="400" height="200"></canvas>
+      <!-- Simulación visual de línea -->
+      <div class="line-chart-placeholder">
+        <svg viewBox="0 0 400 200" width="100%" height="200">
+          <polyline 
+            points="0,150 80,120 160,100 240,90 320,80 400,70" 
+            fill="none" 
+            stroke="#f0c419" 
+            stroke-width="3"/>
+          <circle cx="0" cy="150" r="5" fill="#0a2342"/>
+          <circle cx="80" cy="120" r="5" fill="#0a2342"/>
+          <circle cx="160" cy="100" r="5" fill="#0a2342"/>
+          <circle cx="240" cy="90" r="5" fill="#0a2342"/>
+          <circle cx="320" cy="80" r="5" fill="#0a2342"/>
+          <circle cx="400" cy="70" r="5" fill="#0a2342"/>
+        </svg>
+      </div>
+      <div class="chart-labels">
+        <span>Jun</span>
+        <span>Jul</span>
+        <span>Ago</span>
+        <span>Sep</span>
+        <span>Oct</span>
+        <span>Nov</span>
+      </div>
     </div>
   </div>
+
+  <!-- Tabla de top usuarios -->
+  <div class="top-usuarios">
+    <h3>🏆 Top 10 - Mejor Asistencia del Mes</h3>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Usuario</th>
+          <th>Asistencias</th>
+          <th>Tardanzas</th>
+          <th>Faltas</th>
+          <th>% Asistencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>María López</td>
+          <td>22</td>
+          <td>0</td>
+          <td>0</td>
+          <td><span class="badge success">100%</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Juan Martínez</td>
+          <td>22</td>
+          <td>1</td>
+          <td>0</td>
+          <td><span class="badge success">95.5%</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Ana Pérez</td>
+          <td>21</td>
+          <td>0</td>
+          <td>1</td>
+          <td><span class="badge success">95.5%</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Carlos Gómez</td>
+          <td>21</td>
+          <td>1</td>
+          <td>1</td>
+          <td><span class="badge warning">91.3%</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Laura Sánchez</td>
+          <td>20</td>
+          <td>2</td>
+          <td>2</td>
+          <td><span class="badge warning">87.0%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Resumen por estado -->
+  <div class="estado-resumen">
+    <h3>📋 Resumen por Estado (Últimos 30 días)</h3>
+    <div class="estado-grid">
+      <div class="estado-item">
+        <div class="estado-bar presente" style="width: 79%;">
+          <span>Presentes: 1,896</span>
+        </div>
+      </div>
+      <div class="estado-item">
+        <div class="estado-bar tardanza" style="width: 12%;">
+          <span>Tardanzas: 288</span>
+        </div>
+      </div>
+      <div class="estado-item">
+        <div class="estado-bar ausente" style="width: 9%;">
+          <span>Ausentes: 216</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones de exportación -->
+  <div class="export-actions">
+    <button class="btn-export">📥 Exportar Estadísticas PDF</button>
+    <button class="btn-export">📊 Exportar Excel</button>
+    <button class="btn-export">📧 Enviar Reporte</button>
+  </div>
+
 </section>
