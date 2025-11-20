@@ -1,0 +1,53 @@
+<p>stats-charts works!</p>
+a<div class="charts">
+  <div class="chart-box">
+    <h3>📊 Asistencia Semanal</h3>
+    <p class="chart-description">Comparativa de asistencias por día</p>
+    <canvas id="chartSemanal" width="400" height="200"></canvas>
+    <!-- Simulación visual de gráfico -->
+    <div class="chart-placeholder">
+      <div class="bar" style="height: 85%;" title="Lunes: 102"></div>
+      <div class="bar" style="height: 92%;" title="Martes: 110"></div>
+      <div class="bar" style="height: 78%;" title="Miércoles: 94"></div>
+      <div class="bar" style="height: 88%;" title="Jueves: 105"></div>
+      <div class="bar" style="height: 95%;" title="Viernes: 114"></div>
+    </div>
+    <div class="chart-labels">
+      <span>Lun</span>
+      <span>Mar</span>
+      <span>Mié</span>
+      <span>Jue</span>
+      <span>Vie</span>
+    </div>
+  </div>
+
+  <div class="chart-box">
+    <h3>📈 Tendencia Mensual</h3>
+    <p class="chart-description">Evolución de asistencias mes a mes</p>
+    <canvas id="chartMensual" width="400" height="200"></canvas>
+    <!-- Simulación visual de línea -->
+    <div class="line-chart-placeholder">
+      <svg viewBox="0 0 400 200" width="100%" height="200">
+        <polyline 
+          points="0,150 80,120 160,100 240,90 320,80 400,70" 
+          fill="none" 
+          stroke="#f0c419" 
+          stroke-width="3"/>
+        <circle cx="0" cy="150" r="5" fill="#0a2342"/>
+        <circle cx="80" cy="120" r="5" fill="#0a2342"/>
+        <circle cx="160" cy="100" r="5" fill="#0a2342"/>
+        <circle cx="240" cy="90" r="5" fill="#0a2342"/>
+        <circle cx="320" cy="80" r="5" fill="#0a2342"/>
+        <circle cx="400" cy="70" r="5" fill="#0a2342"/>
+      </svg>
+    </div>
+    <div class="chart-labels">
+      <span>Jun</span>
+      <span>Jul</span>
+      <span>Ago</span>
+      <span>Sep</span>
+      <span>Oct</span>
+      <span>Nov</span>
+    </div>
+  </div>
+</div>

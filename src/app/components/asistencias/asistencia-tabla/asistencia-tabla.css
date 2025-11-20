@@ -1,0 +1,75 @@
+.table-container {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.8rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.admin-table th {
+  background: #0a2342;
+  color: #fff;
+  font-weight: 600;
+}
+
+.admin-table tr:hover {
+  background: #f9f9f9;
+}
+
+.status {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.status.present {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.status.absent {
+  background: #c62828;
+  color: #fff;
+}
+
+.status.tardanza {
+  background: #f57c00;
+  color: #fff;
+}
+
+.btn-action {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 0 0.3rem;
+  transition: transform 0.2s ease;
+}
+
+.btn-action.edit {
+  color: #1976d2;
+}
+
+.btn-action.delete {
+  color: #c62828;
+}
+
+.btn-action.view {
+  color: #388e3c;
+}
+
+.btn-action:hover {
+  transform: scale(1.2);
+}

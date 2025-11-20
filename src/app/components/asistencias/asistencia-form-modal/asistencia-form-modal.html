@@ -1,0 +1,48 @@
+<div class="modal" style="display: none;">
+  <div class="modal-content">
+    <h3>Nueva Asistencia</h3>
+    <form class="asistencia-form">
+      <div class="form-group">
+        <label>Usuario *</label>
+        <select required>
+          <option value="">Seleccionar usuario...</option>
+          <option value="1">Ana Pérez</option>
+          <option value="2">Carlos Gómez</option>
+          <option value="3">María López</option>
+        </select>
+        <span class="error-msg">Este campo es obligatorio</span>
+      </div>
+
+      <div class="form-group">
+        <label>Fecha *</label>
+        <input type="date" required>
+        <span class="error-msg">Fecha inválida</span>
+      </div>
+
+      <div class="form-group">
+        <label>Hora de Entrada *</label>
+        <input type="time" required>
+        <span class="error-msg">Hora requerida</span>
+      </div>
+
+      <div class="form-group">
+        <label>Hora de Salida</label>
+        <input type="time">
+      </div>
+
+      <div class="form-group">
+        <label>Estado *</label>
+        <select required>
+          <option value="presente">Presente</option>
+          <option value="ausente">Ausente</option>
+          <option value="tardanza">Tardanza</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary">💾 Guardar</button>
+        <button type="button" class="btn secondary">❌ Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

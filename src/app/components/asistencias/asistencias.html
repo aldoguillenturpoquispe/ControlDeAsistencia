@@ -51,95 +51,8 @@
     </div>
   </div>
 
-  <!-- Tabla de asistencias -->
-  <div class="table-container">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Usuario</th>
-          <th>Fecha</th>
-          <th>Entrada</th>
-          <th>Salida</th>
-          <th>Horas Totales</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>#001</td>
-          <td>Ana Pérez</td>
-          <td>18/11/2025</td>
-          <td>08:05</td>
-          <td>17:00</td>
-          <td>8h 55m</td>
-          <td><span class="status present">Presente</span></td>
-          <td>
-            <button class="btn-action edit" title="Editar">✏️</button>
-            <button class="btn-action delete" title="Eliminar">🗑️</button>
-            <button class="btn-action view" title="Ver Detalle">👁️</button>
-          </td>
-        </tr>
-        <tr>
-          <td>#002</td>
-          <td>Carlos Gómez</td>
-          <td>18/11/2025</td>
-          <td>--</td>
-          <td>--</td>
-          <td>--</td>
-          <td><span class="status absent">Ausente</span></td>
-          <td>
-            <button class="btn-action edit" title="Editar">✏️</button>
-            <button class="btn-action delete" title="Eliminar">🗑️</button>
-            <button class="btn-action view" title="Ver Detalle">👁️</button>
-          </td>
-        </tr>
-        <tr>
-          <td>#003</td>
-          <td>María López</td>
-          <td>18/11/2025</td>
-          <td>08:45</td>
-          <td>17:10</td>
-          <td>8h 25m</td>
-          <td><span class="status tardanza">Tardanza</span></td>
-          <td>
-            <button class="btn-action edit" title="Editar">✏️</button>
-            <button class="btn-action delete" title="Eliminar">🗑️</button>
-            <button class="btn-action view" title="Ver Detalle">👁️</button>
-          </td>
-        </tr>
-        <tr>
-          <td>#004</td>
-          <td>Juan Martínez</td>
-          <td>17/11/2025</td>
-          <td>07:55</td>
-          <td>16:50</td>
-          <td>8h 55m</td>
-          <td><span class="status present">Presente</span></td>
-          <td>
-            <button class="btn-action edit" title="Editar">✏️</button>
-            <button class="btn-action delete" title="Eliminar">🗑️</button>
-            <button class="btn-action view" title="Ver Detalle">👁️</button>
-          </td>
-        </tr>
-        <tr>
-          <td>#005</td>
-          <td>Laura Sánchez</td>
-          <td>17/11/2025</td>
-          <td>08:00</td>
-          <td>17:05</td>
-          <td>9h 5m</td>
-          <td><span class="status present">Presente</span></td>
-          <td>
-            <button class="btn-action edit" title="Editar">✏️</button>
-            <button class="btn-action delete" title="Eliminar">🗑️</button>
-            <button class="btn-action view" title="Ver Detalle">👁️</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- Tabla de asistencias (COMPONENTE SEPARADO) -->
+  <app-asistencia-tabla></app-asistencia-tabla>
 
   <!-- Paginación -->
   <div class="pagination">
@@ -148,57 +61,10 @@
     <button class="btn secondary">Siguiente »</button>
   </div>
 
-  <!-- Modal/Formulario para crear/editar (oculto por defecto) -->
-  <div class="modal" style="display: none;">
-    <div class="modal-content">
-      <h3>Nueva Asistencia</h3>
-      <form class="asistencia-form">
-        <div class="form-group">
-          <label>Usuario *</label>
-          <select required>
-            <option value="">Seleccionar usuario...</option>
-            <option value="1">Ana Pérez</option>
-            <option value="2">Carlos Gómez</option>
-            <option value="3">María López</option>
-          </select>
-          <span class="error-msg">Este campo es obligatorio</span>
-        </div>
+  <!-- Modal formulario (COMPONENTE SEPARADO) -->
+  <app-asistencia-form-modal></app-asistencia-form-modal>
 
-        <div class="form-group">
-          <label>Fecha *</label>
-          <input type="date" required>
-          <span class="error-msg">Fecha inválida</span>
-        </div>
-
-        <div class="form-group">
-          <label>Hora de Entrada *</label>
-          <input type="time" required>
-          <span class="error-msg">Hora requerida</span>
-        </div>
-
-        <div class="form-group">
-          <label>Hora de Salida</label>
-          <input type="time">
-        </div>
-
-        <div class="form-group">
-          <label>Estado *</label>
-          <select required>
-            <option value="presente">Presente</option>
-            <option value="ausente">Ausente</option>
-            <option value="tardanza">Tardanza</option>
-          </select>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn primary">💾 Guardar</button>
-          <button type="button" class="btn secondary">❌ Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Mensaje de confirmación -->
+  <!-- Mensajes de confirmación -->
   <div class="toast success" style="display: none;">
     ✅ Asistencia guardada correctamente
   </div>
