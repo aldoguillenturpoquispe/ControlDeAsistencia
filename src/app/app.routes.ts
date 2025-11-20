@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
-import { Home } from './componente/home/home';
-import { Asistencias } from './componente/asistencias/asistencias';
-import { Estadisticas } from './componente/estadisticas/estadisticas';
-import { Reportes } from './componente/reportes/reportes';
+import { Home } from './components/home/home';
+import { Asistencias } from './components/asistencias/asistencias';
+import { Estadisticas } from './components/estadisticas/estadisticas';
+import { Reportes } from './components/reportes/reportes';
+import { Login } from './components/auth/login/login';
 
 export const routes: Routes = [
 
-  {path:'', component: Home, title:'Inicio'},
+  {path: '', component: Login, title:'Login'},
+  {path: 'inicio', component: Home, title:'Inicio'},
   {path: 'asistencias', component: Asistencias, title: 'Asistencias'},
   {path: 'estadisticas', component: Estadisticas, title: 'Estadísticas'},
   {path: 'reportes', component: Reportes, title: 'Reportes' },
