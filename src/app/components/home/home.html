@@ -1,38 +1,145 @@
 <section class="home">
-  <!-- Hero principal -->
-  <div class="hero">
-    <div class="hero-text">
-      <h1>Bienvenido al Sistema de Control de Asistencia</h1>
-      <p>Gestión eficiente de usuarios, asistencias y reportes en un entorno confiable y profesional.</p>
-      <div class="hero-actions">
-        <a routerLink="/usuarios" class="btn primary">Gestionar Usuarios</a>
-        <a routerLink="/asistencias" class="btn secondary">Ver Asistencias</a>
+  <!-- Header del Dashboard -->
+  <div class="dashboard-header">
+    <h1>Dashboard de Control de Asistencia</h1>
+    <p>Resumen general de asistencias y estadísticas</p>
+  </div>
+
+  <!-- Tarjetas de resumen -->
+  <div class="stats-cards">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-info">
+        <h3>Total Empleados</h3>
+        <p class="stat-value">45</p>
       </div>
     </div>
-    <div class="hero-image">
-      <img src="assets/attendance-illustration.png" alt="Control de Asistencia">
+
+    <div class="stat-card">
+      <div class="stat-icon present">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <div class="stat-info">
+        <h3>Presentes Hoy</h3>
+        <p class="stat-value">38</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon absent">
+        <i class="fas fa-user-times"></i>
+      </div>
+      <div class="stat-info">
+        <h3>Ausentes Hoy</h3>
+        <p class="stat-value">7</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-percentage"></i>
+      </div>
+      <div class="stat-info">
+        <h3>% Asistencia</h3>
+        <p class="stat-value">84%</p>
+      </div>
     </div>
   </div>
 
-  <!-- Sección de características -->
-  <div class="features">
-    <div class="feature-card">
-      <h3>📋 Registro</h3>
-      <p>Administra usuarios y controla su asistencia de manera clara y ordenada.</p>
-    </div>
-    <div class="feature-card">
-      <h3>📊 Estadísticas</h3>
-      <p>Obtén reportes detallados y métricas en tiempo real para la toma de decisiones.</p>
-    </div>
-    <div class="feature-card">
-      <h3>🔒 Seguridad</h3>
-      <p>Acceso seguro y confiable, con autenticación y control de roles.</p>
+  <!-- Accesos rápidos -->
+  <div class="quick-actions">
+    <h2>Accesos Rápidos</h2>
+    <div class="action-cards">
+      <a routerLink="/asistencias" class="action-card">
+        <i class="fas fa-clock"></i>
+        <h3>Registrar Asistencia</h3>
+        <p>Marcar entrada/salida de empleados</p>
+      </a>
+
+      <a routerLink="/estadisticas" class="action-card">
+        <i class="fas fa-chart-bar"></i>
+        <h3>Ver Estadísticas</h3>
+        <p>Análisis y reportes detallados</p>
+      </a>
+
+      <a routerLink="/reportes" class="action-card">
+        <i class="fas fa-file-alt"></i>
+        <h3>Generar Reportes</h3>
+        <p>Exportar datos y documentos</p>
+      </a>
     </div>
   </div>
 
-  <!-- Sección de llamada a la acción -->
-  <div class="cta">
-    <h2>Optimiza tu gestión de asistencia hoy</h2>
-    <a routerLink="/reportes" class="btn primary">Ver Reportes</a>
+  <!-- Últimas asistencias registradas -->
+  <div class="recent-activity">
+    <h2>Últimas Asistencias Registradas</h2>
+    <div class="activity-list">
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-user-clock"></i>
+        </div>
+        <div class="activity-info">
+          <h4>Juan Pérez López</h4>
+          <p>20/11/2024 - 08:15 AM</p>
+        </div>
+        <div class="activity-status present">
+          Presente
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-user-clock"></i>
+        </div>
+        <div class="activity-info">
+          <h4>María García Silva</h4>
+          <p>20/11/2024 - 08:20 AM</p>
+        </div>
+        <div class="activity-status present">
+          Presente
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-user-clock"></i>
+        </div>
+        <div class="activity-info">
+          <h4>Carlos Rodríguez Mendoza</h4>
+          <p>20/11/2024 - 09:10 AM</p>
+        </div>
+        <div class="activity-status late">
+          Tardanza
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-user-clock"></i>
+        </div>
+        <div class="activity-info">
+          <h4>Ana Martínez Torres</h4>
+          <p>20/11/2024 - 08:05 AM</p>
+        </div>
+        <div class="activity-status present">
+          Presente
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">
+          <i class="fas fa-user-clock"></i>
+        </div>
+        <div class="activity-info">
+          <h4>Luis Fernández Castro</h4>
+          <p>20/11/2024 - Sin registro</p>
+        </div>
+        <div class="activity-status absent">
+          Ausente
+        </div>
+      </div>
+    </div>
   </div>
 </section>
