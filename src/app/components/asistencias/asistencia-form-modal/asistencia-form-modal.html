@@ -1,5 +1,5 @@
-<div class="modal" style="display: none;">
-  <div class="modal-content">
+<div class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
     <h3>Nueva Asistencia</h3>
     <form class="asistencia-form">
       <div class="form-group">
@@ -41,7 +41,7 @@
 
       <div class="form-actions">
         <button type="submit" class="btn primary">💾 Guardar</button>
-        <button type="button" class="btn secondary">❌ Cancelar</button>
+        <button type="button" class="btn secondary" (click)="cerrarModal()">❌ Cancelar</button>
       </div>
     </form>
   </div>

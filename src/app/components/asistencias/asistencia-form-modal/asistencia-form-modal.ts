@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-asistencia-form-modal',
@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './asistencia-form-modal.css',
 })
 export class AsistenciaFormModal {
+  @Output() cerrar = new EventEmitter<void>();
 
+  cerrarModal() {
+    this.cerrar.emit();
+  }
 }

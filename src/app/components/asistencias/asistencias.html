@@ -3,9 +3,7 @@
 
   <!-- Barra de acciones -->
   <div class="toolbar">
-    <button class="btn primary">➕ Nueva Asistencia</button>
-    <button class="btn secondary">📥 Exportar Excel</button>
-    <button class="btn secondary">📄 Exportar PDF</button>
+    <button class="btn primary" (click)="abrirModal()">➕ Nueva Asistencia</button>
   </div>
 
   <!-- Filtros -->
@@ -62,8 +60,8 @@
   </div>
 
   <!-- Modal formulario (COMPONENTE SEPARADO) -->
-  <app-asistencia-form-modal></app-asistencia-form-modal>
-
+  <app-asistencia-form-modal *ngIf="mostrarModal" (cerrar)="cerrarModal()"></app-asistencia-form-modal>
+  
   <!-- Mensajes de confirmación -->
   <div class="toast success" style="display: none;">
     ✅ Asistencia guardada correctamente
