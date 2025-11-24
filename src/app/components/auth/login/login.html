@@ -5,6 +5,7 @@
       <h1>Iniciar Sesión</h1>
       <p>Ingresa tus credenciales para continuar</p>
     </div>
+
     <form class="login-form" (submit)="login()">
       <div class="form-group">
         <label for="email">
@@ -44,14 +45,24 @@
         </label>
         <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
       </div>
+
       <button type="submit" class="btn-login">
         <i class="fas fa-sign-in-alt"></i>
         Iniciar Sesión
       </button>
     </form>
 
+    <div class="divider">
+      <span>O</span>
+    </div>
+
+    <button type="button" class="btn-google" (click)="loginWithGoogle()">
+      <i class="fab fa-google"></i>
+      Iniciar sesión con Google
+    </button>
+
     <div class="login-footer">
       <p>¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a></p>
     </div>
   </div>
-</div>
+</div>  

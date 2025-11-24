@@ -1,10 +1,10 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router'; // Importar Router
+import { Router, RouterLink } from '@angular/router'; // Importar Router
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -33,5 +33,9 @@ export class Login implements AfterViewInit {
       icon?.classList.toggle('fa-eye');
       icon?.classList.toggle('fa-eye-slash');
     });
+  }
+
+  loginWithGoogle() {
+    
   }
 }
