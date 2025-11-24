@@ -73,3 +73,105 @@
 .btn-action:hover {
   transform: scale(1.2);
 }
+
+/* Modales */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+}
+
+.modal-content h3 {
+  color: #0a2342;
+  margin-bottom: 1.5rem;
+}
+
+.asistencia-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.asistencia-form label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.asistencia-form input,
+.asistencia-form select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  flex: 1;
+}
+
+.btn.primary {
+  background: #f0c419;
+  color: #0a2342;
+}
+
+.btn.primary:hover {
+  background: #d4a017;
+}
+
+.btn.secondary {
+  background: transparent;
+  border: 1px solid #0a2342;
+  color: #0a2342;
+}
+
+.btn.secondary:hover {
+  background: #0a2342;
+  color: #fff;
+}
+
+/* Detalle Info */
+.detalle-info {
+  padding: 1rem 0;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-row strong {
+  color: #0a2342;
+}
+
+.info-row span {
+  color: #666;
+}
