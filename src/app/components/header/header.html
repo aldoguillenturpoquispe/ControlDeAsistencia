@@ -38,8 +38,31 @@
       <i class="fas fa-bell"></i>
       <span class="notification-badge">3</span>
     </button>
-    <button class="btn-action">
+    <button class="btn-action" (click)="toggleUserMenu()">
       <i class="fas fa-user"></i>
     </button>
+
+    <!-- Menú desplegable de usuario -->
+    <div class="user-menu" [class.show]="showUserMenu">
+      <div class="user-menu-header">
+        <i class="fas fa-user-circle"></i>
+        <div>
+          <p class="user-name">Usuario Admin</p>
+          <p class="user-email">admin@example.com</p>
+        </div>
+      </div>
+      <div class="user-menu-divider"></div>
+      <button class="user-menu-item" (click)="configuracion()">
+        <i class="fas fa-cog"></i>
+        <span>Configuración</span>
+      </button>
+      <button class="user-menu-item logout" (click)="cerrarSesion()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
   </div>
 </header>
+
+<!-- Overlay para cerrar el menú al hacer click fuera -->
+<div class="overlay" *ngIf="showUserMenu" (click)="toggleUserMenu()"></div>
