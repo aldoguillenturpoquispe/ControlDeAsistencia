@@ -1,25 +1,7 @@
 <section class="admin-reportes">
   <h2>Panel de Reportes</h2>
 
-  <!-- Tipos de reportes predefinidos -->
-  <div class="report-types">
-    <button class="report-type-btn active">📊 Reporte General</button>
-    <button class="report-type-btn">👤 Por Usuario</button>
-    <button class="report-type-btn">📅 Por Período</button>
-    <button class="report-type-btn">⚠️ Incidencias</button>
-    <button class="report-type-btn">📈 Comparativo</button>
-  </div>
-
-  <!-- Barra de acciones -->
-  <div class="toolbar">
-    <button class="btn primary">📥 Exportar Excel</button>
-    <button class="btn secondary">📄 Exportar PDF</button>
-    <button class="btn secondary">🖨️ Imprimir</button>
-    <button class="btn secondary">📧 Enviar por Email</button>
-    <button class="btn secondary">💾 Guardar Configuración</button>
-  </div>
-
-  <!-- Filtros avanzados -->
+  <!-- Filtros -->
   <div class="filters">
     <label>
       Rango de fechas:
@@ -31,16 +13,6 @@
       <input type="text" placeholder="Buscar usuario...">
     </label>
     <label>
-      Departamento:
-      <select>
-        <option value="">Todos</option>
-        <option value="it">TI</option>
-        <option value="rrhh">RRHH</option>
-        <option value="ventas">Ventas</option>
-        <option value="admin">Administración</option>
-      </select>
-    </label>
-    <label>
       Estado:
       <select>
         <option value="">Todos</option>
@@ -49,7 +21,7 @@
         <option value="tardanza">Tardanza</option>
       </select>
     </label>
-    <button class="btn filter">🔍 Generar Reporte</button>
+    <button class="btn filter">🔍 Filtrar</button>
     <button class="btn secondary">🔄 Limpiar</button>
   </div>
 
@@ -77,40 +49,6 @@
         <span class="summary-label">Promedio Asistencia</span>
         <span class="summary-value">87.5%</span>
       </div>
-      <div class="summary-card">
-        <span class="summary-label">Total Horas</span>
-        <span class="summary-value">1,960h</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Opciones de vista -->
-  <div class="view-options">
-    <div class="view-controls">
-      <label>
-        <input type="checkbox" checked> Mostrar horas trabajadas
-      </label>
-      <label>
-        <input type="checkbox" checked> Mostrar departamento
-      </label>
-      <label>
-        <input type="checkbox"> Agrupar por fecha
-      </label>
-      <label>
-        <input type="checkbox"> Mostrar solo anomalías
-      </label>
-    </div>
-    <div class="sort-options">
-      <label>
-        Ordenar por:
-        <select>
-          <option value="fecha">Fecha (más reciente)</option>
-          <option value="fecha-asc">Fecha (más antigua)</option>
-          <option value="usuario">Usuario (A-Z)</option>
-          <option value="estado">Estado</option>
-          <option value="horas">Horas trabajadas</option>
-        </select>
-      </label>
     </div>
   </div>
 
@@ -121,103 +59,58 @@
         <tr>
           <th>ID</th>
           <th>Usuario</th>
-          <th>Departamento</th>
           <th>Fecha</th>
           <th>Entrada</th>
           <th>Salida</th>
           <th>Horas Trabajadas</th>
           <th>Estado</th>
-          <th>Observaciones</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>#001</td>
           <td>Ana Pérez</td>
-          <td>TI</td>
           <td>18/11/2025</td>
           <td>08:05</td>
           <td>17:00</td>
           <td>8h 55m</td>
           <td><span class="status present">Presente</span></td>
-          <td>-</td>
         </tr>
         <tr>
           <td>#002</td>
           <td>Carlos Gómez</td>
-          <td>Ventas</td>
           <td>18/11/2025</td>
           <td>--</td>
           <td>--</td>
           <td>0h</td>
           <td><span class="status absent">Ausente</span></td>
-          <td>Sin justificación</td>
         </tr>
         <tr>
           <td>#003</td>
           <td>María López</td>
-          <td>RRHH</td>
           <td>18/11/2025</td>
           <td>08:35</td>
           <td>17:10</td>
           <td>8h 35m</td>
           <td><span class="status late">Tardanza</span></td>
-          <td>Tráfico</td>
         </tr>
         <tr>
           <td>#004</td>
           <td>Juan Martínez</td>
-          <td>TI</td>
           <td>17/11/2025</td>
           <td>07:58</td>
           <td>17:05</td>
           <td>9h 7m</td>
           <td><span class="status present">Presente</span></td>
-          <td>Horas extra</td>
         </tr>
         <tr>
           <td>#005</td>
           <td>Laura Sánchez</td>
-          <td>Administración</td>
           <td>17/11/2025</td>
           <td>08:00</td>
           <td>17:00</td>
           <td>9h</td>
           <td><span class="status present">Presente</span></td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>#006</td>
-          <td>Pedro Ramírez</td>
-          <td>Ventas</td>
-          <td>17/11/2025</td>
-          <td>09:15</td>
-          <td>16:45</td>
-          <td>7h 30m</td>
-          <td><span class="status late">Tardanza</span></td>
-          <td>Cita médica</td>
-        </tr>
-        <tr>
-          <td>#007</td>
-          <td>Sofia Torres</td>
-          <td>RRHH</td>
-          <td>16/11/2025</td>
-          <td>--</td>
-          <td>--</td>
-          <td>0h</td>
-          <td><span class="status absent">Ausente</span></td>
-          <td>Permiso médico</td>
-        </tr>
-        <tr>
-          <td>#008</td>
-          <td>Diego Castro</td>
-          <td>TI</td>
-          <td>16/11/2025</td>
-          <td>08:10</td>
-          <td>18:00</td>
-          <td>9h 50m</td>
-          <td><span class="status present">Presente</span></td>
-          <td>Proyecto urgente</td>
         </tr>
       </tbody>
     </table>
@@ -225,72 +118,9 @@
 
   <!-- Paginación -->
   <div class="pagination">
-    <button class="btn secondary">« Primera</button>
-    <button class="btn secondary">‹ Anterior</button>
-    <span class="page-info">Página 1 de 12 (245 registros)</span>
-    <button class="btn secondary">Siguiente ›</button>
-    <button class="btn secondary">Última »</button>
-  </div>
-
-  <!-- Gráfico resumen -->
-  <div class="report-chart">
-    <h3>📊 Distribución de Estados</h3>
-    <div class="pie-chart-container">
-      <!-- Simulación de gráfico circular -->
-      <svg viewBox="0 0 200 200" width="200" height="200">
-        <circle cx="100" cy="100" r="80" fill="#2e7d32" stroke="#fff" stroke-width="2"/>
-        <path d="M 100 100 L 100 20 A 80 80 0 0 1 165 75 Z" fill="#f9a825" stroke="#fff" stroke-width="2"/>
-        <path d="M 100 100 L 165 75 A 80 80 0 0 1 180 100 Z" fill="#c62828" stroke="#fff" stroke-width="2"/>
-      </svg>
-      <div class="chart-legend">
-        <div class="legend-item">
-          <span class="legend-color" style="background: #2e7d32;"></span>
-          <span>Presentes (79.6%)</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color" style="background: #f9a825;"></span>
-          <span>Tardanzas (9.0%)</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color" style="background: #c62828;"></span>
-          <span>Ausentes (11.4%)</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Reportes guardados -->
-  <div class="saved-reports">
-    <h3>📁 Reportes Guardados</h3>
-    <div class="saved-list">
-      <div class="saved-item">
-        <span class="saved-name">Reporte Mensual Noviembre 2025</span>
-        <span class="saved-date">Generado: 15/11/2025</span>
-        <div class="saved-actions">
-          <button class="btn-small">👁️ Ver</button>
-          <button class="btn-small">📥 Descargar</button>
-          <button class="btn-small">🗑️ Eliminar</button>
-        </div>
-      </div>
-      <div class="saved-item">
-        <span class="saved-name">Reporte Incidencias Octubre 2025</span>
-        <span class="saved-date">Generado: 01/11/2025</span>
-        <div class="saved-actions">
-          <button class="btn-small">👁️ Ver</button>
-          <button class="btn-small">📥 Descargar</button>
-          <button class="btn-small">🗑️ Eliminar</button>
-        </div>
-      </div>
-      <div class="saved-item">
-        <span class="saved-name">Reporte Comparativo Q3 2025</span>
-        <span class="saved-date">Generado: 28/10/2025</span>
-        <div class="saved-actions">
-          <button class="btn-small">👁️ Ver</button>
-          <button class="btn-small">📥 Descargar</button>
-          <button class="btn-small">🗑️ Eliminar</button>
-        </div>
-      </div>
-    </div>
+    <button class="btn secondary">« Anterior</button>
+    <span class="page-info">Página 1 de 5</span>
+    <button class="btn secondary">Siguiente »</button>
   </div>
 
 </section>
