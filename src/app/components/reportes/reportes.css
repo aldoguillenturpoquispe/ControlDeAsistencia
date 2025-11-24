@@ -198,3 +198,15 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Paginación deshabilitada */
+.pagination .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination .btn:disabled:hover {
+  background: transparent;
+  color: #0a2342;
+}

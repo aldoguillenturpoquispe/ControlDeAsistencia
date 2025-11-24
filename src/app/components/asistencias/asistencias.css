@@ -156,3 +156,14 @@
   justify-content: center;
   align-items: center;
 }
+
+/* Paginación deshabilitada */
+.pagination .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination .btn:disabled:hover {
+  background: transparent;
+  color: #0a2342;
+}

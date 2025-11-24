@@ -118,9 +118,9 @@
 
   <!-- Paginación -->
   <div class="pagination">
-    <button class="btn secondary">« Anterior</button>
-    <span class="page-info">Página 1 de 5</span>
-    <button class="btn secondary">Siguiente »</button>
+    <button class="btn secondary" (click)="paginaAnterior()" [disabled]="paginaActual === 1">« Anterior</button>
+    <span class="page-info">Página {{paginaActual}} de {{totalPaginas}}</span>
+    <button class="btn secondary" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">Siguiente »</button>
   </div>
 
 </section>

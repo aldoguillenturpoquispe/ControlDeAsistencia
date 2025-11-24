@@ -12,6 +12,8 @@ import { AsistenciaTabla } from './asistencia-tabla/asistencia-tabla';
 })
 export class Asistencias {
   mostrarModal = false;
+  paginaActual = 1;
+  totalPaginas = 5;
 
   abrirModal() {
     console.log('Abriendo modal...');
@@ -20,5 +22,19 @@ export class Asistencias {
 
   cerrarModal() {
     this.mostrarModal = false;
+  }
+
+  paginaAnterior() {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+      console.log('Página anterior:', this.paginaActual);
+    }
+  }
+
+  paginaSiguiente() {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+      console.log('Página siguiente:', this.paginaActual);
+    }
   }
 }
