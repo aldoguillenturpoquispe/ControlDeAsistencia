@@ -1,0 +1,36 @@
+<div class="table-container">
+  <table class="report-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>Fecha</th>
+        <th>Entrada</th>
+        <th>Salida</th>
+        <th>Horas Trabajadas</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reporte of reportes">
+        <td>{{ reporte.id }}</td>
+        <td>{{ reporte.usuario }}</td>
+        <td>{{ reporte.fecha }}</td>
+        <td>{{ reporte.entrada }}</td>
+        <td>{{ reporte.salida }}</td>
+        <td>{{ reporte.horasTrabajadas }}</td>
+        <td>
+          <span class="status" 
+                [ngClass]="{
+                  'present': reporte.estado === 'presente',
+                  'absent': reporte.estado === 'ausente',
+                  'late': reporte.estado === 'tardanza'
+                }">
+            {{ reporte.estado === 'presente' ? 'Presente' : 
+               reporte.estado === 'ausente' ? 'Ausente' : 'Tardanza' }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

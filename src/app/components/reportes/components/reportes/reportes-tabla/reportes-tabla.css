@@ -1,0 +1,65 @@
+/* Tabla */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.report-table th,
+.report-table td {
+  padding: 0.8rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.report-table th {
+  background: #0a2342;
+  color: #fff;
+  font-weight: 600;
+}
+
+.report-table tr:hover {
+  background: #f9f9f9;
+}
+
+/* Estados */
+.status {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.status.present {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.status.absent {
+  background: #c62828;
+  color: #fff;
+}
+
+.status.late {
+  background: #f9a825;
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .report-table {
+    font-size: 0.85rem;
+  }
+  
+  .report-table th,
+  .report-table td {
+    padding: 0.5rem;
+  }
+}

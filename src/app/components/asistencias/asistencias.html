@@ -10,23 +10,23 @@
   <div class="filters">
     <label>
       Fecha:
-      <input type="date">
+      <input type="date" [(ngModel)]="filtroFecha">
     </label>
     <label>
       Usuario:
-      <input type="text" placeholder="Buscar usuario...">
+      <input type="text" placeholder="Buscar usuario..." [(ngModel)]="filtroUsuario">
     </label>
     <label>
       Estado:
-      <select>
+      <select [(ngModel)]="filtroEstado">
         <option value="">Todos</option>
         <option value="presente">Presente</option>
         <option value="ausente">Ausente</option>
         <option value="tardanza">Tardanza</option>
       </select>
     </label>
-    <button class="btn filter">🔍 Filtrar</button>
-    <button class="btn secondary">🔄 Limpiar</button>
+    <button class="btn filter" (click)="aplicarFiltros()">🔍 Filtrar</button>
+    <button class="btn secondary" (click)="limpiarFiltros()">🔄 Limpiar</button>
   </div>
 
   <!-- Estadísticas / Resumen -->

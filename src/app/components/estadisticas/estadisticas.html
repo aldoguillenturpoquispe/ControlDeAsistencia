@@ -5,22 +5,22 @@
   <div class="filters-stats">
     <label>
       Período:
-      <select>
+      <select [(ngModel)]="periodo">
         <option value="hoy">Hoy</option>
         <option value="semana">Esta Semana</option>
-        <option value="mes" selected>Este Mes</option>
+        <option value="mes">Este Mes</option>
         <option value="anio">Este Año</option>
       </select>
     </label>
     <label>
       Desde:
-      <input type="date" value="2025-11-01">
+      <input type="date" [(ngModel)]="fechaDesde">
     </label>
     <label>
       Hasta:
-      <input type="date" value="2025-11-20">
+      <input type="date" [(ngModel)]="fechaHasta">
     </label>
-    <button class="btn-filter">🔍 Actualizar</button>
+    <button class="btn-filter" (click)="actualizarEstadisticas()">🔍 Actualizar</button>
   </div>
 
   <!-- Resumen en tarjetas principales -->
@@ -80,11 +80,11 @@
   <!-- Resumen por estado (COMPONENTE SEPARADO) -->
   <app-stats-resumen-estados></app-stats-resumen-estados>
 
-  <!-- Botones de exportación -->
+<!-- Botones de exportación -->
   <div class="export-actions">
-    <button class="btn-export">📥 Exportar Estadísticas PDF</button>
-    <button class="btn-export">📊 Exportar Excel</button>
-    <button class="btn-export">📧 Enviar Reporte</button>
+    <button class="btn-export" (click)="exportarPDF()">📥 Exportar Estadísticas PDF</button>
+    <button class="btn-export" (click)="exportarExcel()">📊 Exportar Excel</button>
+    <button class="btn-export" (click)="enviarReporte()">📧 Enviar Reporte</button>
   </div>
 
 </section>
