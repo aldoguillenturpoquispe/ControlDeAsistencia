@@ -1,0 +1,38 @@
+<div class="not-found-container">
+  <div class="not-found-card">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    
+    <div class="error-content">
+      <h1 class="error-code">404</h1>
+      <h2 class="error-title">Página No Encontrada</h2>
+      <p class="error-message">
+        Lo sentimos, la página que estás buscando no existe o ha sido movida.
+      </p>
+    </div>
+
+    <div class="error-actions">
+      <button class="btn-primary" routerLink="/home">
+        <i class="fas fa-home"></i>
+        Volver al Inicio
+      </button>
+      <button class="btn-secondary" (click)="volverAtras()">
+        <i class="fas fa-arrow-left"></i>
+        Página Anterior
+      </button>
+    </div>
+
+    <div class="error-help">
+      <p>¿Necesitas ayuda?</p>
+      <a routerLink="/home">Contacta con soporte</a>
+    </div>
+  </div>
+
+  <!-- Decoración de fondo -->
+  <div class="background-decoration">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
+</div>

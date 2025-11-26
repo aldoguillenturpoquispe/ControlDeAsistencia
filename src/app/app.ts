@@ -25,7 +25,7 @@ export class App implements OnInit, OnDestroy {
   // Función auxiliar para verificar si la ruta actual debe estar oculta
   private checkVisibility(url: string): boolean {
     // CORRECCIÓN: La ruta raíz ('/') DEBE estar incluida explícitamente.
-    const rutasOcultas = ['/', '/login', '/register']; 
+    const rutasOcultas = ['/', '/login', '/register', '/forgot-password']; 
     
     // Obtenemos solo la ruta base, sin query params ni fragmentos.
     const urlCheck = url.split('?')[0].split('#')[0];

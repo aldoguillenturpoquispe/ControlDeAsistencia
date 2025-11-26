@@ -5,11 +5,13 @@ import { Estadisticas } from './components/estadisticas/estadisticas';
 import { Reportes } from './components/reportes/reportes';
 import { Login } from './components/auth/login/login';
 import { Register } from './components/auth/register/register';
+import { ForgotPassword } from './components/auth/forgot-password/forgot-password';
 
 export const routes: Routes = [
   {path: '', component: Login, title:'Login'},
   {path: 'login', component: Login, title:'Login'},
   {path: 'register', component: Register, title:'Register'},
+  {path: 'forgot-password', component: ForgotPassword, title:'Register'},
   {path: 'inicio', component: Home, title:'Inicio'},
   {path: 'asistencias', component: Asistencias, title: 'Asistencias'},
   {path: 'estadisticas', component: Estadisticas, title: 'Estadísticas'},
