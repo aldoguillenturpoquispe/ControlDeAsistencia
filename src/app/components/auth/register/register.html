@@ -6,20 +6,31 @@
       <p>Completa tus datos para registrarte</p>
     </div>
 
-    <form class="register-form" (submit)="register()">
+    <form class="register-form" [formGroup]="registerForm" (ngSubmit)="register()">
+      <!-- NOMBRE COMPLETO -->
       <div class="form-group">
-        <label for="nombre">
+        <label for="nombreCompleto">
           <i class="fas fa-user"></i>
           Nombre Completo
         </label>
         <input 
           type="text" 
-          id="nombre" 
+          id="nombreCompleto" 
+          formControlName="nombreCompleto"
           placeholder="Juan Pérez"
-          required
+          [class.error]="nombreCompletoInvalid"
         >
+        <span class="error-message" *ngIf="nombreCompletoInvalid">
+          <span *ngIf="registerForm.get('nombreCompleto')?.hasError('required')">
+            El nombre completo es requerido
+          </span>
+          <span *ngIf="registerForm.get('nombreCompleto')?.hasError('minlength')">
+            El nombre debe tener al menos 3 caracteres
+          </span>
+        </span>
       </div>
 
+      <!-- EMAIL -->
       <div class="form-group">
         <label for="email">
           <i class="fas fa-envelope"></i>
@@ -28,11 +39,21 @@
         <input 
           type="email" 
           id="email" 
+          formControlName="email"
           placeholder="ejemplo@correo.com"
-          required
+          [class.error]="emailInvalid"
         >
+        <span class="error-message" *ngIf="emailInvalid">
+          <span *ngIf="registerForm.get('email')?.hasError('required')">
+            El correo electrónico es requerido
+          </span>
+          <span *ngIf="registerForm.get('email')?.hasError('email')">
+            Por favor ingresa un correo válido
+          </span>
+        </span>
       </div>
 
+      <!-- CONTRASEÑA -->
       <div class="form-group">
         <label for="password">
           <i class="fas fa-lock"></i>
@@ -40,17 +61,27 @@
         </label>
         <div class="password-input">
           <input 
-            type="password" 
+            [type]="showPassword ? 'text' : 'password'"
             id="password" 
+            formControlName="password"
             placeholder="••••••••"
-            required
+            [class.error]="passwordInvalid"
           >
-          <button type="button" class="toggle-password">
-            <i class="fas fa-eye"></i>
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
           </button>
         </div>
+        <span class="error-message" *ngIf="passwordInvalid">
+          <span *ngIf="registerForm.get('password')?.hasError('required')">
+            La contraseña es requerida
+          </span>
+          <span *ngIf="registerForm.get('password')?.hasError('minlength')">
+            La contraseña debe tener al menos 6 caracteres
+          </span>
+        </span>
       </div>
 
+      <!-- CONFIRMAR CONTRASEÑA -->
       <div class="form-group">
         <label for="confirmPassword">
           <i class="fas fa-lock"></i>
@@ -58,27 +89,54 @@
         </label>
         <div class="password-input">
           <input 
-            type="password" 
+            [type]="showConfirmPassword ? 'text' : 'password'"
             id="confirmPassword" 
+            formControlName="confirmPassword"
             placeholder="••••••••"
-            required
+            [class.error]="confirmPasswordInvalid || passwordMismatch"
           >
-          <button type="button" class="toggle-password">
-            <i class="fas fa-eye"></i>
+          <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
+            <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
           </button>
         </div>
+        <span class="error-message" *ngIf="confirmPasswordInvalid || passwordMismatch">
+          <span *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+            Debes confirmar tu contraseña
+          </span>
+          <span *ngIf="passwordMismatch">
+            Las contraseñas no coinciden
+          </span>
+        </span>
       </div>
 
+      <!-- TÉRMINOS Y CONDICIONES -->
       <div class="form-options">
         <label class="terms">
-          <input type="checkbox" required>
-          <span>Acepto los <a href="#">términos y condiciones</a></span>
+          <input type="checkbox" formControlName="aceptarTerminos">
+          <span>Acepto los <a href="#" (click)="$event.preventDefault()">términos y condiciones</a></span>
         </label>
+        <span class="error-message" *ngIf="registerForm.get('aceptarTerminos')?.invalid && registerForm.get('aceptarTerminos')?.touched">
+          Debes aceptar los términos y condiciones
+        </span>
       </div>
 
-      <button type="submit" class="btn-register">
-        <i class="fas fa-user-plus"></i>
-        Crear Cuenta
+      <!-- MENSAJE DE ERROR GENERAL -->
+      <div class="alert alert-error" *ngIf="errorMessage">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ errorMessage }}
+      </div>
+
+      <!-- MENSAJE DE ÉXITO -->
+      <div class="alert alert-success" *ngIf="successMessage">
+        <i class="fas fa-check-circle"></i>
+        {{ successMessage }}
+      </div>
+
+      <!-- BOTÓN DE REGISTRO -->
+      <button type="submit" class="btn-register" [disabled]="registerForm.invalid || loading">
+        <i class="fas fa-user-plus" *ngIf="!loading"></i>
+        <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+        {{ loading ? 'Creando cuenta...' : 'Crear Cuenta' }}
       </button>
     </form>
 
@@ -86,7 +144,7 @@
       <span>O</span>
     </div>
 
-    <button type="button" class="btn-google" (click)="registerWithGoogle()">
+    <button type="button" class="btn-google" (click)="registerWithGoogle()" [disabled]="loading">
       <i class="fab fa-google"></i>
       Registrarse con Google
     </button>

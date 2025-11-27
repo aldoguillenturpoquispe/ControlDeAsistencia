@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut, 
   user,
   User
@@ -177,5 +178,28 @@ export class AuthService {
   // ==========================================
   isAuthenticated(): boolean {
     return this.auth.currentUser !== null;
+  }
+
+  // ==========================================
+  // AGREGAR ESTE MÉTODO EN AuthService
+  // ==========================================
+  async enviarRecuperacionPassword(email: string) {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+      console.log('✅ Email de recuperación enviado a:', email);
+    } catch (error: any) {
+      console.error('❌ Error al enviar email de recuperación:', error);
+      
+      // Manejo de errores específicos
+      if (error.code === 'auth/user-not-found') {
+        throw new Error('No existe una cuenta con este correo electrónico');
+      } else if (error.code === 'auth/invalid-email') {
+        throw new Error('El correo electrónico no es válido');
+      } else if (error.code === 'auth/too-many-requests') {
+        throw new Error('Demasiados intentos. Por favor, intenta más tarde');
+      }
+      
+      throw error;
+    }
   }
 }
