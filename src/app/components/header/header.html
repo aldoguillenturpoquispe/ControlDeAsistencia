@@ -38,24 +38,31 @@
       <i class="fas fa-bell"></i>
       <span class="notification-badge">3</span>
     </button>
-    <button class="btn-action" (click)="toggleUserMenu()">
-      <i class="fas fa-user"></i>
+    
+    <!-- Botón de usuario con foto o iniciales -->
+    <button class="btn-action user-avatar" (click)="toggleUserMenu()">
+      <img *ngIf="photoURL" [src]="photoURL" alt="Avatar" class="avatar-img">
+      <div *ngIf="!photoURL" class="avatar-initials">
+        {{ getIniciales() }}
+      </div>
     </button>
 
     <!-- Menú desplegable de usuario -->
     <div class="user-menu" [class.show]="showUserMenu">
       <div class="user-menu-header">
-        <i class="fas fa-user-circle"></i>
+        <!-- Avatar o iniciales en el menú -->
+        <div class="user-avatar-large">
+          <img *ngIf="photoURL" [src]="photoURL" alt="Avatar" class="avatar-img-large">
+          <div *ngIf="!photoURL" class="avatar-initials-large">
+            {{ getIniciales() }}
+          </div>
+        </div>
         <div>
-          <p class="user-name">Usuario Admin</p>
-          <p class="user-email">admin@example.com</p>
+          <p class="user-name">{{ nombreUsuario }}</p>
+          <p class="user-email">{{ emailUsuario }}</p>
         </div>
       </div>
       <div class="user-menu-divider"></div>
-      <button class="user-menu-item" (click)="configuracion()">
-        <i class="fas fa-cog"></i>
-        <span>Configuración</span>
-      </button>
       <button class="user-menu-item logout" (click)="cerrarSesion()">
         <i class="fas fa-sign-out-alt"></i>
         <span>Cerrar Sesión</span>
