@@ -1,143 +1,108 @@
 <section class="home">
-  <!-- Header del Dashboard -->
-  <div class="dashboard-header">
-    <h1>Dashboard de Control de Asistencia</h1>
-    <p>Resumen general de asistencias y estadísticas</p>
+  <!-- Loader mientras carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando datos...</p>
   </div>
 
-  <!-- Tarjetas de resumen -->
-  <div class="stats-cards">
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="fas fa-users"></i>
+  <!-- Contenido principal -->
+  <div *ngIf="!isLoading">
+    <!-- Header del Dashboard -->
+    <div class="dashboard-header">
+      <h1>Dashboard de Control de Asistencia</h1>
+      <p>Resumen general de asistencias y estadísticas</p>
+    </div>
+
+    <!-- Tarjetas de resumen -->
+    <div class="stats-cards">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+          <h3>Total Empleados</h3>
+          <p class="stat-value">{{ totalEmpleados }}</p>
+        </div>
       </div>
-      <div class="stat-info">
-        <h3>Total Empleados</h3>
-        <p class="stat-value">45</p>
+
+      <div class="stat-card">
+        <div class="stat-icon present">
+          <i class="fas fa-user-check"></i>
+        </div>
+        <div class="stat-info">
+          <h3>Presentes Hoy</h3>
+          <p class="stat-value">{{ presentesHoy }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon absent">
+          <i class="fas fa-user-times"></i>
+        </div>
+        <div class="stat-info">
+          <h3>Ausentes Hoy</h3>
+          <p class="stat-value">{{ ausentesHoy }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-percentage"></i>
+        </div>
+        <div class="stat-info">
+          <h3>% Asistencia</h3>
+          <p class="stat-value">{{ porcentajeAsistencia }}%</p>
+        </div>
       </div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-icon present">
-        <i class="fas fa-user-check"></i>
-      </div>
-      <div class="stat-info">
-        <h3>Presentes Hoy</h3>
-        <p class="stat-value">38</p>
-      </div>
-    </div>
+    <!-- Accesos rápidos -->
+    <div class="quick-actions">
+      <h2>Accesos Rápidos</h2>
+      <div class="action-cards">
+        <a routerLink="/asistencias" class="action-card">
+          <i class="fas fa-clock"></i>
+          <h3>Registrar Asistencia</h3>
+          <p>Marcar entrada/salida de empleados</p>
+        </a>
 
-    <div class="stat-card">
-      <div class="stat-icon absent">
-        <i class="fas fa-user-times"></i>
-      </div>
-      <div class="stat-info">
-        <h3>Ausentes Hoy</h3>
-        <p class="stat-value">7</p>
-      </div>
-    </div>
+        <a routerLink="/estadisticas" class="action-card">
+          <i class="fas fa-chart-bar"></i>
+          <h3>Ver Estadísticas</h3>
+          <p>Análisis y reportes detallados</p>
+        </a>
 
-    <div class="stat-card">
-      <div class="stat-icon">
-        <i class="fas fa-percentage"></i>
-      </div>
-      <div class="stat-info">
-        <h3>% Asistencia</h3>
-        <p class="stat-value">84%</p>
+        <a routerLink="/reportes" class="action-card">
+          <i class="fas fa-file-alt"></i>
+          <h3>Generar Reportes</h3>
+          <p>Exportar datos y documentos</p>
+        </a>
       </div>
     </div>
-  </div>
 
-  <!-- Accesos rápidos -->
-  <div class="quick-actions">
-    <h2>Accesos Rápidos</h2>
-    <div class="action-cards">
-      <a routerLink="/asistencias" class="action-card">
-        <i class="fas fa-clock"></i>
-        <h3>Registrar Asistencia</h3>
-        <p>Marcar entrada/salida de empleados</p>
-      </a>
-
-      <a routerLink="/estadisticas" class="action-card">
-        <i class="fas fa-chart-bar"></i>
-        <h3>Ver Estadísticas</h3>
-        <p>Análisis y reportes detallados</p>
-      </a>
-
-      <a routerLink="/reportes" class="action-card">
-        <i class="fas fa-file-alt"></i>
-        <h3>Generar Reportes</h3>
-        <p>Exportar datos y documentos</p>
-      </a>
-    </div>
-  </div>
-
-  <!-- Últimas asistencias registradas -->
-  <div class="recent-activity">
-    <h2>Últimas Asistencias Registradas</h2>
-    <div class="activity-list">
-      <div class="activity-item">
-        <div class="activity-icon">
-          <i class="fas fa-user-clock"></i>
-        </div>
-        <div class="activity-info">
-          <h4>Juan Pérez López</h4>
-          <p>20/11/2024 - 08:15 AM</p>
-        </div>
-        <div class="activity-status present">
-          Presente
-        </div>
+    <!-- Últimas asistencias registradas -->
+    <div class="recent-activity">
+      <h2>Últimas Asistencias Registradas</h2>
+      
+      <!-- Mensaje si no hay asistencias -->
+      <div *ngIf="ultimasAsistencias.length === 0" class="no-data">
+        <i class="fas fa-inbox"></i>
+        <p>No hay asistencias registradas aún</p>
       </div>
 
-      <div class="activity-item">
-        <div class="activity-icon">
-          <i class="fas fa-user-clock"></i>
-        </div>
-        <div class="activity-info">
-          <h4>María García Silva</h4>
-          <p>20/11/2024 - 08:20 AM</p>
-        </div>
-        <div class="activity-status present">
-          Presente
-        </div>
-      </div>
-
-      <div class="activity-item">
-        <div class="activity-icon">
-          <i class="fas fa-user-clock"></i>
-        </div>
-        <div class="activity-info">
-          <h4>Carlos Rodríguez Mendoza</h4>
-          <p>20/11/2024 - 09:10 AM</p>
-        </div>
-        <div class="activity-status late">
-          Tardanza
-        </div>
-      </div>
-
-      <div class="activity-item">
-        <div class="activity-icon">
-          <i class="fas fa-user-clock"></i>
-        </div>
-        <div class="activity-info">
-          <h4>Ana Martínez Torres</h4>
-          <p>20/11/2024 - 08:05 AM</p>
-        </div>
-        <div class="activity-status present">
-          Presente
-        </div>
-      </div>
-
-      <div class="activity-item">
-        <div class="activity-icon">
-          <i class="fas fa-user-clock"></i>
-        </div>
-        <div class="activity-info">
-          <h4>Luis Fernández Castro</h4>
-          <p>20/11/2024 - Sin registro</p>
-        </div>
-        <div class="activity-status absent">
-          Ausente
+      <!-- Lista de asistencias -->
+      <div class="activity-list" *ngIf="ultimasAsistencias.length > 0">
+        <div class="activity-item" *ngFor="let asistencia of ultimasAsistencias">
+          <div class="activity-icon">
+            <i class="fas fa-user-clock"></i>
+          </div>
+          <div class="activity-info">
+            <h4>{{ asistencia.nombreCompleto }}</h4>
+            <p>{{ formatearFecha(asistencia.fecha) }} - {{ formatearHora(asistencia.horaEntrada) }}</p>
+          </div>
+          <div class="activity-status" [ngClass]="obtenerClaseEstado(asistencia.estado)">
+            {{ obtenerTextoEstado(asistencia.estado) }}
+          </div>
         </div>
       </div>
     </div>
