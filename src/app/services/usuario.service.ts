@@ -204,5 +204,10 @@ export class UsuarioService {
       throw error;
     }
   }
-  
+  // ==========================================
+// ALIAS PARA OBTENER TODOS LOS USUARIOS
+// ==========================================
+async obtenerUsuarios(): Promise<Usuario[]> {
+  return this.obtenerTodosLosUsuarios();
+}
 }

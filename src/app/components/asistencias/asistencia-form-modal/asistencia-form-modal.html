@@ -1,47 +1,86 @@
 <div class="modal-overlay" (click)="cerrarModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h3>Nueva Asistencia</h3>
-    <form class="asistencia-form">
+
+    <!-- Loader mientras carga usuarios -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando usuarios...</p>
+    </div>
+
+    <!-- Formulario -->
+    <form class="asistencia-form" *ngIf="!isLoading" (ngSubmit)="guardarAsistencia()">
+      
+      <!-- Usuario -->
       <div class="form-group">
         <label>Usuario *</label>
-        <select required>
+        <select [(ngModel)]="usuarioId" name="usuarioId" required>
           <option value="">Seleccionar usuario...</option>
-          <option value="1">Ana Pérez</option>
-          <option value="2">Carlos Gómez</option>
-          <option value="3">María López</option>
+          <option *ngFor="let usuario of usuarios" [value]="usuario.uid">
+            {{ usuario.nombreCompleto }}
+          </option>
         </select>
-        <span class="error-msg">Este campo es obligatorio</span>
+        <span class="error-msg" *ngIf="errores.usuarioId">{{ errores.usuarioId }}</span>
       </div>
 
+      <!-- Fecha -->
       <div class="form-group">
         <label>Fecha *</label>
-        <input type="date" required>
-        <span class="error-msg">Fecha inválida</span>
+        <input type="date" [(ngModel)]="fecha" name="fecha" required>
+        <span class="error-msg" *ngIf="errores.fecha">{{ errores.fecha }}</span>
       </div>
 
+      <!-- Hora de Entrada -->
       <div class="form-group">
         <label>Hora de Entrada *</label>
-        <input type="time" required>
-        <span class="error-msg">Hora requerida</span>
+        <input type="time" [(ngModel)]="horaEntrada" name="horaEntrada" required>
+        <span class="error-msg" *ngIf="errores.horaEntrada">{{ errores.horaEntrada }}</span>
       </div>
 
+      <!-- Hora de Salida -->
       <div class="form-group">
         <label>Hora de Salida</label>
-        <input type="time">
+        <input type="time" [(ngModel)]="horaSalida" name="horaSalida">
+        <span class="error-msg" *ngIf="errores.horaSalida">{{ errores.horaSalida }}</span>
       </div>
 
+      <!-- Estado -->
       <div class="form-group">
         <label>Estado *</label>
-        <select required>
+        <select [(ngModel)]="estado" name="estado" required>
           <option value="presente">Presente</option>
           <option value="ausente">Ausente</option>
           <option value="tardanza">Tardanza</option>
+          <option value="permiso">Permiso</option>
         </select>
       </div>
 
+      <!-- Observaciones -->
+      <div class="form-group">
+        <label>Observaciones</label>
+        <textarea 
+          [(ngModel)]="observaciones" 
+          name="observaciones" 
+          rows="3" 
+          placeholder="Comentarios adicionales (opcional)">
+        </textarea>
+      </div>
+
+      <!-- Botones -->
       <div class="form-actions">
-        <button type="submit" class="btn primary">💾 Guardar</button>
-        <button type="button" class="btn secondary" (click)="cerrarModal()">❌ Cancelar</button>
+        <button 
+          type="submit" 
+          class="btn primary" 
+          [disabled]="isSaving">
+          {{ isSaving ? '⏳ Guardando...' : '💾 Guardar' }}
+        </button>
+        <button 
+          type="button" 
+          class="btn secondary" 
+          (click)="cerrarModal()"
+          [disabled]="isSaving">
+          ❌ Cancelar
+        </button>
       </div>
     </form>
   </div>

@@ -13,159 +13,68 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>#001</td>
-        <td>Ana Pérez</td>
-        <td>18/11/2025</td>
-        <td>08:05</td>
-        <td>17:00</td>
-        <td>8h 55m</td>
-        <td><span class="status present">Presente</span></td>
+      <tr *ngFor="let asistencia of asistencias; let i = index">
+        <td>{{ obtenerIndice(i) }}</td>
+        <td>{{ asistencia.nombreCompleto }}</td>
+        <td>{{ formatearFecha(asistencia.fecha) }}</td>
+        <td>{{ formatearHora(asistencia.horaEntrada) }}</td>
+        <td>{{ formatearHora(asistencia.horaSalida) }}</td>
+        <td>{{ calcularHorasTrabajadas(asistencia.horaEntrada, asistencia.horaSalida) }}</td>
         <td>
-          <button class="btn-action edit" title="Editar" (click)="editarAsistencia('#001')">✏️</button>
-          <button class="btn-action delete" title="Eliminar" (click)="eliminarAsistencia('#001')">🗑️</button>
-          <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia('#001')">👁️</button>
+          <span class="status" [ngClass]="obtenerClaseEstado(asistencia.estado)">
+            {{ obtenerTextoEstado(asistencia.estado) }}
+          </span>
         </td>
-      </tr>
-      <tr>
-        <td>#002</td>
-        <td>Carlos Gómez</td>
-        <td>18/11/2025</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-        <td><span class="status absent">Ausente</span></td>
         <td>
-          <button class="btn-action edit" title="Editar" (click)="editarAsistencia('#002')">✏️</button>
-          <button class="btn-action delete" title="Eliminar" (click)="eliminarAsistencia('#002')">🗑️</button>
-          <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia('#002')">👁️</button>
-        </td>
-      </tr>
-      <tr>
-        <td>#003</td>
-        <td>María López</td>
-        <td>18/11/2025</td>
-        <td>08:45</td>
-        <td>17:10</td>
-        <td>8h 25m</td>
-        <td><span class="status tardanza">Tardanza</span></td>
-        <td>
-          <button class="btn-action edit" title="Editar" (click)="editarAsistencia('#003')">✏️</button>
-          <button class="btn-action delete" title="Eliminar" (click)="eliminarAsistencia('#003')">🗑️</button>
-          <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia('#003')">👁️</button>
-        </td>
-      </tr>
-      <tr>
-        <td>#004</td>
-        <td>Juan Martínez</td>
-        <td>17/11/2025</td>
-        <td>07:55</td>
-        <td>16:50</td>
-        <td>8h 55m</td>
-        <td><span class="status present">Presente</span></td>
-        <td>
-          <button class="btn-action edit" title="Editar" (click)="editarAsistencia('#004')">✏️</button>
-          <button class="btn-action delete" title="Eliminar" (click)="eliminarAsistencia('#004')">🗑️</button>
-          <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia('#004')">👁️</button>
-        </td>
-      </tr>
-      <tr>
-        <td>#005</td>
-        <td>Laura Sánchez</td>
-        <td>17/11/2025</td>
-        <td>08:00</td>
-        <td>17:05</td>
-        <td>9h 5m</td>
-        <td><span class="status present">Presente</span></td>
-        <td>
-          <button class="btn-action edit" title="Editar" (click)="editarAsistencia('#005')">✏️</button>
-          <button class="btn-action delete" title="Eliminar" (click)="eliminarAsistencia('#005')">🗑️</button>
-          <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia('#005')">👁️</button>
+          <button class="btn-action edit" title="Editar" (click)="editarAsistencia(asistencia)">
+            ✏️
+          </button>
+          <button class="btn-action delete" title="Eliminar" (click)="eliminarAsistencia(asistencia.id!)">
+            🗑️
+          </button>
+          <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia(asistencia)">
+            👁️
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<!-- Modal Editar -->
-<div *ngIf="mostrarModalEditar" class="modal-overlay" (click)="cerrarModalEditar()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <h3>Editar Asistencia</h3>
-    <form class="asistencia-form">
-      <div class="form-group">
-        <label>Usuario *</label>
-        <select required>
-          <option value="">Seleccionar usuario...</option>
-          <option value="1">Ana Pérez</option>
-          <option value="2">Carlos Gómez</option>
-          <option value="3">María López</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Fecha *</label>
-        <input type="date" required>
-      </div>
-
-      <div class="form-group">
-        <label>Hora de Entrada *</label>
-        <input type="time" required>
-      </div>
-
-      <div class="form-group">
-        <label>Hora de Salida</label>
-        <input type="time">
-      </div>
-
-      <div class="form-group">
-        <label>Estado *</label>
-        <select required>
-          <option value="presente">Presente</option>
-          <option value="ausente">Ausente</option>
-          <option value="tardanza">Tardanza</option>
-        </select>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn primary">💾 Actualizar</button>
-        <button type="button" class="btn secondary" (click)="cerrarModalEditar()">❌ Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
-
 <!-- Modal Ver Detalle -->
-<div *ngIf="mostrarModalDetalle" class="modal-overlay" (click)="cerrarModalDetalle()">
+<div *ngIf="mostrarModalDetalle && asistenciaSeleccionada" class="modal-overlay" (click)="cerrarModalDetalle()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h3>Detalle de Asistencia</h3>
     <div class="detalle-info">
       <div class="info-row">
-        <strong>ID:</strong>
-        <span>#001</span>
-      </div>
-      <div class="info-row">
         <strong>Usuario:</strong>
-        <span>Ana Pérez</span>
+        <span>{{ asistenciaSeleccionada.nombreCompleto }}</span>
       </div>
       <div class="info-row">
         <strong>Fecha:</strong>
-        <span>18/11/2025</span>
+        <span>{{ formatearFecha(asistenciaSeleccionada.fecha) }}</span>
       </div>
       <div class="info-row">
         <strong>Hora de Entrada:</strong>
-        <span>08:05</span>
+        <span>{{ formatearHora(asistenciaSeleccionada.horaEntrada) }}</span>
       </div>
       <div class="info-row">
         <strong>Hora de Salida:</strong>
-        <span>17:00</span>
+        <span>{{ formatearHora(asistenciaSeleccionada.horaSalida) }}</span>
       </div>
       <div class="info-row">
         <strong>Horas Totales:</strong>
-        <span>8h 55m</span>
+        <span>{{ calcularHorasTrabajadas(asistenciaSeleccionada.horaEntrada, asistenciaSeleccionada.horaSalida) }}</span>
       </div>
       <div class="info-row">
         <strong>Estado:</strong>
-        <span class="status present">Presente</span>
+        <span class="status" [ngClass]="obtenerClaseEstado(asistenciaSeleccionada.estado)">
+          {{ obtenerTextoEstado(asistenciaSeleccionada.estado) }}
+        </span>
+      </div>
+      <div class="info-row" *ngIf="asistenciaSeleccionada.observaciones">
+        <strong>Observaciones:</strong>
+        <span>{{ asistenciaSeleccionada.observaciones }}</span>
       </div>
     </div>
     <div class="form-actions">

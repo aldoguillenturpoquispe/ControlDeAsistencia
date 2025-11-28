@@ -175,3 +175,8 @@
 .info-row span {
   color: #666;
 }
+
+.status.permission {
+  background: #0288d1;
+  color: #fff;
+}

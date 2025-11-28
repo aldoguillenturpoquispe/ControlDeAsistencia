@@ -1,73 +1,94 @@
 <section class="admin-asistencias">
-  <h2>Panel de Asistencias</h2>
-
-  <!-- Barra de acciones -->
-  <div class="toolbar">
-    <button class="btn primary" (click)="abrirModal()">➕ Nueva Asistencia</button>
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando asistencias...</p>
   </div>
 
-  <!-- Filtros -->
-  <div class="filters">
-    <label>
-      Fecha:
-      <input type="date" [(ngModel)]="filtroFecha">
-    </label>
-    <label>
-      Usuario:
-      <input type="text" placeholder="Buscar usuario..." [(ngModel)]="filtroUsuario">
-    </label>
-    <label>
-      Estado:
-      <select [(ngModel)]="filtroEstado">
-        <option value="">Todos</option>
-        <option value="presente">Presente</option>
-        <option value="ausente">Ausente</option>
-        <option value="tardanza">Tardanza</option>
-      </select>
-    </label>
-    <button class="btn filter" (click)="aplicarFiltros()">🔍 Filtrar</button>
-    <button class="btn secondary" (click)="limpiarFiltros()">🔄 Limpiar</button>
-  </div>
+  <!-- Contenido principal -->
+  <div *ngIf="!isLoading">
+    <h2>Panel de Asistencias</h2>
 
-  <!-- Estadísticas / Resumen -->
-  <div class="stats-container">
-    <div class="stat-card">
-      <h3>Total Registros</h3>
-      <p class="stat-number">45</p>
+    <!-- Barra de acciones -->
+    <div class="toolbar">
+      <button class="btn primary" (click)="abrirModal()">➕ Nueva Asistencia</button>
     </div>
-    <div class="stat-card">
-      <h3>Presentes Hoy</h3>
-      <p class="stat-number">32</p>
+
+    <!-- Filtros -->
+    <div class="filters">
+      <label>
+        Fecha:
+        <input type="date" [(ngModel)]="filtroFecha">
+      </label>
+      <label>
+        Usuario:
+        <input type="text" placeholder="Buscar usuario..." [(ngModel)]="filtroUsuario">
+      </label>
+      <label>
+        Estado:
+        <select [(ngModel)]="filtroEstado">
+          <option value="">Todos</option>
+          <option value="presente">Presente</option>
+          <option value="ausente">Ausente</option>
+          <option value="tardanza">Tardanza</option>
+          <option value="permiso">Permiso</option>
+        </select>
+      </label>
+      <button class="btn filter" (click)="aplicarFiltros()">🔍 Filtrar</button>
+      <button class="btn secondary" (click)="limpiarFiltros()">🔄 Limpiar</button>
     </div>
-    <div class="stat-card">
-      <h3>Ausentes Hoy</h3>
-      <p class="stat-number">8</p>
+
+    <!-- Estadísticas / Resumen -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <h3>Total Registros</h3>
+        <p class="stat-number">{{ totalRegistros }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Presentes Hoy</h3>
+        <p class="stat-number">{{ presentesHoy }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Ausentes Hoy</h3>
+        <p class="stat-number">{{ ausentesHoy }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Tardanzas</h3>
+        <p class="stat-number">{{ tardanzasHoy }}</p>
+      </div>
     </div>
-    <div class="stat-card">
-      <h3>Tardanzas</h3>
-      <p class="stat-number">5</p>
+
+    <!-- Mensaje si no hay datos -->
+    <div *ngIf="asistenciasFiltradas.length === 0" class="no-data">
+      <i class="fas fa-inbox"></i>
+      <p>No hay asistencias registradas</p>
+      <button class="btn primary" (click)="abrirModal()">Registrar primera asistencia</button>
+    </div>
+
+    <!-- Tabla de asistencias -->
+    <app-asistencia-tabla 
+      *ngIf="asistenciasFiltradas.length > 0"
+      [asistencias]="asistenciasPaginadas"
+      [paginaActual]="paginaActual"
+      [itemsPorPagina]="itemsPorPagina"
+      (eliminar)="eliminarAsistencia($event)">
+    </app-asistencia-tabla>
+
+    <!-- Paginación -->
+    <div class="pagination" *ngIf="asistenciasFiltradas.length > 0">
+      <button class="btn secondary" (click)="paginaAnterior()" [disabled]="paginaActual === 1">
+        « Anterior
+      </button>
+      <span class="page-info">Página {{ paginaActual }} de {{ totalPaginas }}</span>
+      <button class="btn secondary" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">
+        Siguiente »
+      </button>
     </div>
   </div>
 
-  <!-- Tabla de asistencias (COMPONENTE SEPARADO) -->
-  <app-asistencia-tabla></app-asistencia-tabla>
-
-  <!-- Paginación -->
-  <div class="pagination">
-    <button class="btn secondary" (click)="paginaAnterior()" [disabled]="paginaActual === 1">« Anterior</button>
-    <span class="page-info">Página {{paginaActual}} de {{totalPaginas}}</span>
-    <button class="btn secondary" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">Siguiente »</button>
-  </div>
-
-  <!-- Modal formulario (COMPONENTE SEPARADO) -->
-  <app-asistencia-form-modal *ngIf="mostrarModal" (cerrar)="cerrarModal()"></app-asistencia-form-modal>
-  
-  <!-- Mensajes de confirmación -->
-  <div class="toast success" style="display: none;">
-    ✅ Asistencia guardada correctamente
-  </div>
-
-  <div class="toast error" style="display: none;">
-    ❌ Error al eliminar la asistencia
-  </div>
+  <!-- Modal formulario -->
+  <app-asistencia-form-modal 
+    *ngIf="mostrarModal" 
+    (cerrar)="cerrarModal($event)">
+  </app-asistencia-form-modal>
 </section>
