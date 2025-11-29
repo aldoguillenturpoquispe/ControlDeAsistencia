@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StatsCharts } from './stats-charts/stats-charts';
 import { StatsResumenEstados } from './stats-resumen-estados/stats-resumen-estados';
 import { StatsTopUsuarios } from './stats-top-usuarios/stats-top-usuarios';
-import { RouterLink } from '@angular/router';
+import { AsistenciaService } from '../../services/asistencia.service';
+import { UsuarioService } from '../../services/usuario.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -22,64 +23,317 @@ import * as XLSX from 'xlsx';
   templateUrl: './estadisticas.html',
   styleUrl: './estadisticas.css',
 })
-export class Estadisticas {
+export class Estadisticas implements OnInit {
+  private asistenciaService = inject(AsistenciaService);
+  private usuarioService = inject(UsuarioService);
+
   // Variables para los filtros
   periodo: string = 'mes';
-  fechaDesde: string = '2025-11-01';
-  fechaHasta: string = '2025-11-20';
+  fechaDesde: string = '';
+  fechaHasta: string = '';
 
-  // Datos extraídos del HTML
+  // Estado de carga
+  isLoading = true;
+
+  // Datos de estadísticas
   datosEstadisticas = {
-    totalUsuarios: 120,
-    asistenciasHoy: 95,
-    faltasHoy: 25,
-    porcentajeAsistencia: 79.2,
-    tardanzasMes: 38,
-    promedioHoras: 8.2,
+    totalUsuarios: 0,
+    asistenciasHoy: 0,
+    faltasHoy: 0,
+    porcentajeAsistencia: 0,
+    tardanzasMes: 0,
+    promedioHoras: 0,
     diasLaborables: 22,
-    mejorAsistencia: 98
+    mejorAsistencia: 0
   };
 
-  // Función para actualizar estadísticas
-  actualizarEstadisticas() {
-    console.log('Actualizando estadísticas con:', {
+  async ngOnInit(): Promise<void> {
+    this.establecerFechasIniciales();
+    await this.cargarEstadisticas();
+  }
+
+  // ==========================================
+  // ESTABLECER FECHAS INICIALES
+  // ==========================================
+  establecerFechasIniciales(): void {
+    const hoy = new Date();
+    const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+    
+    this.fechaHasta = hoy.toISOString().split('T')[0];
+    this.fechaDesde = primerDiaMes.toISOString().split('T')[0];
+  }
+
+  // ==========================================
+  // CALCULAR FECHAS SEGÚN PERÍODO
+  // ==========================================
+  calcularFechasPorPeriodo(): { desde: Date; hasta: Date } {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    
+    let desde: Date;
+    let hasta: Date = new Date(hoy);
+
+    switch (this.periodo) {
+      case 'hoy':
+        desde = new Date(hoy);
+        break;
+
+      case 'semana':
+        // Calcular inicio de semana (lunes)
+        const diaSemana = hoy.getDay();
+        const diasDesdeInicio = diaSemana === 0 ? 6 : diaSemana - 1;
+        desde = new Date(hoy);
+        desde.setDate(hoy.getDate() - diasDesdeInicio);
+        break;
+
+      case 'mes':
+        desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        break;
+
+      case 'anio':
+        desde = new Date(hoy.getFullYear(), 0, 1);
+        break;
+
+      default:
+        // Si hay fechas personalizadas, usarlas
+        if (this.fechaDesde && this.fechaHasta) {
+          desde = new Date(this.fechaDesde);
+          hasta = new Date(this.fechaHasta);
+        } else {
+          desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        }
+    }
+
+    // Actualizar los inputs de fecha con el período calculado
+    this.fechaDesde = desde.toISOString().split('T')[0];
+    this.fechaHasta = hasta.toISOString().split('T')[0];
+
+    return { desde, hasta };
+  }
+
+  // ==========================================
+  // CARGAR ESTADÍSTICAS CON FILTROS
+  // ==========================================
+  async cargarEstadisticas(): Promise<void> {
+    try {
+      this.isLoading = true;
+
+      // Calcular fechas según el período seleccionado
+      const { desde, hasta } = this.calcularFechasPorPeriodo();
+
+      console.log('📅 Cargando estadísticas desde:', desde, 'hasta:', hasta);
+
+      // Cargar datos en paralelo
+      const [usuarios, asistenciasHoy, todasAsistencias] = await Promise.all([
+        this.usuarioService.obtenerUsuarios(),
+        this.asistenciaService.contarPorEstadoHoy(),
+        this.asistenciaService.obtenerAsistencias()
+      ]);
+
+      // Total de usuarios
+      this.datosEstadisticas.totalUsuarios = usuarios.length;
+
+      // Filtrar asistencias por rango de fechas
+      const asistenciasFiltradas = todasAsistencias.filter(a => {
+        const fechaAsistencia = new Date(a.fecha);
+        fechaAsistencia.setHours(0, 0, 0, 0);
+        return fechaAsistencia >= desde && fechaAsistencia <= hasta;
+      });
+
+      console.log('📊 Asistencias filtradas:', asistenciasFiltradas.length);
+
+      // Estadísticas de HOY (siempre del día actual, no filtradas)
+      this.datosEstadisticas.asistenciasHoy = asistenciasHoy.presentes;
+      this.datosEstadisticas.faltasHoy = asistenciasHoy.ausentes;
+
+      // Porcentaje de asistencia del PERÍODO FILTRADO
+      const presentesPeriodo = asistenciasFiltradas.filter(
+        a => a.estado === 'presente' || a.estado === 'tardanza'
+      ).length;
+      
+      const diasLaborablesPeriodo = this.calcularDiasLaborables(desde, hasta);
+      const totalEsperado = this.datosEstadisticas.totalUsuarios * diasLaborablesPeriodo;
+
+      if (totalEsperado > 0) {
+        this.datosEstadisticas.porcentajeAsistencia = parseFloat(
+          ((presentesPeriodo / totalEsperado) * 100).toFixed(1)
+        );
+      } else {
+        this.datosEstadisticas.porcentajeAsistencia = 0;
+      }
+
+      // Tardanzas del PERÍODO FILTRADO
+      const tardanzasPeriodo = asistenciasFiltradas.filter(
+        a => a.estado === 'tardanza'
+      );
+      this.datosEstadisticas.tardanzasMes = tardanzasPeriodo.length;
+
+      // Calcular promedio de horas trabajadas del PERÍODO FILTRADO
+      const asistenciasConSalida = asistenciasFiltradas.filter(
+        a => a.horaSalida && (a.estado === 'presente' || a.estado === 'tardanza')
+      );
+      
+      if (asistenciasConSalida.length > 0) {
+        const totalHoras = asistenciasConSalida.reduce((sum, a) => {
+          return sum + this.calcularHorasTrabajadas(a.horaEntrada, a.horaSalida!);
+        }, 0);
+        this.datosEstadisticas.promedioHoras = parseFloat(
+          (totalHoras / asistenciasConSalida.length).toFixed(1)
+        );
+      } else {
+        this.datosEstadisticas.promedioHoras = 0;
+      }
+
+      // Días laborables del período
+      this.datosEstadisticas.diasLaborables = diasLaborablesPeriodo;
+
+      // Mejor asistencia (máximo entre el porcentaje actual y registros históricos)
+      const porcentajesPorDia = this.calcularPorcentajesPorDia(
+        asistenciasFiltradas, 
+        usuarios.length,
+        desde,
+        hasta
+      );
+      
+      this.datosEstadisticas.mejorAsistencia = porcentajesPorDia.length > 0
+        ? Math.max(...porcentajesPorDia, this.datosEstadisticas.porcentajeAsistencia)
+        : this.datosEstadisticas.porcentajeAsistencia;
+
+      console.log('✅ Estadísticas cargadas:', this.datosEstadisticas);
+
+    } catch (error) {
+      console.error('❌ Error al cargar estadísticas:', error);
+      alert('Error al cargar las estadísticas');
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  // ==========================================
+  // CALCULAR DÍAS LABORABLES (LUNES A VIERNES)
+  // ==========================================
+  calcularDiasLaborables(desde: Date, hasta: Date): number {
+    let diasLaborables = 0;
+    const fechaActual = new Date(desde);
+
+    while (fechaActual <= hasta) {
+      const diaSemana = fechaActual.getDay();
+      // Contar solo lunes (1) a viernes (5)
+      if (diaSemana !== 0 && diaSemana !== 6) {
+        diasLaborables++;
+      }
+      fechaActual.setDate(fechaActual.getDate() + 1);
+    }
+
+    return diasLaborables;
+  }
+
+  // ==========================================
+  // CALCULAR PORCENTAJES POR DÍA
+  // ==========================================
+  calcularPorcentajesPorDia(
+    asistencias: any[], 
+    totalUsuarios: number,
+    desde: Date,
+    hasta: Date
+  ): number[] {
+    const porcentajes: number[] = [];
+    const fechaActual = new Date(desde);
+
+    while (fechaActual <= hasta) {
+      const fechaStr = fechaActual.toISOString().split('T')[0];
+      
+      const presentesDia = asistencias.filter(a => {
+        const fechaAsistencia = new Date(a.fecha).toISOString().split('T')[0];
+        return fechaAsistencia === fechaStr && 
+               (a.estado === 'presente' || a.estado === 'tardanza');
+      }).length;
+
+      if (totalUsuarios > 0) {
+        const porcentaje = (presentesDia / totalUsuarios) * 100;
+        porcentajes.push(porcentaje);
+      }
+
+      fechaActual.setDate(fechaActual.getDate() + 1);
+    }
+
+    return porcentajes;
+  }
+
+  // ==========================================
+  // ACTUALIZAR ESTADÍSTICAS (APLICAR FILTROS)
+  // ==========================================
+  async actualizarEstadisticas(): Promise<void> {
+    // Validar que las fechas sean correctas
+    if (this.fechaDesde && this.fechaHasta) {
+      const desde = new Date(this.fechaDesde);
+      const hasta = new Date(this.fechaHasta);
+
+      if (desde > hasta) {
+        alert('⚠️ La fecha "Desde" no puede ser mayor que la fecha "Hasta"');
+        return;
+      }
+    }
+
+    console.log('🔄 Actualizando estadísticas con filtros:', {
       periodo: this.periodo,
       desde: this.fechaDesde,
       hasta: this.fechaHasta
     });
+
+    // Recargar estadísticas con los nuevos filtros
+    await this.cargarEstadisticas();
   }
 
-  // 📥 Exportar a PDF
-  exportarPDF() {
-    const doc = new jsPDF();
-    const fechaActual = new Date().toLocaleDateString('es-ES');
+  // ==========================================
+  // CALCULAR HORAS TRABAJADAS
+  // ==========================================
+  calcularHorasTrabajadas(entrada: string, salida: string): number {
+    try {
+      const [horaE, minE] = entrada.split(':').map(Number);
+      const [horaS, minS] = salida.split(':').map(Number);
 
-    // Título
+      let totalMinutos = (horaS * 60 + minS) - (horaE * 60 + minE);
+      
+      if (totalMinutos < 0) {
+        totalMinutos += 24 * 60;
+      }
+
+      return totalMinutos / 60;
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  // ==========================================
+  // EXPORTAR PDF
+  // ==========================================
+  exportarPDF(): void {
+    const doc = new jsPDF();
+    const fechaActual = new Date().toLocaleDateString('es-PE');
+
     doc.setFontSize(20);
     doc.setTextColor(10, 35, 66);
     doc.text('Panel de Estadísticas', 105, 20, { align: 'center' });
 
-    // Info del período
     doc.setFontSize(11);
     doc.setTextColor(100);
     doc.text(`Generado: ${fechaActual}`, 14, 35);
     doc.text(`Período: ${this.periodo}`, 14, 42);
     doc.text(`Desde: ${this.fechaDesde} | Hasta: ${this.fechaHasta}`, 14, 49);
 
-    // Línea separadora
     doc.setDrawColor(10, 35, 66);
     doc.line(14, 53, 196, 53);
 
-    // Tabla de estadísticas principales
     doc.setFontSize(14);
     doc.setTextColor(10, 35, 66);
     doc.text('Estadísticas Principales', 14, 62);
 
     const datosTabla = [
       ['Total Usuarios', this.datosEstadisticas.totalUsuarios.toString(), 'Registrados activos'],
-      ['Asistencias Hoy', this.datosEstadisticas.asistenciasHoy.toString(), '+5 vs ayer'],
-      ['Faltas Hoy', this.datosEstadisticas.faltasHoy.toString(), '-2 vs ayer'],
-      ['Porcentaje Asistencia', `${this.datosEstadisticas.porcentajeAsistencia}%`, 'Del mes actual']
+      ['Asistencias Hoy', this.datosEstadisticas.asistenciasHoy.toString(), 'Presentes'],
+      ['Faltas Hoy', this.datosEstadisticas.faltasHoy.toString(), 'Ausentes'],
+      ['Porcentaje Asistencia', `${this.datosEstadisticas.porcentajeAsistencia}%`, 'Del período seleccionado']
     ];
 
     autoTable(doc, {
@@ -95,12 +349,11 @@ export class Estadisticas {
       styles: { fontSize: 10, cellPadding: 5 }
     });
 
-    // Estadísticas secundarias
     doc.setFontSize(14);
     doc.text('Resumen Adicional', 14, (doc as any).lastAutoTable.finalY + 15);
 
     const datosSecundarios = [
-      ['Tardanzas Este Mes', this.datosEstadisticas.tardanzasMes.toString()],
+      ['Tardanzas del Período', this.datosEstadisticas.tardanzasMes.toString()],
       ['Promedio Horas/Día', `${this.datosEstadisticas.promedioHoras}h`],
       ['Días Laborables', this.datosEstadisticas.diasLaborables.toString()],
       ['Mejor Asistencia', `${this.datosEstadisticas.mejorAsistencia}%`]
@@ -118,179 +371,64 @@ export class Estadisticas {
       styles: { fontSize: 10 }
     });
 
-    // Footer
     doc.setFontSize(9);
     doc.setTextColor(150);
     doc.text('Sistema de Control de Asistencias', 105, 280, { align: 'center' });
 
-    // Guardar
     doc.save(`estadisticas_${fechaActual.replace(/\//g, '-')}.pdf`);
     console.log('✅ PDF exportado correctamente');
   }
 
-// 📊 Exportar a Excel (MEJORADO)
-exportarExcel() {
-  const wb = XLSX.utils.book_new();
-  const fechaActual = new Date().toLocaleDateString('es-ES');
+  // ==========================================
+  // EXPORTAR EXCEL
+  // ==========================================
+  exportarExcel(): void {
+    const wb = XLSX.utils.book_new();
+    const fechaActual = new Date().toLocaleDateString('es-PE');
 
-  // ============ HOJA 1: RESUMEN EJECUTIVO ============
-  const datosResumen = [
-    ['PANEL DE ESTADÍSTICAS - CONTROL DE ASISTENCIAS'],
-    [''],
-    ['Información del Reporte'],
-    ['Fecha de Generación:', fechaActual],
-    ['Período Seleccionado:', this.periodo],
-    ['Rango de Fechas:', `${this.fechaDesde} al ${this.fechaHasta}`],
-    [''],
-    [''],
-    ['TARJETAS PRINCIPALES'],
-    ['Indicador', 'Valor', 'Comparación', 'Estado'],
-    ['👥 Total Usuarios', this.datosEstadisticas.totalUsuarios, 'Registrados activos', '✓'],
-    ['✅ Asistencias Hoy', this.datosEstadisticas.asistenciasHoy, '+5 vs ayer', '↑'],
-    ['❌ Faltas Hoy', this.datosEstadisticas.faltasHoy, '-2 vs ayer', '↓'],
-    [`📊 Porcentaje Asistencia`, `${this.datosEstadisticas.porcentajeAsistencia}%`, 'Del mes actual', '⚠'],
-    [''],
-    [''],
-    ['MÉTRICAS SECUNDARIAS'],
-    ['Métrica', 'Valor', 'Descripción'],
-    ['Tardanzas Este Mes', this.datosEstadisticas.tardanzasMes, 'Total de llegadas tarde'],
-    ['Promedio Horas/Día', `${this.datosEstadisticas.promedioHoras}h`, 'Promedio de horas trabajadas'],
-    ['Días Laborables', this.datosEstadisticas.diasLaborables, 'Días hábiles del período'],
-    ['Mejor Asistencia', `${this.datosEstadisticas.mejorAsistencia}%`, 'Porcentaje más alto registrado']
-  ];
+    const datosResumen = [
+      ['PANEL DE ESTADÍSTICAS - CONTROL DE ASISTENCIAS'],
+      [''],
+      ['Información del Reporte'],
+      ['Fecha de Generación:', fechaActual],
+      ['Período Seleccionado:', this.periodo],
+      ['Rango de Fechas:', `${this.fechaDesde} al ${this.fechaHasta}`],
+      [''],
+      ['ESTADÍSTICAS PRINCIPALES'],
+      ['Indicador', 'Valor', 'Descripción'],
+      ['Total Usuarios', this.datosEstadisticas.totalUsuarios, 'Registrados activos'],
+      ['Asistencias Hoy', this.datosEstadisticas.asistenciasHoy, 'Presentes'],
+      ['Faltas Hoy', this.datosEstadisticas.faltasHoy, 'Ausentes'],
+      ['Porcentaje Asistencia', `${this.datosEstadisticas.porcentajeAsistencia}%`, 'Del período seleccionado'],
+      [''],
+      ['MÉTRICAS SECUNDARIAS'],
+      ['Métrica', 'Valor', 'Descripción'],
+      ['Tardanzas del Período', this.datosEstadisticas.tardanzasMes, 'Total de tardanzas'],
+      ['Promedio Horas/Día', `${this.datosEstadisticas.promedioHoras}h`, 'Promedio trabajado'],
+      ['Días Laborables', this.datosEstadisticas.diasLaborables, 'Días hábiles'],
+      ['Mejor Asistencia', `${this.datosEstadisticas.mejorAsistencia}%`, 'Porcentaje máximo']
+    ];
 
-  const wsResumen = XLSX.utils.aoa_to_sheet(datosResumen);
+    const wsResumen = XLSX.utils.aoa_to_sheet(datosResumen);
+    XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen');
 
-  // Configurar anchos de columna
-  wsResumen['!cols'] = [
-    { wch: 28 },  // Columna A
-    { wch: 18 },  // Columna B
-    { wch: 28 },  // Columna C
-    { wch: 12 }   // Columna D
-  ];
+    const nombreArchivo = `Estadisticas_${this.periodo}_${fechaActual.replace(/\//g, '-')}.xlsx`;
+    XLSX.writeFile(wb, nombreArchivo);
+    console.log('✅ Excel exportado correctamente');
+  }
 
-  // Merge de celdas para el título
-  wsResumen['!merges'] = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 3 } },  // Título principal
-    { s: { r: 2, c: 0 }, e: { r: 2, c: 1 } },  // "Información del Reporte"
-    { s: { r: 8, c: 0 }, e: { r: 8, c: 3 } },  // "TARJETAS PRINCIPALES"
-    { s: { r: 16, c: 0 }, e: { r: 16, c: 2 } } // "MÉTRICAS SECUNDARIAS"
-  ];
-
-  XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen Ejecutivo');
-
-
-  // ============ HOJA 2: ANÁLISIS DETALLADO ============
-  const analisis = [
-    ['ANÁLISIS DETALLADO DE ASISTENCIAS'],
-    [''],
-    ['Período de Análisis:', `${this.fechaDesde} - ${this.fechaHasta}`],
-    [''],
-    ['DISTRIBUCIÓN POR ESTADO'],
-    ['Estado', 'Cantidad', 'Porcentaje', 'Tendencia'],
-    ['Presentes', this.datosEstadisticas.asistenciasHoy, 
-     `${((this.datosEstadisticas.asistenciasHoy / this.datosEstadisticas.totalUsuarios) * 100).toFixed(1)}%`, 
-     'Estable'],
-    ['Ausentes', this.datosEstadisticas.faltasHoy, 
-     `${((this.datosEstadisticas.faltasHoy / this.datosEstadisticas.totalUsuarios) * 100).toFixed(1)}%`, 
-     'Disminuyendo'],
-    ['Tardanzas', this.datosEstadisticas.tardanzasMes, 
-     `${((this.datosEstadisticas.tardanzasMes / this.datosEstadisticas.totalUsuarios) * 100).toFixed(1)}%`, 
-     'Variable'],
-    [''],
-    ['INDICADORES DE RENDIMIENTO (KPIs)'],
-    ['Indicador', 'Valor Actual', 'Meta', 'Cumplimiento'],
-    ['Tasa de Asistencia', `${this.datosEstadisticas.porcentajeAsistencia}%`, '85%', 
-     this.datosEstadisticas.porcentajeAsistencia >= 85 ? 'Cumplido ✓' : 'Por mejorar ⚠'],
-    ['Promedio Horas Diarias', `${this.datosEstadisticas.promedioHoras}h`, '8h', 
-     this.datosEstadisticas.promedioHoras >= 8 ? 'Cumplido ✓' : 'Por mejorar ⚠'],
-    ['Tasa de Puntualidad', `${(100 - (this.datosEstadisticas.tardanzasMes / this.datosEstadisticas.totalUsuarios * 100)).toFixed(1)}%`, 
-     '90%', 'En progreso'],
-    [''],
-    ['COMPARATIVA TEMPORAL'],
-    ['Período', 'Asistencias', 'Cambio'],
-    ['Hoy', this.datosEstadisticas.asistenciasHoy, '+5'],
-    ['Ayer', this.datosEstadisticas.asistenciasHoy - 5, 'Base'],
-    ['Promedio Semanal', Math.round(this.datosEstadisticas.asistenciasHoy * 0.95), '-5%'],
-    ['Promedio Mensual', Math.round(this.datosEstadisticas.asistenciasHoy * 0.92), '-8%']
-  ];
-
-  const wsAnalisis = XLSX.utils.aoa_to_sheet(analisis);
-
-  wsAnalisis['!cols'] = [
-    { wch: 25 },
-    { wch: 18 },
-    { wch: 15 },
-    { wch: 20 }
-  ];
-
-  wsAnalisis['!merges'] = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 3 } },
-    { s: { r: 4, c: 0 }, e: { r: 4, c: 3 } },
-    { s: { r: 10, c: 0 }, e: { r: 10, c: 3 } },
-    { s: { r: 16, c: 0 }, e: { r: 16, c: 2 } }
-  ];
-
-  XLSX.utils.book_append_sheet(wb, wsAnalisis, 'Análisis Detallado');
-
-
-  // ============ HOJA 3: DATOS CRUDOS ============
-  const datosCrudos = [
-    ['DATOS CRUDOS - EXPORTACIÓN COMPLETA'],
-    ['Generado:', fechaActual, '', 'Período:', this.periodo],
-    [''],
-    ['TODAS LAS MÉTRICAS'],
-    ['Métrica', 'Valor', 'Tipo', 'Unidad'],
-    ['Total Usuarios', this.datosEstadisticas.totalUsuarios, 'Contador', 'usuarios'],
-    ['Asistencias Hoy', this.datosEstadisticas.asistenciasHoy, 'Contador', 'personas'],
-    ['Faltas Hoy', this.datosEstadisticas.faltasHoy, 'Contador', 'personas'],
-    ['Porcentaje Asistencia', this.datosEstadisticas.porcentajeAsistencia, 'Porcentaje', '%'],
-    ['Tardanzas Mes', this.datosEstadisticas.tardanzasMes, 'Contador', 'eventos'],
-    ['Promedio Horas Día', this.datosEstadisticas.promedioHoras, 'Promedio', 'horas'],
-    ['Días Laborables', this.datosEstadisticas.diasLaborables, 'Contador', 'días'],
-    ['Mejor Asistencia', this.datosEstadisticas.mejorAsistencia, 'Porcentaje', '%'],
-    [''],
-    ['CÁLCULOS DERIVADOS'],
-    ['Fórmula', 'Resultado'],
-    ['Total Registros Hoy', this.datosEstadisticas.asistenciasHoy + this.datosEstadisticas.faltasHoy],
-    ['Tasa de Ausencia', `${((this.datosEstadisticas.faltasHoy / this.datosEstadisticas.totalUsuarios) * 100).toFixed(2)}%`],
-    ['Usuarios sin Registro', this.datosEstadisticas.totalUsuarios - (this.datosEstadisticas.asistenciasHoy + this.datosEstadisticas.faltasHoy)],
-    ['Horas Totales Trabajadas (estimado)', `${(this.datosEstadisticas.asistenciasHoy * this.datosEstadisticas.promedioHoras).toFixed(1)}h`]
-  ];
-
-  const wsCrudos = XLSX.utils.aoa_to_sheet(datosCrudos);
-
-  wsCrudos['!cols'] = [
-    { wch: 30 },
-    { wch: 20 },
-    { wch: 15 },
-    { wch: 12 }
-  ];
-
-  wsCrudos['!merges'] = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 3 } },
-    { s: { r: 3, c: 0 }, e: { r: 3, c: 3 } },
-    { s: { r: 14, c: 0 }, e: { r: 14, c: 1 } }
-  ];
-
-  XLSX.utils.book_append_sheet(wb, wsCrudos, 'Datos Crudos');
-
-
-  // ============ GUARDAR ARCHIVO ============
-  const nombreArchivo = `Estadisticas_Asistencias_${this.periodo}_${fechaActual.replace(/\//g, '-')}.xlsx`;
-  XLSX.writeFile(wb, nombreArchivo);
-  
-}
-
-  // 📧 Enviar Reporte
-  enviarReporte() {
+  // ==========================================
+  // ENVIAR REPORTE
+  // ==========================================
+  enviarReporte(): void {
     const email = prompt('Ingrese el correo electrónico de destino:');
     
     if (email && email.includes('@')) {
       console.log('Enviando reporte a:', email);
+      console.log('Período:', this.periodo);
+      console.log('Rango:', this.fechaDesde, '-', this.fechaHasta);
       console.log('Datos:', this.datosEstadisticas);
       
-      // Simular envío (aquí integrarías tu backend)
       setTimeout(() => {
         alert(`✅ Reporte enviado exitosamente a ${email}`);
       }, 1000);

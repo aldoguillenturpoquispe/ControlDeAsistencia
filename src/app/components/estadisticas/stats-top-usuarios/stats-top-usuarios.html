@@ -1,6 +1,19 @@
 <div class="top-usuarios">
   <h3>🏆 Top 10 - Mejor Asistencia del Mes</h3>
-  <table class="stats-table">
+
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando ranking...</p>
+  </div>
+
+  <!-- Mensaje si no hay datos -->
+  <div *ngIf="!isLoading && topUsuarios.length === 0" class="no-data">
+    <p>No hay datos disponibles para mostrar</p>
+  </div>
+
+  <!-- Tabla -->
+  <table class="stats-table" *ngIf="!isLoading && topUsuarios.length > 0">
     <thead>
       <tr>
         <th>#</th>
@@ -12,45 +25,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>María López</td>
-        <td>22</td>
-        <td>0</td>
-        <td>0</td>
-        <td><span class="badge success">100%</span></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Juan Martínez</td>
-        <td>22</td>
-        <td>1</td>
-        <td>0</td>
-        <td><span class="badge success">95.5%</span></td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>Ana Pérez</td>
-        <td>21</td>
-        <td>0</td>
-        <td>1</td>
-        <td><span class="badge success">95.5%</span></td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td>Carlos Gómez</td>
-        <td>21</td>
-        <td>1</td>
-        <td>1</td>
-        <td><span class="badge warning">91.3%</span></td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td>Laura Sánchez</td>
-        <td>20</td>
-        <td>2</td>
-        <td>2</td>
-        <td><span class="badge warning">87.0%</span></td>
+      <tr *ngFor="let usuario of topUsuarios; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ usuario.usuario }}</td>
+        <td>{{ usuario.asistencias }}</td>
+        <td>{{ usuario.tardanzas }}</td>
+        <td>{{ usuario.faltas }}</td>
+        <td>
+          <span class="badge" [ngClass]="obtenerClaseBadge(usuario.porcentaje)">
+            {{ usuario.porcentaje }}%
+          </span>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -1,90 +1,107 @@
 <section class="admin-stats">
-  <h2>Panel de Estadísticas</h2>
-
-  <!-- Filtros de fecha -->
-  <div class="filters-stats">
-    <label>
-      Período:
-      <select [(ngModel)]="periodo">
-        <option value="hoy">Hoy</option>
-        <option value="semana">Esta Semana</option>
-        <option value="mes">Este Mes</option>
-        <option value="anio">Este Año</option>
-      </select>
-    </label>
-    <label>
-      Desde:
-      <input type="date" [(ngModel)]="fechaDesde">
-    </label>
-    <label>
-      Hasta:
-      <input type="date" [(ngModel)]="fechaHasta">
-    </label>
-    <button class="btn-filter" (click)="actualizarEstadisticas()">🔍 Actualizar</button>
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando estadísticas...</p>
   </div>
 
-  <!-- Resumen en tarjetas principales -->
-  <div class="cards">
-    <div class="card">
-      <div class="card-icon">👥</div>
-      <h3>Total Usuarios</h3>
-      <p class="value">120</p>
-      <span class="card-subtitle">Registrados activos</span>
+  <!-- Contenido -->
+  <div *ngIf="!isLoading">
+    <h2>Panel de Estadísticas</h2>
+
+    <!-- Filtros de fecha -->
+    <div class="filters-stats">
+      <label>
+        Período:
+        <select [(ngModel)]="periodo" (change)="actualizarEstadisticas()">
+          <option value="hoy">Hoy</option>
+          <option value="semana">Esta Semana</option>
+          <option value="mes">Este Mes</option>
+          <option value="anio">Este Año</option>
+        </select>
+      </label>
+      <label>
+        Desde:
+        <input type="date" [(ngModel)]="fechaDesde">
+      </label>
+      <label>
+        Hasta:
+        <input type="date" [(ngModel)]="fechaHasta">
+      </label>
+      <button class="btn-filter" (click)="actualizarEstadisticas()">🔍 Actualizar</button>
     </div>
-    <div class="card">
-      <div class="card-icon">✅</div>
-      <h3>Asistencias Hoy</h3>
-      <p class="value success">95</p>
-      <span class="card-subtitle">+5 vs ayer</span>
+
+    <!-- Resumen en tarjetas principales -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <h3>Total Usuarios</h3>
+        <p class="value">{{ datosEstadisticas.totalUsuarios }}</p>
+        <span class="card-subtitle">Registrados activos</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">✅</div>
+        <h3>Asistencias Hoy</h3>
+        <p class="value success">{{ datosEstadisticas.asistenciasHoy }}</p>
+        <span class="card-subtitle">Presentes</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">❌</div>
+        <h3>Faltas Hoy</h3>
+        <p class="value danger">{{ datosEstadisticas.faltasHoy }}</p>
+        <span class="card-subtitle">Ausentes</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Porcentaje Asistencia</h3>
+        <p class="value warning">{{ datosEstadisticas.porcentajeAsistencia }}%</p>
+        <span class="card-subtitle">Del período seleccionado</span>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-icon">❌</div>
-      <h3>Faltas Hoy</h3>
-      <p class="value danger">25</p>
-      <span class="card-subtitle">-2 vs ayer</span>
+
+    <!-- Tarjetas adicionales de resumen -->
+    <div class="cards-secondary">
+      <div class="card-small">
+        <h4>Tardanzas del Período</h4>
+        <p class="value-small">{{ datosEstadisticas.tardanzasMes }}</p>
+      </div>
+      <div class="card-small">
+        <h4>Promedio Horas/Día</h4>
+        <p class="value-small">{{ datosEstadisticas.promedioHoras }}h</p>
+      </div>
+      <div class="card-small">
+        <h4>Días Laborables</h4>
+        <p class="value-small">{{ datosEstadisticas.diasLaborables }}</p>
+      </div>
+      <div class="card-small">
+        <h4>Mejor Asistencia</h4>
+        <p class="value-small">{{ datosEstadisticas.mejorAsistencia }}%</p>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-icon">📊</div>
-      <h3>Porcentaje Asistencia</h3>
-      <p class="value warning">79.2%</p>
-      <span class="card-subtitle">Del mes actual</span>
+
+    <!-- Gráficos (COMPONENTE SEPARADO con inputs) -->
+    <app-stats-charts 
+      [fechaDesde]="fechaDesde" 
+      [fechaHasta]="fechaHasta">
+    </app-stats-charts>
+    
+    <!-- Tabla de top usuarios (COMPONENTE SEPARADO con inputs) -->
+    <app-stats-top-usuarios 
+      [fechaDesde]="fechaDesde" 
+      [fechaHasta]="fechaHasta">
+    </app-stats-top-usuarios>
+
+    <!-- Resumen por estado (COMPONENTE SEPARADO con inputs) -->
+    <app-stats-resumen-estados 
+      [fechaDesde]="fechaDesde" 
+      [fechaHasta]="fechaHasta">
+    </app-stats-resumen-estados>
+
+    <!-- Botones de exportación -->
+    <div class="export-actions">
+      <button class="btn-export" (click)="exportarPDF()">📥 Exportar Estadísticas PDF</button>
+      <button class="btn-export" (click)="exportarExcel()">📊 Exportar Excel</button>
+      <button class="btn-export" (click)="enviarReporte()">📧 Enviar Reporte</button>
     </div>
   </div>
-
-  <!-- Tarjetas adicionales de resumen -->
-  <div class="cards-secondary">
-    <div class="card-small">
-      <h4>Tardanzas Este Mes</h4>
-      <p class="value-small">38</p>
-    </div>
-    <div class="card-small">
-      <h4>Promedio Horas/Día</h4>
-      <p class="value-small">8.2h</p>
-    </div>
-    <div class="card-small">
-      <h4>Días Laborables</h4>
-      <p class="value-small">22</p>
-    </div>
-    <div class="card-small">
-      <h4>Mejor Asistencia</h4>
-      <p class="value-small">98%</p>
-    </div>
-  </div>
-
-  <!-- Gráficos (COMPONENTE SEPARADO) -->
-  <app-stats-charts></app-stats-charts>
-  
-  <!-- Tabla de top usuarios (COMPONENTE SEPARADO) -->
-  <app-stats-top-usuarios></app-stats-top-usuarios>
-
-  <!-- Resumen por estado (COMPONENTE SEPARADO) -->
-  <app-stats-resumen-estados></app-stats-resumen-estados>
-
-<!-- Botones de exportación -->
-  <div class="export-actions">
-    <button class="btn-export" (click)="exportarPDF()">📥 Exportar Estadísticas PDF</button>
-    <button class="btn-export" (click)="exportarExcel()">📊 Exportar Excel</button>
-    <button class="btn-export" (click)="enviarReporte()">📧 Enviar Reporte</button>
-  </div>
-
 </section>

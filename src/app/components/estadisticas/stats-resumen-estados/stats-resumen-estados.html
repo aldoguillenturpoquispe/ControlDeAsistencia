@@ -1,20 +1,50 @@
 <div class="estado-resumen">
   <h3>📋 Resumen por Estado (Últimos 30 días)</h3>
-  <div class="estado-grid">
+
+  <!-- Loader -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando resumen...</p>
+  </div>
+
+  <!-- Mensaje si no hay datos -->
+  <div *ngIf="!isLoading && total === 0" class="no-data">
+    <p>No hay registros de asistencias en los últimos 30 días</p>
+  </div>
+
+  <!-- Grid de estados -->
+  <div class="estado-grid" *ngIf="!isLoading && total > 0">
+    <!-- Presentes -->
     <div class="estado-item">
-      <div class="estado-bar presente" style="width: 79%;">
-        <span>Presentes: 1,896</span>
+      <div class="estado-bar presente" [style.width.%]="porcentajePresentes">
+        <span>Presentes: {{ presentes }} ({{ porcentajePresentes.toFixed(1) }}%)</span>
       </div>
     </div>
+
+    <!-- Tardanzas -->
     <div class="estado-item">
-      <div class="estado-bar tardanza" style="width: 12%;">
-        <span>Tardanzas: 288</span>
+      <div class="estado-bar tardanza" [style.width.%]="porcentajeTardanzas">
+        <span>Tardanzas: {{ tardanzas }} ({{ porcentajeTardanzas.toFixed(1) }}%)</span>
       </div>
     </div>
+
+    <!-- Ausentes -->
     <div class="estado-item">
-      <div class="estado-bar ausente" style="width: 9%;">
-        <span>Ausentes: 216</span>
+      <div class="estado-bar ausente" [style.width.%]="porcentajeAusentes">
+        <span>Ausentes: {{ ausentes }} ({{ porcentajeAusentes.toFixed(1) }}%)</span>
       </div>
     </div>
+
+    <!-- Permisos (si existen) -->
+    <div class="estado-item" *ngIf="permisos > 0">
+      <div class="estado-bar permiso" [style.width.%]="porcentajePermisos">
+        <span>Permisos: {{ permisos }} ({{ porcentajePermisos.toFixed(1) }}%)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total de registros -->
+  <div class="total-registros" *ngIf="!isLoading && total > 0">
+    <p><strong>Total de registros:</strong> {{ total }}</p>
   </div>
 </div>
