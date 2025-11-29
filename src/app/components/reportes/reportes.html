@@ -5,57 +5,75 @@
   <div class="filters">
     <label>
       Rango de fechas:
-      <input type="date" value="2025-11-01"> -
-      <input type="date" value="2025-11-20">
+      <input type="date" [(ngModel)]="filtros.fechaInicio" (change)="aplicarFiltros()">
+      -
+      <input type="date" [(ngModel)]="filtros.fechaFin" (change)="aplicarFiltros()">
     </label>
     <label>
       Usuario:
-      <input type="text" placeholder="Buscar usuario...">
+      <input type="text" [(ngModel)]="filtros.usuario" placeholder="Buscar usuario...">
     </label>
     <label>
       Estado:
-      <select>
+      <select [(ngModel)]="filtros.estado">
         <option value="">Todos</option>
         <option value="presente">Presente</option>
         <option value="ausente">Ausente</option>
         <option value="tardanza">Tardanza</option>
       </select>
     </label>
-    <button class="btn filter">🔍 Filtrar</button>
-    <button class="btn secondary">🔄 Limpiar</button>
+    <button class="btn filter" (click)="aplicarFiltros()">🔍 Filtrar</button>
+    <button class="btn secondary" (click)="limpiarFiltros()">🔄 Limpiar</button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando reportes...</p>
   </div>
 
   <!-- Resumen del reporte -->
-  <div class="report-summary">
+  <div class="report-summary" *ngIf="!cargando">
     <h3>Resumen del Reporte</h3>
     <div class="summary-cards">
       <div class="summary-card">
         <span class="summary-label">Total Registros</span>
-        <span class="summary-value">245</span>
+        <span class="summary-value">{{ resumen.totalRegistros }}</span>
       </div>
       <div class="summary-card">
         <span class="summary-label">Presentes</span>
-        <span class="summary-value success">195</span>
+        <span class="summary-value success">{{ resumen.presentes }}</span>
       </div>
       <div class="summary-card">
         <span class="summary-label">Ausentes</span>
-        <span class="summary-value danger">28</span>
+        <span class="summary-value danger">{{ resumen.ausentes }}</span>
       </div>
       <div class="summary-card">
         <span class="summary-label">Tardanzas</span>
-        <span class="summary-value warning">22</span>
+        <span class="summary-value warning">{{ resumen.tardanzas }}</span>
       </div>
       <div class="summary-card">
         <span class="summary-label">Promedio Asistencia</span>
-        <span class="summary-value">87.5%</span>
+        <span class="summary-value">{{ resumen.promedioAsistencia }}%</span>
       </div>
     </div>
   </div>
 
-  <app-reportes-tabla></app-reportes-tabla>
+<!-- Tabla de reportes -->
+<app-reportes-tabla 
+  *ngIf="!cargando" 
+  [reportes]="reportesPaginados"
+  [paginaActual]="paginaActual"
+  [itemsPorPagina]="registrosPorPagina">
+</app-reportes-tabla>
+
+  <!-- Mensaje si no hay datos -->
+  <div *ngIf="!cargando && reportesFiltrados.length === 0" class="no-data">
+    <p>No se encontraron registros con los filtros aplicados.</p>
+  </div>
 
   <!-- Paginación -->
-  <div class="pagination">
+  <div class="pagination" *ngIf="!cargando && reportesFiltrados.length > 0">
     <button class="btn secondary" (click)="paginaAnterior()" [disabled]="paginaActual === 1">« Anterior</button>
     <span class="page-info">Página {{paginaActual}} de {{totalPaginas}}</span>
     <button class="btn secondary" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">Siguiente »</button>

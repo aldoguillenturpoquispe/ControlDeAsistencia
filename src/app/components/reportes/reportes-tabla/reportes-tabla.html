@@ -12,13 +12,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let reporte of reportes">
-        <td>{{ reporte.id }}</td>
-        <td>{{ reporte.usuario }}</td>
-        <td>{{ reporte.fecha }}</td>
-        <td>{{ reporte.entrada }}</td>
-        <td>{{ reporte.salida }}</td>
-        <td>{{ reporte.horasTrabajadas }}</td>
+      <tr *ngFor="let reporte of reportes; let i = index">
+        <td>{{ obtenerIndice(i) }}</td>
+        <td>{{ reporte.nombreCompleto || 'Usuario Desconocido' }}</td>
+        <td>{{ formatearFecha(reporte.fecha) }}</td>
+        <td>{{ formatearHora(reporte.horaEntrada) }}</td>
+        <td>{{ formatearHora(reporte.horaSalida) }}</td>
+        <td>{{ calcularHorasTrabajadas(reporte.horaEntrada, reporte.horaSalida) }}</td>
         <td>
           <span class="status" 
                 [ngClass]="{
@@ -26,8 +26,7 @@
                   'absent': reporte.estado === 'ausente',
                   'late': reporte.estado === 'tardanza'
                 }">
-            {{ reporte.estado === 'presente' ? 'Presente' : 
-               reporte.estado === 'ausente' ? 'Ausente' : 'Tardanza' }}
+            {{ obtenerTextoEstado(reporte.estado) }}
           </span>
         </td>
       </tr>
