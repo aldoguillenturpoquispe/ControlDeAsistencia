@@ -4,11 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { StatsCharts } from './stats-charts/stats-charts';
 import { StatsResumenEstados } from './stats-resumen-estados/stats-resumen-estados';
 import { StatsTopUsuarios } from './stats-top-usuarios/stats-top-usuarios';
+import { StatsExportActions } from './stats-export-actions/stats-export-actions';
 import { AsistenciaService } from '../../services/asistencia.service';
 import { UsuarioService } from '../../services/usuario.service';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-estadisticas',
@@ -18,7 +16,8 @@ import * as XLSX from 'xlsx';
     FormsModule,
     StatsCharts, 
     StatsResumenEstados, 
-    StatsTopUsuarios
+    StatsTopUsuarios,
+    StatsExportActions
   ],
   templateUrl: './estadisticas.html',
   styleUrl: './estadisticas.css',
@@ -302,138 +301,6 @@ export class Estadisticas implements OnInit {
       return totalMinutos / 60;
     } catch (error) {
       return 0;
-    }
-  }
-
-  // ==========================================
-  // EXPORTAR PDF
-  // ==========================================
-  exportarPDF(): void {
-    const doc = new jsPDF();
-    const fechaActual = new Date().toLocaleDateString('es-PE');
-
-    doc.setFontSize(20);
-    doc.setTextColor(10, 35, 66);
-    doc.text('Panel de Estadísticas', 105, 20, { align: 'center' });
-
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    doc.text(`Generado: ${fechaActual}`, 14, 35);
-    doc.text(`Período: ${this.periodo}`, 14, 42);
-    doc.text(`Desde: ${this.fechaDesde} | Hasta: ${this.fechaHasta}`, 14, 49);
-
-    doc.setDrawColor(10, 35, 66);
-    doc.line(14, 53, 196, 53);
-
-    doc.setFontSize(14);
-    doc.setTextColor(10, 35, 66);
-    doc.text('Estadísticas Principales', 14, 62);
-
-    const datosTabla = [
-      ['Total Usuarios', this.datosEstadisticas.totalUsuarios.toString(), 'Registrados activos'],
-      ['Asistencias Hoy', this.datosEstadisticas.asistenciasHoy.toString(), 'Presentes'],
-      ['Faltas Hoy', this.datosEstadisticas.faltasHoy.toString(), 'Ausentes'],
-      ['Porcentaje Asistencia', `${this.datosEstadisticas.porcentajeAsistencia}%`, 'Del período seleccionado']
-    ];
-
-    autoTable(doc, {
-      startY: 67,
-      head: [['Indicador', 'Valor', 'Observación']],
-      body: datosTabla,
-      theme: 'grid',
-      headStyles: { 
-        fillColor: [10, 35, 66],
-        textColor: 255,
-        fontStyle: 'bold'
-      },
-      styles: { fontSize: 10, cellPadding: 5 }
-    });
-
-    doc.setFontSize(14);
-    doc.text('Resumen Adicional', 14, (doc as any).lastAutoTable.finalY + 15);
-
-    const datosSecundarios = [
-      ['Tardanzas del Período', this.datosEstadisticas.tardanzasMes.toString()],
-      ['Promedio Horas/Día', `${this.datosEstadisticas.promedioHoras}h`],
-      ['Días Laborables', this.datosEstadisticas.diasLaborables.toString()],
-      ['Mejor Asistencia', `${this.datosEstadisticas.mejorAsistencia}%`]
-    ];
-
-    autoTable(doc, {
-      startY: (doc as any).lastAutoTable.finalY + 20,
-      head: [['Métrica', 'Valor']],
-      body: datosSecundarios,
-      theme: 'striped',
-      headStyles: { 
-        fillColor: [10, 35, 66],
-        textColor: 255
-      },
-      styles: { fontSize: 10 }
-    });
-
-    doc.setFontSize(9);
-    doc.setTextColor(150);
-    doc.text('Sistema de Control de Asistencias', 105, 280, { align: 'center' });
-
-    doc.save(`estadisticas_${fechaActual.replace(/\//g, '-')}.pdf`);
-    console.log('✅ PDF exportado correctamente');
-  }
-
-  // ==========================================
-  // EXPORTAR EXCEL
-  // ==========================================
-  exportarExcel(): void {
-    const wb = XLSX.utils.book_new();
-    const fechaActual = new Date().toLocaleDateString('es-PE');
-
-    const datosResumen = [
-      ['PANEL DE ESTADÍSTICAS - CONTROL DE ASISTENCIAS'],
-      [''],
-      ['Información del Reporte'],
-      ['Fecha de Generación:', fechaActual],
-      ['Período Seleccionado:', this.periodo],
-      ['Rango de Fechas:', `${this.fechaDesde} al ${this.fechaHasta}`],
-      [''],
-      ['ESTADÍSTICAS PRINCIPALES'],
-      ['Indicador', 'Valor', 'Descripción'],
-      ['Total Usuarios', this.datosEstadisticas.totalUsuarios, 'Registrados activos'],
-      ['Asistencias Hoy', this.datosEstadisticas.asistenciasHoy, 'Presentes'],
-      ['Faltas Hoy', this.datosEstadisticas.faltasHoy, 'Ausentes'],
-      ['Porcentaje Asistencia', `${this.datosEstadisticas.porcentajeAsistencia}%`, 'Del período seleccionado'],
-      [''],
-      ['MÉTRICAS SECUNDARIAS'],
-      ['Métrica', 'Valor', 'Descripción'],
-      ['Tardanzas del Período', this.datosEstadisticas.tardanzasMes, 'Total de tardanzas'],
-      ['Promedio Horas/Día', `${this.datosEstadisticas.promedioHoras}h`, 'Promedio trabajado'],
-      ['Días Laborables', this.datosEstadisticas.diasLaborables, 'Días hábiles'],
-      ['Mejor Asistencia', `${this.datosEstadisticas.mejorAsistencia}%`, 'Porcentaje máximo']
-    ];
-
-    const wsResumen = XLSX.utils.aoa_to_sheet(datosResumen);
-    XLSX.utils.book_append_sheet(wb, wsResumen, 'Resumen');
-
-    const nombreArchivo = `Estadisticas_${this.periodo}_${fechaActual.replace(/\//g, '-')}.xlsx`;
-    XLSX.writeFile(wb, nombreArchivo);
-    console.log('✅ Excel exportado correctamente');
-  }
-
-  // ==========================================
-  // ENVIAR REPORTE
-  // ==========================================
-  enviarReporte(): void {
-    const email = prompt('Ingrese el correo electrónico de destino:');
-    
-    if (email && email.includes('@')) {
-      console.log('Enviando reporte a:', email);
-      console.log('Período:', this.periodo);
-      console.log('Rango:', this.fechaDesde, '-', this.fechaHasta);
-      console.log('Datos:', this.datosEstadisticas);
-      
-      setTimeout(() => {
-        alert(`✅ Reporte enviado exitosamente a ${email}`);
-      }, 1000);
-    } else if (email) {
-      alert('❌ Email inválido');
     }
   }
 }

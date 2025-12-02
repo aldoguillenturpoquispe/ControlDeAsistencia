@@ -35,7 +35,7 @@ export class Asistencias implements OnInit {
   mostrarModalEliminar = false;
   isLoading = true;
   
-  // Para edición
+  // 🔥 Para edición
   asistenciaParaEditar: Asistencia | null = null;
   
   // Para eliminación
@@ -91,8 +91,6 @@ export class Asistencias implements OnInit {
       this.calcularPaginacion();
 
       console.log('✅ Datos de asistencias cargados');
-      console.log('Total registros:', this.totalRegistros);
-      console.log('Presentes hoy:', this.presentesHoy);
 
     } catch (error) {
       console.error('❌ Error al cargar datos:', error);
@@ -122,12 +120,6 @@ export class Asistencias implements OnInit {
   // APLICAR FILTROS
   // ==========================================
   aplicarFiltros(): void {
-    console.log('Aplicando filtros:', {
-      fecha: this.filtroFecha,
-      usuario: this.filtroUsuario,
-      estado: this.filtroEstado
-    });
-
     this.asistenciasFiltradas = this.asistencias.filter(asistencia => {
       let cumpleFecha = true;
       let cumpleUsuario = true;
@@ -135,23 +127,17 @@ export class Asistencias implements OnInit {
 
       if (this.filtroFecha && this.filtroFecha.trim() !== '') {
         try {
-          let fechaAsistencia: string;
-          let fecha: Date;
-          
-          if (asistencia.fecha instanceof Date) {
-            fecha = asistencia.fecha;
-          } else {
-            fecha = new Date(asistencia.fecha as any);
-          }
+          const fecha = asistencia.fecha instanceof Date 
+            ? asistencia.fecha 
+            : new Date(asistencia.fecha as any);
           
           const year = fecha.getFullYear();
           const month = String(fecha.getMonth() + 1).padStart(2, '0');
           const day = String(fecha.getDate()).padStart(2, '0');
-          fechaAsistencia = `${year}-${month}-${day}`;
+          const fechaAsistencia = `${year}-${month}-${day}`;
           
           cumpleFecha = fechaAsistencia === this.filtroFecha;
         } catch (error) {
-          console.warn('Error al comparar fecha para asistencia:', asistencia.id, error);
           cumpleFecha = false;
         }
       }
@@ -172,8 +158,6 @@ export class Asistencias implements OnInit {
 
     this.paginaActual = 1;
     this.calcularPaginacion();
-
-    console.log('✅ Resultados filtrados:', this.asistenciasFiltradas.length);
   }
 
   // ==========================================
@@ -186,7 +170,6 @@ export class Asistencias implements OnInit {
     this.asistenciasFiltradas = this.asistencias;
     this.paginaActual = 1;
     this.calcularPaginacion();
-    console.log('✅ Filtros limpiados');
   }
 
   // ==========================================
@@ -199,7 +182,7 @@ export class Asistencias implements OnInit {
   }
 
   // ==========================================
-  // MODAL - EDITAR ASISTENCIA
+  // 🔥 MODAL - EDITAR ASISTENCIA
   // ==========================================
   abrirModalEditar(asistencia: Asistencia): void {
     if (!this.esAdmin) {
@@ -207,7 +190,7 @@ export class Asistencias implements OnInit {
       return;
     }
 
-    console.log('Abriendo modal para editar asistencia:', asistencia);
+    console.log('📝 Abriendo modal para editar asistencia:', asistencia);
     this.asistenciaParaEditar = asistencia;
     this.mostrarModal = true;
   }
@@ -222,7 +205,7 @@ export class Asistencias implements OnInit {
   }
 
   // ==========================================
-  // 🔥 NUEVO: MODAL DE ELIMINACIÓN
+  // MODAL DE ELIMINACIÓN
   // ==========================================
   async eliminarAsistencia(id: string): Promise<void> {
     if (!this.esAdmin) {
@@ -230,7 +213,6 @@ export class Asistencias implements OnInit {
       return;
     }
 
-    // Encontrar la asistencia
     const asistencia = this.asistencias.find(a => a.id === id);
     
     if (!asistencia) {
@@ -238,14 +220,10 @@ export class Asistencias implements OnInit {
       return;
     }
 
-    // Guardar para el modal y abrir
     this.asistenciaParaEliminar = asistencia;
     this.mostrarModalEliminar = true;
   }
 
-  // ==========================================
-  // 🔥 CONFIRMAR ELIMINACIÓN
-  // ==========================================
   async confirmarEliminacion(): Promise<void> {
     if (!this.asistenciaParaEliminar?.id) {
       this.mostrarToast('❌ Error: No se puede eliminar', 'error');
@@ -256,13 +234,10 @@ export class Asistencias implements OnInit {
       const id = this.asistenciaParaEliminar.id;
       const nombreUsuario = this.asistenciaParaEliminar.nombreCompleto;
       
-      console.log('🗑️ Eliminando asistencia:', id);
-      
       await this.asistenciaService.eliminarAsistencia(id);
       
       this.mostrarToast(`✅ Asistencia de ${nombreUsuario} eliminada`, 'success');
       
-      // Cerrar modal y recargar
       this.cancelarEliminacion();
       await this.cargarDatos();
       
@@ -272,9 +247,6 @@ export class Asistencias implements OnInit {
     }
   }
 
-  // ==========================================
-  // 🔥 CANCELAR ELIMINACIÓN
-  // ==========================================
   cancelarEliminacion(): void {
     this.mostrarModalEliminar = false;
     this.asistenciaParaEliminar = null;
@@ -286,34 +258,24 @@ export class Asistencias implements OnInit {
   paginaAnterior(): void {
     if (this.paginaActual > 1) {
       this.paginaActual--;
-      console.log('Página anterior:', this.paginaActual);
     }
   }
 
   paginaSiguiente(): void {
     if (this.paginaActual < this.totalPaginas) {
       this.paginaActual++;
-      console.log('Página siguiente:', this.paginaActual);
-    }
-  }
-
-  irAPagina(pagina: number): void {
-    if (pagina >= 1 && pagina <= this.totalPaginas) {
-      this.paginaActual = pagina;
     }
   }
 
   // ==========================================
-  // 🔥 MOSTRAR TOAST (NOTIFICACIÓN)
+  // MOSTRAR TOAST
   // ==========================================
   mostrarToast(mensaje: string, tipo: 'success' | 'error'): void {
-    // Crear elemento toast
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
     toast.textContent = mensaje;
     document.body.appendChild(toast);
 
-    // Remover después de 3 segundos
     setTimeout(() => {
       toast.remove();
     }, 3000);

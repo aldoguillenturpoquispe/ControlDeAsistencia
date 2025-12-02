@@ -1,6 +1,7 @@
 <div class="modal-overlay" (click)="cerrarModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <h3>Nueva Asistencia</h3>
+    <!-- 🔥 MODIFICADO: Título dinámico según modo -->
+    <h3>{{ modoEdicion ? '✏️ Editar Asistencia' : '➕ Nueva Asistencia' }}</h3>
 
     <!-- Loader mientras carga usuarios -->
     <div *ngIf="isLoading" class="loading-container">
@@ -72,14 +73,14 @@
           type="submit" 
           class="btn primary" 
           [disabled]="isSaving">
-          {{ isSaving ? '⏳ Guardando...' : '💾 Guardar' }}
+          {{ isSaving ? '⏳ Guardando...' : (modoEdicion ? '💾 Actualizar' : '💾 Guardar') }}
         </button>
         <button 
           type="button" 
           class="btn secondary" 
           (click)="cerrarModal()"
           [disabled]="isSaving">
-          ❌ Cancelar
+          ✖ Cancelar
         </button>
       </div>
     </form>

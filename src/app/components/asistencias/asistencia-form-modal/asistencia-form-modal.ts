@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AsistenciaService } from '../../../services/asistencia.service';
@@ -17,6 +17,9 @@ export class AsistenciaFormModal implements OnInit {
   private asistenciaService = inject(AsistenciaService);
   private usuarioService = inject(UsuarioService);
 
+  // 🔥 NUEVO: Recibir asistencia para editar
+  @Input() asistenciaParaEditar: Asistencia | null = null;
+  
   @Output() cerrar = new EventEmitter<boolean>();
 
   // Datos del formulario
@@ -40,9 +43,61 @@ export class AsistenciaFormModal implements OnInit {
     horaSalida: ''
   };
 
+  // 🔥 NUEVO: Modo edición
+  get modoEdicion(): boolean {
+    return this.asistenciaParaEditar !== null;
+  }
+
   async ngOnInit(): Promise<void> {
     await this.cargarUsuarios();
-    this.establecerFechaActual();
+    
+    // 🔥 Si hay asistencia para editar, cargar sus datos
+    if (this.asistenciaParaEditar) {
+      this.cargarDatosAsistencia();
+    } else {
+      this.establecerFechaActual();
+    }
+  }
+
+  // ==========================================
+  // 🔥 NUEVO: CARGAR DATOS DE ASISTENCIA PARA EDITAR
+  // ==========================================
+  cargarDatosAsistencia(): void {
+    if (!this.asistenciaParaEditar) return;
+
+    console.log('📝 Cargando datos para editar:', this.asistenciaParaEditar);
+
+    // Cargar usuario
+    this.usuarioId = this.asistenciaParaEditar.usuarioId || '';
+
+    // Cargar fecha
+    if (this.asistenciaParaEditar.fecha) {
+      const fecha = this.asistenciaParaEditar.fecha instanceof Date 
+        ? this.asistenciaParaEditar.fecha 
+        : new Date(this.asistenciaParaEditar.fecha);
+      
+      const year = fecha.getFullYear();
+      const month = String(fecha.getMonth() + 1).padStart(2, '0');
+      const day = String(fecha.getDate()).padStart(2, '0');
+      this.fecha = `${year}-${month}-${day}`;
+    }
+
+    // Cargar horas
+    this.horaEntrada = this.asistenciaParaEditar.horaEntrada || '';
+    this.horaSalida = this.asistenciaParaEditar.horaSalida || '';
+
+    // Cargar estado
+    this.estado = this.asistenciaParaEditar.estado || 'presente';
+
+    // Cargar observaciones
+    this.observaciones = this.asistenciaParaEditar.observaciones || '';
+
+    console.log('✅ Datos cargados:', {
+      usuarioId: this.usuarioId,
+      fecha: this.fecha,
+      horaEntrada: this.horaEntrada,
+      estado: this.estado
+    });
   }
 
   // ==========================================
@@ -113,7 +168,7 @@ export class AsistenciaFormModal implements OnInit {
   }
 
   // ==========================================
-  // GUARDAR ASISTENCIA
+  // 🔥 MODIFICADO: GUARDAR O ACTUALIZAR ASISTENCIA
   // ==========================================
   async guardarAsistencia(): Promise<void> {
     // Validar formulario
@@ -134,10 +189,10 @@ export class AsistenciaFormModal implements OnInit {
 
       // Crear fecha local sin problemas de zona horaria
       const [year, month, day] = this.fecha.split('-').map(Number);
-      const fechaLocal = new Date(year, month - 1, day, 12, 0, 0); // Usar mediodía para evitar problemas de zona horaria
+      const fechaLocal = new Date(year, month - 1, day, 12, 0, 0);
 
       // Crear objeto de asistencia
-      const nuevaAsistencia: Asistencia = {
+      const datosAsistencia: Asistencia = {
         usuarioId: this.usuarioId,
         nombreCompleto: usuario.nombreCompleto,
         fecha: fechaLocal,
@@ -147,17 +202,22 @@ export class AsistenciaFormModal implements OnInit {
         observaciones: this.observaciones || undefined
       };
 
-      console.log('📅 Fecha a guardar:', {
-        fechaOriginal: this.fecha,
-        fechaLocal: fechaLocal,
-        fechaISO: fechaLocal.toISOString()
-      });
-
-      // Guardar en Firebase
-      const id = await this.asistenciaService.crearAsistencia(nuevaAsistencia);
-      
-      console.log('✅ Asistencia guardada con ID:', id);
-      alert('✅ Asistencia registrada correctamente');
+      // 🔥 Modo edición o creación
+      if (this.modoEdicion && this.asistenciaParaEditar?.id) {
+        // ACTUALIZAR asistencia existente
+        datosAsistencia.id = this.asistenciaParaEditar.id;
+        await this.asistenciaService.editarAsistencia(
+          this.asistenciaParaEditar.id, 
+          datosAsistencia
+        );
+        console.log('✅ Asistencia actualizada');
+        alert('✅ Asistencia actualizada correctamente');
+      } else {
+        // CREAR nueva asistencia
+        const id = await this.asistenciaService.crearAsistencia(datosAsistencia);
+        console.log('✅ Asistencia creada con ID:', id);
+        alert('✅ Asistencia registrada correctamente');
+      }
       
       // Cerrar modal e indicar que se guardó
       this.cerrar.emit(true);

@@ -93,13 +93,14 @@
     </div>
   </div>
 
-  <!-- Modal formulario (crear/editar) -->
+  <!-- 🔥 MODIFICADO: Modal formulario con asistencia para editar -->
   <app-asistencia-form-modal 
     *ngIf="mostrarModal" 
+    [asistenciaParaEditar]="asistenciaParaEditar"
     (cerrar)="cerrarModal($event)">
   </app-asistencia-form-modal>
 
-  <!-- 🔥 NUEVO: Modal de confirmación de eliminación -->
+  <!-- Modal de confirmación de eliminación -->
   <app-asistencia-delete-modal 
     *ngIf="mostrarModalEliminar && asistenciaParaEliminar"
     [asistencia]="asistenciaParaEliminar"

@@ -97,11 +97,12 @@
       [fechaHasta]="fechaHasta">
     </app-stats-resumen-estados>
 
-    <!-- Botones de exportación -->
-    <div class="export-actions">
-      <button class="btn-export" (click)="exportarPDF()">📥 Exportar Estadísticas PDF</button>
-      <button class="btn-export" (click)="exportarExcel()">📊 Exportar Excel</button>
-      <button class="btn-export" (click)="enviarReporte()">📧 Enviar Reporte</button>
-    </div>
+    <!-- 🔥 NUEVO: Componente de acciones de exportación -->
+    <app-stats-export-actions
+      [datosEstadisticas]="datosEstadisticas"
+      [periodo]="periodo"
+      [fechaDesde]="fechaDesde"
+      [fechaHasta]="fechaHasta">
+    </app-stats-export-actions>
   </div>
 </section>

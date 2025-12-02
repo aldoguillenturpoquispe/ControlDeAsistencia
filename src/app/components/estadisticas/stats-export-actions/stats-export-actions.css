@@ -1,0 +1,156 @@
+.export-actions {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+}
+
+.export-title {
+  font-size: 1.3rem;
+  color: #0a2342;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+  justify-content: center;
+}
+
+.btn-export:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-export:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn-export:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Estilos específicos por tipo de botón */
+.btn-export.pdf {
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+  color: #fff;
+}
+
+.btn-export.pdf:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+}
+
+.btn-export.excel {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: #fff;
+}
+
+.btn-export.excel:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1b5e20 0%, #145214 100%);
+}
+
+.btn-export.email {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+  color: #fff;
+}
+
+.btn-export.email:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0d47a1 0%, #083a7e 100%);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+.btn-text {
+  font-size: 0.95rem;
+}
+
+.export-info {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+/* Animación de carga para botones */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.btn-export:disabled {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .export-actions {
+    padding: 1.5rem;
+  }
+
+  .export-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-export {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .export-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Animaciones para toast */
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}

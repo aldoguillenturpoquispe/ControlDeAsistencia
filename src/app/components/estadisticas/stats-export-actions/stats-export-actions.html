@@ -1,0 +1,32 @@
+<div class="export-actions">
+  <h3 class="export-title">📊 Exportar Estadísticas</h3>
+  
+  <div class="export-buttons">
+    <!-- Botón Exportar PDF -->
+    <button 
+      class="btn-export pdf" 
+      (click)="exportarPDF()"
+      [disabled]="isExportingPDF">
+      <span class="btn-icon">📥</span>
+      <span class="btn-text">
+        {{ isExportingPDF ? 'Generando...' : 'Exportar PDF' }}
+      </span>
+    </button>
+
+    <!-- Botón Exportar Excel -->
+    <button 
+      class="btn-export excel" 
+      (click)="exportarExcel()"
+      [disabled]="isExportingExcel">
+      <span class="btn-icon">📊</span>
+      <span class="btn-text">
+        {{ isExportingExcel ? 'Generando...' : 'Exportar Excel' }}
+      </span>
+    </button>
+  </div>
+
+  <!-- Información adicional -->
+  <p class="export-info">
+    💡 Los reportes incluyen todos los datos del período seleccionado
+  </p>
+</div>
