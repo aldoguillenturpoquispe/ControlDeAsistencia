@@ -49,6 +49,11 @@
   color: #fff;
 }
 
+.status.permission {
+  background: #0288d1;
+  color: #fff;
+}
+
 .btn-action {
   background: transparent;
   border: none;
@@ -74,31 +79,77 @@
   transform: scale(1.2);
 }
 
-/* Modales */
+/* ========================================== */
+/* 🔥 MODALES MEJORADOS - SCROLL ARREGLADO */
+/* ========================================== */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  overflow-y: auto; /* 🔥 El overlay tiene scroll */
+  padding: 20px; /* 🔥 Padding para que el modal no toque los bordes */
+  backdrop-filter: blur(2px); /* 🔥 Efecto blur en el fondo */
 }
 
 .modal-content {
   background: #fff;
   padding: 2rem;
-  border-radius: 8px;
-  max-width: 500px;
+  border-radius: 12px;
+  max-width: 600px;
   width: 90%;
+  max-height: 90vh; /* 🔥 Altura máxima del modal */
+  overflow-y: auto; /* 🔥 Scroll dentro del modal si es necesario */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  margin: auto; /* 🔥 Centrar verticalmente */
+  
+  /* 🔥 Animación de entrada */
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 🔥 Scroll personalizado para el modal */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #0a2342;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #0d3a63;
 }
 
 .modal-content h3 {
   color: #0a2342;
   margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #f0c419;
+  padding-bottom: 0.5rem;
 }
 
 .asistencia-form .form-group {
@@ -120,6 +171,12 @@
   border-radius: 4px;
 }
 
+.error-msg {
+  color: #c62828;
+  font-size: 0.8rem;
+  display: none;
+}
+
 .form-actions {
   display: flex;
   gap: 1rem;
@@ -127,36 +184,43 @@
 }
 
 .btn {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
   flex: 1;
+  font-size: 0.95rem;
 }
 
 .btn.primary {
   background: #f0c419;
   color: #0a2342;
+  box-shadow: 0 2px 8px rgba(240, 196, 25, 0.3);
 }
 
 .btn.primary:hover {
   background: #d4a017;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 196, 25, 0.4);
 }
 
 .btn.secondary {
   background: transparent;
-  border: 1px solid #0a2342;
+  border: 2px solid #0a2342;
   color: #0a2342;
 }
 
 .btn.secondary:hover {
   background: #0a2342;
   color: #fff;
+  transform: translateY(-2px);
 }
 
-/* Detalle Info */
+/* ========================================== */
+/* 🔥 DETALLE INFO MEJORADO */
+/* ========================================== */
 .detalle-info {
   padding: 1rem 0;
 }
@@ -164,19 +228,55 @@
 .info-row {
   display: flex;
   justify-content: space-between;
-  padding: 0.7rem 0;
+  align-items: center;
+  padding: 1rem;
   border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+.info-row:hover {
+  background: #f9f9f9;
+}
+
+.info-row:last-child {
+  border-bottom: none;
 }
 
 .info-row strong {
   color: #0a2342;
+  font-size: 0.95rem;
+  min-width: 150px;
 }
 
 .info-row span {
-  color: #fff;
+  color: #333;
+  text-align: right;
+  word-break: break-word;
 }
 
-.status.permission {
-  background: #0288d1;
-  color: #fff;
+/* 🔥 Responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+    max-height: 85vh;
+  }
+
+  .modal-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .info-row strong {
+    min-width: auto;
+  }
+
+  .info-row span {
+    text-align: left;
+  }
 }

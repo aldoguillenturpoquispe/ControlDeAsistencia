@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AsistenciaFormModal } from './asistencia-form-modal/asistencia-form-modal';
+import { AsistenciaDeleteModal } from './asistencia-delete-modal/asistencia-delete-modal';
 import { AsistenciaTabla } from './asistencia-tabla/asistencia-tabla';
 import { AsistenciaService } from '../../services/asistencia.service';
 import { UsuarioService } from '../../services/usuario.service';
@@ -11,7 +12,13 @@ import { Asistencia } from '../../models/asistencia.model';
 @Component({
   selector: 'app-asistencias',
   standalone: true,
-  imports: [CommonModule, FormsModule, AsistenciaFormModal, AsistenciaTabla],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    AsistenciaFormModal, 
+    AsistenciaDeleteModal,
+    AsistenciaTabla
+  ],
   templateUrl: './asistencias.html',
   styleUrl: './asistencias.css',
 })
@@ -25,10 +32,14 @@ export class Asistencias implements OnInit {
 
   // Estado
   mostrarModal = false;
+  mostrarModalEliminar = false;
   isLoading = true;
   
-  // 🔥 NUEVO: Para edición
+  // Para edición
   asistenciaParaEditar: Asistencia | null = null;
+  
+  // Para eliminación
+  asistenciaParaEliminar: Asistencia | null = null;
 
   // Datos
   asistencias: Asistencia[] = [];
@@ -188,11 +199,11 @@ export class Asistencias implements OnInit {
   }
 
   // ==========================================
-  // 🔥 NUEVO: MODAL - EDITAR ASISTENCIA
+  // MODAL - EDITAR ASISTENCIA
   // ==========================================
   abrirModalEditar(asistencia: Asistencia): void {
     if (!this.esAdmin) {
-      alert('⛔ Solo los administradores pueden editar asistencias');
+      this.mostrarToast('⛔ Solo los administradores pueden editar asistencias', 'error');
       return;
     }
 
@@ -208,6 +219,65 @@ export class Asistencias implements OnInit {
     if (asistenciaGuardada) {
       await this.cargarDatos();
     }
+  }
+
+  // ==========================================
+  // 🔥 NUEVO: MODAL DE ELIMINACIÓN
+  // ==========================================
+  async eliminarAsistencia(id: string): Promise<void> {
+    if (!this.esAdmin) {
+      this.mostrarToast('⛔ Solo los administradores pueden eliminar asistencias', 'error');
+      return;
+    }
+
+    // Encontrar la asistencia
+    const asistencia = this.asistencias.find(a => a.id === id);
+    
+    if (!asistencia) {
+      this.mostrarToast('❌ Asistencia no encontrada', 'error');
+      return;
+    }
+
+    // Guardar para el modal y abrir
+    this.asistenciaParaEliminar = asistencia;
+    this.mostrarModalEliminar = true;
+  }
+
+  // ==========================================
+  // 🔥 CONFIRMAR ELIMINACIÓN
+  // ==========================================
+  async confirmarEliminacion(): Promise<void> {
+    if (!this.asistenciaParaEliminar?.id) {
+      this.mostrarToast('❌ Error: No se puede eliminar', 'error');
+      return;
+    }
+
+    try {
+      const id = this.asistenciaParaEliminar.id;
+      const nombreUsuario = this.asistenciaParaEliminar.nombreCompleto;
+      
+      console.log('🗑️ Eliminando asistencia:', id);
+      
+      await this.asistenciaService.eliminarAsistencia(id);
+      
+      this.mostrarToast(`✅ Asistencia de ${nombreUsuario} eliminada`, 'success');
+      
+      // Cerrar modal y recargar
+      this.cancelarEliminacion();
+      await this.cargarDatos();
+      
+    } catch (error: any) {
+      console.error('❌ Error al eliminar asistencia:', error);
+      this.mostrarToast(`❌ Error al eliminar: ${error.message}`, 'error');
+    }
+  }
+
+  // ==========================================
+  // 🔥 CANCELAR ELIMINACIÓN
+  // ==========================================
+  cancelarEliminacion(): void {
+    this.mostrarModalEliminar = false;
+    this.asistenciaParaEliminar = null;
   }
 
   // ==========================================
@@ -234,46 +304,18 @@ export class Asistencias implements OnInit {
   }
 
   // ==========================================
-  // 🔥 MEJORADO: ELIMINAR ASISTENCIA
+  // 🔥 MOSTRAR TOAST (NOTIFICACIÓN)
   // ==========================================
-  async eliminarAsistencia(id: string): Promise<void> {
-    if (!this.esAdmin) {
-      alert('⛔ Solo los administradores pueden eliminar asistencias');
-      return;
-    }
+  mostrarToast(mensaje: string, tipo: 'success' | 'error'): void {
+    // Crear elemento toast
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    toast.textContent = mensaje;
+    document.body.appendChild(toast);
 
-    // Encontrar la asistencia para mostrar más info
-    const asistencia = this.asistencias.find(a => a.id === id);
-    const nombreUsuario = asistencia?.nombreCompleto || 'este usuario';
-    const fechaAsistencia = asistencia 
-      ? new Date(asistencia.fecha).toLocaleDateString('es-PE')
-      : '';
-
-    const confirmacion = confirm(
-      `🗑️ ¿Confirmar eliminación?\n\n` +
-      `📌 Usuario: ${nombreUsuario}\n` +
-      `📅 Fecha: ${fechaAsistencia}\n\n` +
-      `Esta acción no se puede deshacer.`
-    );
-
-    if (!confirmacion) {
-      console.log('❌ Eliminación cancelada por el usuario');
-      return;
-    }
-
-    try {
-      console.log('🗑️ Eliminando asistencia:', id);
-      
-      await this.asistenciaService.eliminarAsistencia(id);
-      
-      // Mostrar mensaje de éxito
-      alert(`✅ Asistencia eliminada correctamente\n\nUsuario: ${nombreUsuario}\nFecha: ${fechaAsistencia}`);
-      
-      await this.cargarDatos();
-      
-    } catch (error: any) {
-      console.error('❌ Error al eliminar asistencia:', error);
-      alert(`❌ Error al eliminar asistencia:\n\n${error.message || 'Error desconocido'}`);
-    }
+    // Remover después de 3 segundos
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
   }
 }

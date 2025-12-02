@@ -7,7 +7,7 @@
 
   <!-- Contenido principal -->
   <div *ngIf="!isLoading">
-    <!-- 🔥 NUEVO: Mostrar tipo de usuario -->
+    <!-- Mostrar tipo de usuario -->
     <div class="user-info" *ngIf="esAdmin">
       <span class="badge-admin">👑 Modo Administrador</span>
     </div>
@@ -70,7 +70,7 @@
       <button class="btn primary" (click)="abrirModal()">Registrar primera asistencia</button>
     </div>
 
-    <!-- 🔥 MODIFICADO: Pasar esAdmin a la tabla y conectar evento editar -->
+    <!-- Tabla de asistencias -->
     <app-asistencia-tabla 
       *ngIf="asistenciasFiltradas.length > 0"
       [asistencias]="asistenciasPaginadas"
@@ -93,9 +93,17 @@
     </div>
   </div>
 
-  <!-- Modal formulario -->
+  <!-- Modal formulario (crear/editar) -->
   <app-asistencia-form-modal 
     *ngIf="mostrarModal" 
     (cerrar)="cerrarModal($event)">
   </app-asistencia-form-modal>
+
+  <!-- 🔥 NUEVO: Modal de confirmación de eliminación -->
+  <app-asistencia-delete-modal 
+    *ngIf="mostrarModalEliminar && asistenciaParaEliminar"
+    [asistencia]="asistenciaParaEliminar"
+    (confirmar)="confirmarEliminacion()"
+    (cancelar)="cancelarEliminacion()">
+  </app-asistencia-delete-modal>
 </section>

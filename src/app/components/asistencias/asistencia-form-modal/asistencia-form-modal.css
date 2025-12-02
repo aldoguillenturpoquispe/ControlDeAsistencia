@@ -1,91 +1,186 @@
+/* ========================================== */
+/* 🔥 MODAL OVERLAY - SCROLL ARREGLADO */
+/* ========================================== */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  overflow-y: auto; /* 🔥 El overlay tiene scroll */
+  padding: 20px; /* 🔥 Padding para que el modal no toque los bordes */
+  backdrop-filter: blur(2px); /* 🔥 Efecto blur en el fondo */
 }
 
+/* ========================================== */
+/* 🔥 MODAL CONTENT - SCROLL INTERNO */
+/* ========================================== */
 .modal-content {
   background: #fff;
   padding: 2rem;
-  border-radius: 8px;
-  max-width: 500px;
+  border-radius: 12px;
+  max-width: 600px;
   width: 90%;
+  max-height: 90vh; /* 🔥 Altura máxima del modal */
+  overflow-y: auto; /* 🔥 Scroll dentro del modal si es necesario */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  margin: auto; /* 🔥 Centrar verticalmente */
+  
+  /* 🔥 Animación de entrada */
+  animation: modalSlideIn 0.3s ease-out;
 }
 
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 🔥 Scroll personalizado para el modal */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #0a2342;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #0d3a63;
+}
+
+/* ========================================== */
+/* CONTENIDO DEL MODAL */
+/* ========================================== */
 .modal-content h3 {
   color: #0a2342;
   margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #f0c419;
+  padding-bottom: 0.5rem;
 }
 
 .asistencia-form .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .asistencia-form label {
   display: block;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
   color: #333;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .asistencia-form input,
-.asistencia-form select {
+.asistencia-form select,
+.asistencia-form textarea {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.7rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
 }
 
+.asistencia-form input:focus,
+.asistencia-form select:focus,
+.asistencia-form textarea:focus {
+  outline: none;
+  border-color: #f0c419;
+  box-shadow: 0 0 0 3px rgba(240, 196, 25, 0.1);
+}
+
+.asistencia-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ========================================== */
+/* MENSAJES DE ERROR */
+/* ========================================== */
 .error-msg {
   color: #c62828;
   font-size: 0.8rem;
-  display: none;
+  display: block;
+  margin-top: 0.3rem;
+  font-weight: 500;
 }
 
+/* ========================================== */
+/* BOTONES DEL FORMULARIO */
+/* ========================================== */
 .form-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
 }
 
 .btn {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
   flex: 1;
+  font-size: 0.95rem;
 }
 
 .btn.primary {
   background: #f0c419;
   color: #0a2342;
+  box-shadow: 0 2px 8px rgba(240, 196, 25, 0.3);
 }
 
-.btn.primary:hover {
+.btn.primary:hover:not(:disabled) {
   background: #d4a017;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 196, 25, 0.4);
 }
 
 .btn.secondary {
   background: transparent;
-  border: 1px solid #0a2342;
+  border: 2px solid #0a2342;
   color: #0a2342;
 }
 
-.btn.secondary:hover {
+.btn.secondary:hover:not(:disabled) {
   background: #0a2342;
   color: #fff;
+  transform: translateY(-2px);
 }
 
-/* Loader */
+/* Botones deshabilitados */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ========================================== */
+/* LOADER */
+/* ========================================== */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -96,12 +191,12 @@
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border: 4px solid rgba(10, 35, 66, 0.1);
-  border-top-color: #0a2342;
+  border-top-color: #f0c419;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
@@ -110,29 +205,49 @@
 
 .loading-container p {
   color: #666;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
-/* Textarea */
-.asistencia-form textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-family: inherit;
-  resize: vertical;
+/* ========================================== */
+/* 🔥 RESPONSIVE */
+/* ========================================== */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+    max-height: 85vh;
+  }
+
+  .modal-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
 }
 
-/* Mostrar mensajes de error */
-.error-msg {
-  color: #c62828;
-  font-size: 0.8rem;
-  display: block;
-  margin-top: 0.3rem;
+/* ========================================== */
+/* 🔥 SELECT MEJORADO */
+/* ========================================== */
+.asistencia-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230a2342' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
 }
 
-/* Botones deshabilitados */
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.asistencia-form select:hover {
+  border-color: #0a2342;
 }
