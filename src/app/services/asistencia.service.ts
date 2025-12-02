@@ -15,12 +15,14 @@ import {
   Timestamp,
 } from '@angular/fire/firestore';
 import { Asistencia } from '../models/asistencia.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AsistenciaService {
   private firestore = inject(Firestore);
+  private authService = inject(AuthService);
   private asistenciasCollection = collection(this.firestore, 'asistencias');
 
   // ==========================================
@@ -38,6 +40,60 @@ export class AsistenciaService {
       return docRef.id;
     } catch (error) {
       console.error('❌ Error al crear asistencia:', error);
+      throw error;
+    }
+  }
+
+  // ==========================================
+  // 🔥 NUEVO: EDITAR ASISTENCIA (SOLO ADMIN)
+  // ==========================================
+  async editarAsistencia(id: string, asistenciaActualizada: Partial<Asistencia>): Promise<void> {
+    try {
+      // Verificar si es admin
+      if (!this.authService.esAdmin()) {
+        throw new Error('❌ No tienes permisos para editar asistencias');
+      }
+
+      const asistenciaRef = doc(this.firestore, 'asistencias', id);
+      
+      // Preparar datos para actualizar
+      const dataToUpdate: any = { ...asistenciaActualizada };
+      
+      // Convertir fecha a Timestamp si existe
+      if (dataToUpdate.fecha) {
+        dataToUpdate.fecha = Timestamp.fromDate(
+          dataToUpdate.fecha instanceof Date 
+            ? dataToUpdate.fecha 
+            : new Date(dataToUpdate.fecha)
+        );
+      }
+
+      // Agregar fecha de actualización
+      dataToUpdate.updatedAt = Timestamp.now();
+
+      await updateDoc(asistenciaRef, dataToUpdate);
+      console.log('✅ Asistencia editada correctamente:', id);
+    } catch (error) {
+      console.error('❌ Error al editar asistencia:', error);
+      throw error;
+    }
+  }
+
+  // ==========================================
+  // 🔥 NUEVO: ELIMINAR ASISTENCIA (SOLO ADMIN)
+  // ==========================================
+  async eliminarAsistencia(id: string): Promise<void> {
+    try {
+      // Verificar si es admin
+      if (!this.authService.esAdmin()) {
+        throw new Error('❌ No tienes permisos para eliminar asistencias');
+      }
+
+      const asistenciaRef = doc(this.firestore, 'asistencias', id);
+      await deleteDoc(asistenciaRef);
+      console.log('✅ Asistencia eliminada correctamente:', id);
+    } catch (error) {
+      console.error('❌ Error al eliminar asistencia:', error);
       throw error;
     }
   }

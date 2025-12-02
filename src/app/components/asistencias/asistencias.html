@@ -7,6 +7,11 @@
 
   <!-- Contenido principal -->
   <div *ngIf="!isLoading">
+    <!-- 🔥 NUEVO: Mostrar tipo de usuario -->
+    <div class="user-info" *ngIf="esAdmin">
+      <span class="badge-admin">👑 Modo Administrador</span>
+    </div>
+    
     <h2>Panel de Asistencias</h2>
 
     <!-- Barra de acciones -->
@@ -65,13 +70,15 @@
       <button class="btn primary" (click)="abrirModal()">Registrar primera asistencia</button>
     </div>
 
-    <!-- Tabla de asistencias -->
+    <!-- 🔥 MODIFICADO: Pasar esAdmin a la tabla y conectar evento editar -->
     <app-asistencia-tabla 
       *ngIf="asistenciasFiltradas.length > 0"
       [asistencias]="asistenciasPaginadas"
       [paginaActual]="paginaActual"
       [itemsPorPagina]="itemsPorPagina"
-      (eliminar)="eliminarAsistencia($event)">
+      [esAdmin]="esAdmin"
+      (eliminar)="eliminarAsistencia($event)"
+      (editar)="abrirModalEditar($event)">
     </app-asistencia-tabla>
 
     <!-- Paginación -->

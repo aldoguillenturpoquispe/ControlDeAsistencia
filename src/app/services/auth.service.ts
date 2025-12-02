@@ -77,12 +77,16 @@ export class AuthService {
   }
 
   // ==========================================
-  // LOGIN CON EMAIL Y CONTRASEÑA
+  // LOGIN CON EMAIL Y CONTRASEÑA (MODIFICADO)
   // ==========================================
   async loginConEmail(email: string, password: string) {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       console.log('✅ Login exitoso:', userCredential.user.uid);
+      
+      // 🔥 NUEVO: Obtener y guardar el rol del usuario
+      await this.cargarRolUsuario(userCredential.user.uid);
+      
       this.router.navigate(['/inicio']);
       return userCredential;
     } catch (error: any) {
@@ -103,7 +107,7 @@ export class AuthService {
   }
 
   // ==========================================
-  // LOGIN CON GOOGLE
+  // LOGIN CON GOOGLE (MODIFICADO)
   // ==========================================
   async loginWithGoogle() {
     try {
@@ -137,6 +141,9 @@ export class AuthService {
         await this.usuarioService.crearUsuario(nuevoUsuario);
       }
       
+      // 🔥 NUEVO: Cargar rol del usuario
+      await this.cargarRolUsuario(user.uid);
+      
       this.router.navigate(['/inicio']);
       return result;
     } catch (error: any) {
@@ -153,11 +160,53 @@ export class AuthService {
   }
 
   // ==========================================
-  // CERRAR SESIÓN
+  // 🔥 NUEVO: CARGAR ROL DEL USUARIO DESDE FIRESTORE
+  // ==========================================
+  async cargarRolUsuario(uid: string): Promise<void> {
+    try {
+      const usuario = await this.usuarioService.obtenerUsuario(uid);
+      
+      if (usuario) {
+        // Guardar rol en localStorage
+        localStorage.setItem('userRole', usuario.rol);
+        localStorage.setItem('userName', usuario.nombreCompleto);
+        console.log('✅ Rol cargado:', usuario.rol);
+      } else {
+        console.warn('⚠️ Usuario no encontrado en Firestore');
+        localStorage.setItem('userRole', 'usuario'); // Por defecto
+      }
+    } catch (error) {
+      console.error('❌ Error al cargar rol:', error);
+      localStorage.setItem('userRole', 'usuario'); // Por defecto en caso de error
+    }
+  }
+
+  // ==========================================
+  // 🔥 NUEVO: VERIFICAR SI EL USUARIO ES ADMIN
+  // ==========================================
+  esAdmin(): boolean {
+    return localStorage.getItem('userRole') === 'admin';
+  }
+
+  // ==========================================
+  // 🔥 NUEVO: OBTENER ROL ACTUAL
+  // ==========================================
+  getRolActual(): 'admin' | 'usuario' {
+    const rol = localStorage.getItem('userRole');
+    return rol === 'admin' ? 'admin' : 'usuario';
+  }
+
+  // ==========================================
+  // CERRAR SESIÓN (MODIFICADO)
   // ==========================================
   async logout() {
     try {
       await signOut(this.auth);
+      
+      // 🔥 NUEVO: Limpiar localStorage
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userName');
+      
       console.log('✅ Sesión cerrada correctamente');
       this.router.navigate(['/login']);
     } catch (error) {
@@ -181,7 +230,7 @@ export class AuthService {
   }
 
   // ==========================================
-  // AGREGAR ESTE MÉTODO EN AuthService
+  // ENVIAR RECUPERACIÓN DE PASSWORD
   // ==========================================
   async enviarRecuperacionPassword(email: string) {
     try {

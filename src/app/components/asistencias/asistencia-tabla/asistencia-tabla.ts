@@ -11,8 +11,11 @@ import { Asistencia } from '../../../models/asistencia.model';
 })
 export class AsistenciaTabla {
   @Input() asistencias: Asistencia[] = [];
-  @Input() paginaActual: number = 1; // Recibir página actual
-  @Input() itemsPorPagina: number = 10; // Recibir items por página
+  @Input() paginaActual: number = 1;
+  @Input() itemsPorPagina: number = 10;
+  
+  // 🔥 NUEVO: Recibir si el usuario es admin
+  @Input() esAdmin: boolean = false;
   
   @Output() eliminar = new EventEmitter<string>();
   @Output() editar = new EventEmitter<Asistencia>();
@@ -30,21 +33,27 @@ export class AsistenciaTabla {
   }
 
   // ==========================================
-  // EDITAR ASISTENCIA
+  // EDITAR ASISTENCIA (solo si es admin)
   // ==========================================
   editarAsistencia(asistencia: Asistencia): void {
-    console.log('Editar asistencia:', asistencia);
+    if (!this.esAdmin) {
+      alert('⛔ Solo los administradores pueden editar asistencias');
+      return;
+    }
+    console.log('✏️ Editar asistencia:', asistencia);
     this.editar.emit(asistencia);
   }
 
   // ==========================================
-  // ELIMINAR ASISTENCIA
+  // ELIMINAR ASISTENCIA (solo si es admin)
   // ==========================================
   eliminarAsistencia(id: string): void {
-    console.log('Eliminar asistencia:', id);
-    if (confirm('¿Estás seguro de eliminar esta asistencia?')) {
-      this.eliminar.emit(id);
+    if (!this.esAdmin) {
+      alert('⛔ Solo los administradores pueden eliminar asistencias');
+      return;
     }
+    console.log('🗑️ Solicitud de eliminar asistencia:', id);
+    this.eliminar.emit(id);
   }
 
   // ==========================================
@@ -86,7 +95,7 @@ export class AsistenciaTabla {
       let totalMinutos = (horaS * 60 + minS) - (horaE * 60 + minE);
       
       if (totalMinutos < 0) {
-        totalMinutos += 24 * 60; // Manejar caso de paso de medianoche
+        totalMinutos += 24 * 60;
       }
 
       const horas = Math.floor(totalMinutos / 60);
@@ -129,7 +138,6 @@ export class AsistenciaTabla {
   // OBTENER ÍNDICE GLOBAL PARA ID
   // ==========================================
   obtenerIndice(index: number): string {
-    // Calcular el índice global basado en la página actual
     const indiceGlobal = (this.paginaActual - 1) * this.itemsPorPagina + index + 1;
     return `#${String(indiceGlobal).padStart(3, '0')}`;
   }

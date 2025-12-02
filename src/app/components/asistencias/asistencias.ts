@@ -5,6 +5,7 @@ import { AsistenciaFormModal } from './asistencia-form-modal/asistencia-form-mod
 import { AsistenciaTabla } from './asistencia-tabla/asistencia-tabla';
 import { AsistenciaService } from '../../services/asistencia.service';
 import { UsuarioService } from '../../services/usuario.service';
+import { AuthService } from '../../services/auth.service';
 import { Asistencia } from '../../models/asistencia.model';
 
 @Component({
@@ -17,10 +18,17 @@ import { Asistencia } from '../../models/asistencia.model';
 export class Asistencias implements OnInit {
   private asistenciaService = inject(AsistenciaService);
   private usuarioService = inject(UsuarioService);
+  private authService = inject(AuthService);
+
+  // Variables de rol
+  esAdmin: boolean = false;
 
   // Estado
   mostrarModal = false;
   isLoading = true;
+  
+  // 🔥 NUEVO: Para edición
+  asistenciaParaEditar: Asistencia | null = null;
 
   // Datos
   asistencias: Asistencia[] = [];
@@ -43,6 +51,9 @@ export class Asistencias implements OnInit {
   totalPaginas = 1;
 
   async ngOnInit(): Promise<void> {
+    this.esAdmin = this.authService.esAdmin();
+    console.log('🔐 Usuario es admin:', this.esAdmin);
+    
     await this.cargarDatos();
   }
 
@@ -53,7 +64,6 @@ export class Asistencias implements OnInit {
     try {
       this.isLoading = true;
 
-      // Cargar asistencias y estadísticas en paralelo
       const [asistencias, estadisticas] = await Promise.all([
         this.asistenciaService.obtenerAsistencias(),
         this.asistenciaService.contarPorEstadoHoy()
@@ -62,13 +72,11 @@ export class Asistencias implements OnInit {
       this.asistencias = asistencias;
       this.asistenciasFiltradas = asistencias;
       
-      // Actualizar estadísticas
       this.totalRegistros = asistencias.length;
       this.presentesHoy = estadisticas.presentes;
       this.ausentesHoy = estadisticas.ausentes;
       this.tardanzasHoy = estadisticas.tardanzas;
 
-      // Calcular paginación
       this.calcularPaginacion();
 
       console.log('✅ Datos de asistencias cargados');
@@ -114,10 +122,8 @@ export class Asistencias implements OnInit {
       let cumpleUsuario = true;
       let cumpleEstado = true;
 
-      // Filtro por fecha
       if (this.filtroFecha && this.filtroFecha.trim() !== '') {
         try {
-          // Convertir la fecha de asistencia a formato YYYY-MM-DD usando hora local
           let fechaAsistencia: string;
           let fecha: Date;
           
@@ -127,26 +133,18 @@ export class Asistencias implements OnInit {
             fecha = new Date(asistencia.fecha as any);
           }
           
-          // Usar getFullYear, getMonth, getDate para evitar problemas de zona horaria
           const year = fecha.getFullYear();
           const month = String(fecha.getMonth() + 1).padStart(2, '0');
           const day = String(fecha.getDate()).padStart(2, '0');
           fechaAsistencia = `${year}-${month}-${day}`;
           
           cumpleFecha = fechaAsistencia === this.filtroFecha;
-          
-          console.log('🔍 Comparando fechas:', {
-            fechaAsistencia,
-            filtroFecha: this.filtroFecha,
-            coincide: cumpleFecha
-          });
         } catch (error) {
           console.warn('Error al comparar fecha para asistencia:', asistencia.id, error);
           cumpleFecha = false;
         }
       }
 
-      // Filtro por usuario (nombre) - con validación de undefined/null
       if (this.filtroUsuario && this.filtroUsuario.trim() !== '') {
         const nombreCompleto = asistencia.nombreCompleto || '';
         cumpleUsuario = nombreCompleto
@@ -154,7 +152,6 @@ export class Asistencias implements OnInit {
           .includes(this.filtroUsuario.toLowerCase().trim());
       }
 
-      // Filtro por estado
       if (this.filtroEstado && this.filtroEstado.trim() !== '') {
         cumpleEstado = asistencia.estado === this.filtroEstado;
       }
@@ -162,7 +159,6 @@ export class Asistencias implements OnInit {
       return cumpleFecha && cumpleUsuario && cumpleEstado;
     });
 
-    // Resetear paginación y recalcular
     this.paginaActual = 1;
     this.calcularPaginacion();
 
@@ -183,17 +179,32 @@ export class Asistencias implements OnInit {
   }
 
   // ==========================================
-  // MODAL
+  // MODAL - NUEVA ASISTENCIA
   // ==========================================
   abrirModal(): void {
-    console.log('Abriendo modal...');
+    console.log('Abriendo modal para nueva asistencia...');
+    this.asistenciaParaEditar = null;
+    this.mostrarModal = true;
+  }
+
+  // ==========================================
+  // 🔥 NUEVO: MODAL - EDITAR ASISTENCIA
+  // ==========================================
+  abrirModalEditar(asistencia: Asistencia): void {
+    if (!this.esAdmin) {
+      alert('⛔ Solo los administradores pueden editar asistencias');
+      return;
+    }
+
+    console.log('Abriendo modal para editar asistencia:', asistencia);
+    this.asistenciaParaEditar = asistencia;
     this.mostrarModal = true;
   }
 
   async cerrarModal(asistenciaGuardada?: boolean): Promise<void> {
     this.mostrarModal = false;
+    this.asistenciaParaEditar = null;
     
-    // Si se guardó una asistencia, recargar datos
     if (asistenciaGuardada) {
       await this.cargarDatos();
     }
@@ -223,19 +234,46 @@ export class Asistencias implements OnInit {
   }
 
   // ==========================================
-  // ELIMINAR ASISTENCIA
+  // 🔥 MEJORADO: ELIMINAR ASISTENCIA
   // ==========================================
   async eliminarAsistencia(id: string): Promise<void> {
-    if (!confirm('¿Estás seguro de eliminar esta asistencia?')) {
+    if (!this.esAdmin) {
+      alert('⛔ Solo los administradores pueden eliminar asistencias');
+      return;
+    }
+
+    // Encontrar la asistencia para mostrar más info
+    const asistencia = this.asistencias.find(a => a.id === id);
+    const nombreUsuario = asistencia?.nombreCompleto || 'este usuario';
+    const fechaAsistencia = asistencia 
+      ? new Date(asistencia.fecha).toLocaleDateString('es-PE')
+      : '';
+
+    const confirmacion = confirm(
+      `🗑️ ¿Confirmar eliminación?\n\n` +
+      `📌 Usuario: ${nombreUsuario}\n` +
+      `📅 Fecha: ${fechaAsistencia}\n\n` +
+      `Esta acción no se puede deshacer.`
+    );
+
+    if (!confirmacion) {
+      console.log('❌ Eliminación cancelada por el usuario');
       return;
     }
 
     try {
-      // Aquí llamarás al servicio cuando lo implementes
-      console.log('Eliminando asistencia:', id);
+      console.log('🗑️ Eliminando asistencia:', id);
+      
+      await this.asistenciaService.eliminarAsistencia(id);
+      
+      // Mostrar mensaje de éxito
+      alert(`✅ Asistencia eliminada correctamente\n\nUsuario: ${nombreUsuario}\nFecha: ${fechaAsistencia}`);
+      
       await this.cargarDatos();
-    } catch (error) {
+      
+    } catch (error: any) {
       console.error('❌ Error al eliminar asistencia:', error);
+      alert(`❌ Error al eliminar asistencia:\n\n${error.message || 'Error desconocido'}`);
     }
   }
 }

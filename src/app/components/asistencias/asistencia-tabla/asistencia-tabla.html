@@ -26,15 +26,27 @@
           </span>
         </td>
         <td>
-          <button class="btn-action edit" title="Editar" (click)="editarAsistencia(asistencia)">
-            ✏️
-          </button>
-          <button class="btn-action delete" title="Eliminar" (click)="eliminarAsistencia(asistencia.id!)">
-            🗑️
-          </button>
-          <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia(asistencia)">
-            👁️
-          </button>
+          <!-- 🔥 NUEVO: Botones según rol -->
+          
+          <!-- ADMIN: ve todos los botones -->
+          <ng-container *ngIf="esAdmin">
+            <button class="btn-action edit" title="Editar" (click)="editarAsistencia(asistencia)">
+              ✏️
+            </button>
+            <button class="btn-action delete" title="Eliminar" (click)="eliminarAsistencia(asistencia.id!)">
+              🗑️
+            </button>
+            <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia(asistencia)">
+              👁️
+            </button>
+          </ng-container>
+
+          <!-- USUARIO: solo ve detalle -->
+          <ng-container *ngIf="!esAdmin">
+            <button class="btn-action view" title="Ver Detalle" (click)="verDetalleAsistencia(asistencia)">
+              👁️ Ver Detalle
+            </button>
+          </ng-container>
         </td>
       </tr>
     </tbody>
