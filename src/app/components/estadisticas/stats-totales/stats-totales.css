@@ -1,0 +1,79 @@
+.section-title {
+  margin: 2rem 0 1rem 0;
+}
+
+.section-title h3 {
+  font-size: 1.3rem;
+  color: #0a2342;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0c419;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: #fff;
+  padding: 1.2rem;
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card h3 {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.8rem;
+}
+
+.value {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #0a2342;
+  margin: 0.5rem 0;
+}
+
+.value.success {
+  color: #2e7d32;
+}
+
+.value.danger {
+  color: #c62828;
+}
+
+.value.warning {
+  color: #f9a825;
+}
+
+.value.info {
+  color: #1565c0;
+}
+
+.card-subtitle {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}

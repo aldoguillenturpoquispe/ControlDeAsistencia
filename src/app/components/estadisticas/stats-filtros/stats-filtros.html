@@ -1,0 +1,20 @@
+<div class="filters-stats">
+  <label>
+    Período:
+    <select [(ngModel)]="periodoLocal" (change)="onPeriodoChange()">
+      <option value="hoy">Hoy</option>
+      <option value="semana">Esta Semana</option>
+      <option value="mes">Este Mes</option>
+      <option value="anio">Este Año</option>
+    </select>
+  </label>
+  <label>
+    Desde:
+    <input type="date" [(ngModel)]="fechaDesdeLocal">
+  </label>
+  <label>
+    Hasta:
+    <input type="date" [(ngModel)]="fechaHastaLocal">
+  </label>
+  <button class="btn-filter" (click)="onActualizar()">🔍 Actualizar</button>
+</div>

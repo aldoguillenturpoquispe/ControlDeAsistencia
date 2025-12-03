@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatsTopUsuarios } from './stats-top-usuarios';
+import { StatsPromedios } from './stats-promedios';
 
-describe('StatsTopUsuarios', () => {
-  let component: StatsTopUsuarios;
-  let fixture: ComponentFixture<StatsTopUsuarios>;
+describe('StatsPromedios', () => {
+  let component: StatsPromedios;
+  let fixture: ComponentFixture<StatsPromedios>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StatsTopUsuarios]
+      imports: [StatsPromedios]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(StatsTopUsuarios);
+    fixture = TestBed.createComponent(StatsPromedios);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

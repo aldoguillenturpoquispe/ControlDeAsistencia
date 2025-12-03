@@ -1,9 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { StatsCharts } from './stats-charts/stats-charts';
+import { StatsFiltros } from './stats-filtros/stats-filtros';
+import { StatsTotales } from './stats-totales/stats-totales';
+import { StatsPromedios } from './stats-promedios/stats-promedios';
 import { StatsResumenEstados } from './stats-resumen-estados/stats-resumen-estados';
-import { StatsTopUsuarios } from './stats-top-usuarios/stats-top-usuarios';
 import { StatsExportActions } from './stats-export-actions/stats-export-actions';
 import { AsistenciaService } from '../../services/asistencia.service';
 import { UsuarioService } from '../../services/usuario.service';
@@ -12,11 +12,11 @@ import { UsuarioService } from '../../services/usuario.service';
   selector: 'app-estadisticas',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule,
-    StatsCharts, 
-    StatsResumenEstados, 
-    StatsTopUsuarios,
+    CommonModule,
+    StatsFiltros,
+    StatsTotales,
+    StatsPromedios,
+    StatsResumenEstados,
     StatsExportActions
   ],
   templateUrl: './estadisticas.html',
@@ -26,24 +26,24 @@ export class Estadisticas implements OnInit {
   private asistenciaService = inject(AsistenciaService);
   private usuarioService = inject(UsuarioService);
 
-  // Variables para los filtros
+  // Filtros
   periodo: string = 'mes';
   fechaDesde: string = '';
   fechaHasta: string = '';
 
-  // Estado de carga
+  // Estado
   isLoading = true;
 
   // Datos de estadísticas
   datosEstadisticas = {
     totalUsuarios: 0,
-    asistenciasHoy: 0,
-    faltasHoy: 0,
-    porcentajeAsistencia: 0,
-    tardanzasMes: 0,
+    totalAsistencias: 0,
+    totalPresentes: 0,
+    totalAusentes: 0,
+    totalTardanzas: 0,
+    totalPermisos: 0,
     promedioHoras: 0,
-    diasLaborables: 22,
-    mejorAsistencia: 0
+    porcentajeAsistencia: 0
   };
 
   async ngOnInit(): Promise<void> {
@@ -51,9 +51,6 @@ export class Estadisticas implements OnInit {
     await this.cargarEstadisticas();
   }
 
-  // ==========================================
-  // ESTABLECER FECHAS INICIALES
-  // ==========================================
   establecerFechasIniciales(): void {
     const hoy = new Date();
     const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
@@ -62,245 +59,93 @@ export class Estadisticas implements OnInit {
     this.fechaDesde = primerDiaMes.toISOString().split('T')[0];
   }
 
-  // ==========================================
-  // CALCULAR FECHAS SEGÚN PERÍODO
-  // ==========================================
-  calcularFechasPorPeriodo(): { desde: Date; hasta: Date } {
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
+  // 🔥 SIMPLIFICADO: Solo actualizar y recargar
+  async onFiltrosChange(filtros: any): Promise<void> {
+    console.log('📥 Filtros recibidos:', filtros);
+
+    this.periodo = filtros.periodo;
+    this.fechaDesde = filtros.fechaDesde;
+    this.fechaHasta = filtros.fechaHasta;
     
-    let desde: Date;
-    let hasta: Date = new Date(hoy);
-
-    switch (this.periodo) {
-      case 'hoy':
-        desde = new Date(hoy);
-        break;
-
-      case 'semana':
-        // Calcular inicio de semana (lunes)
-        const diaSemana = hoy.getDay();
-        const diasDesdeInicio = diaSemana === 0 ? 6 : diaSemana - 1;
-        desde = new Date(hoy);
-        desde.setDate(hoy.getDate() - diasDesdeInicio);
-        break;
-
-      case 'mes':
-        desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-        break;
-
-      case 'anio':
-        desde = new Date(hoy.getFullYear(), 0, 1);
-        break;
-
-      default:
-        // Si hay fechas personalizadas, usarlas
-        if (this.fechaDesde && this.fechaHasta) {
-          desde = new Date(this.fechaDesde);
-          hasta = new Date(this.fechaHasta);
-        } else {
-          desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-        }
-    }
-
-    // Actualizar los inputs de fecha con el período calculado
-    this.fechaDesde = desde.toISOString().split('T')[0];
-    this.fechaHasta = hasta.toISOString().split('T')[0];
-
-    return { desde, hasta };
+    await this.cargarEstadisticas();
   }
 
-  // ==========================================
-  // CARGAR ESTADÍSTICAS CON FILTROS
-  // ==========================================
   async cargarEstadisticas(): Promise<void> {
     try {
       this.isLoading = true;
 
-      // Calcular fechas según el período seleccionado
-      const { desde, hasta } = this.calcularFechasPorPeriodo();
+      console.log('📅 Cargando con fechas:', {
+        desde: this.fechaDesde,
+        hasta: this.fechaHasta
+      });
 
-      console.log('📅 Cargando estadísticas desde:', desde, 'hasta:', hasta);
+      const desde = new Date(this.fechaDesde);
+      const hasta = new Date(this.fechaHasta);
+      desde.setHours(0, 0, 0, 0);
+      hasta.setHours(23, 59, 59, 999);
 
-      // Cargar datos en paralelo
-      const [usuarios, asistenciasHoy, todasAsistencias] = await Promise.all([
+      const [usuarios, todasAsistencias] = await Promise.all([
         this.usuarioService.obtenerUsuarios(),
-        this.asistenciaService.contarPorEstadoHoy(),
         this.asistenciaService.obtenerAsistencias()
       ]);
 
-      // Total de usuarios
-      this.datosEstadisticas.totalUsuarios = usuarios.length;
+      console.log('📊 Total asistencias en BD:', todasAsistencias.length);
 
-      // Filtrar asistencias por rango de fechas
       const asistenciasFiltradas = todasAsistencias.filter(a => {
         const fechaAsistencia = new Date(a.fecha);
         fechaAsistencia.setHours(0, 0, 0, 0);
         return fechaAsistencia >= desde && fechaAsistencia <= hasta;
       });
 
-      console.log('📊 Asistencias filtradas:', asistenciasFiltradas.length);
+      console.log('✅ Asistencias filtradas:', asistenciasFiltradas.length);
 
-      // Estadísticas de HOY (siempre del día actual, no filtradas)
-      this.datosEstadisticas.asistenciasHoy = asistenciasHoy.presentes;
-      this.datosEstadisticas.faltasHoy = asistenciasHoy.ausentes;
+      // Calcular totales
+      this.datosEstadisticas.totalUsuarios = usuarios.length;
+      this.datosEstadisticas.totalAsistencias = asistenciasFiltradas.length;
+      this.datosEstadisticas.totalPresentes = asistenciasFiltradas.filter(a => a.estado === 'presente').length;
+      this.datosEstadisticas.totalAusentes = asistenciasFiltradas.filter(a => a.estado === 'ausente').length;
+      this.datosEstadisticas.totalTardanzas = asistenciasFiltradas.filter(a => a.estado === 'tardanza').length;
+      this.datosEstadisticas.totalPermisos = asistenciasFiltradas.filter(a => a.estado === 'permiso').length;
 
-      // Porcentaje de asistencia del PERÍODO FILTRADO
-      const presentesPeriodo = asistenciasFiltradas.filter(
-        a => a.estado === 'presente' || a.estado === 'tardanza'
-      ).length;
-      
-      const diasLaborablesPeriodo = this.calcularDiasLaborables(desde, hasta);
-      const totalEsperado = this.datosEstadisticas.totalUsuarios * diasLaborablesPeriodo;
-
-      if (totalEsperado > 0) {
-        this.datosEstadisticas.porcentajeAsistencia = parseFloat(
-          ((presentesPeriodo / totalEsperado) * 100).toFixed(1)
-        );
-      } else {
-        this.datosEstadisticas.porcentajeAsistencia = 0;
-      }
-
-      // Tardanzas del PERÍODO FILTRADO
-      const tardanzasPeriodo = asistenciasFiltradas.filter(
-        a => a.estado === 'tardanza'
-      );
-      this.datosEstadisticas.tardanzasMes = tardanzasPeriodo.length;
-
-      // Calcular promedio de horas trabajadas del PERÍODO FILTRADO
-      const asistenciasConSalida = asistenciasFiltradas.filter(
-        a => a.horaSalida && (a.estado === 'presente' || a.estado === 'tardanza')
-      );
-      
-      if (asistenciasConSalida.length > 0) {
-        const totalHoras = asistenciasConSalida.reduce((sum, a) => {
-          return sum + this.calcularHorasTrabajadas(a.horaEntrada, a.horaSalida!);
+      // Calcular promedio de horas
+      const conSalida = asistenciasFiltradas.filter(a => a.horaSalida);
+      if (conSalida.length > 0) {
+        const totalHoras = conSalida.reduce((sum, a) => {
+          const [hE, mE] = a.horaEntrada.split(':').map(Number);
+          const [hS, mS] = a.horaSalida!.split(':').map(Number);
+          const mins = (hS * 60 + mS) - (hE * 60 + mE);
+          return sum + (mins > 0 ? mins / 60 : 0);
         }, 0);
-        this.datosEstadisticas.promedioHoras = parseFloat(
-          (totalHoras / asistenciasConSalida.length).toFixed(1)
-        );
+        this.datosEstadisticas.promedioHoras = parseFloat((totalHoras / conSalida.length).toFixed(1));
       } else {
         this.datosEstadisticas.promedioHoras = 0;
       }
 
-      // Días laborables del período
-      this.datosEstadisticas.diasLaborables = diasLaborablesPeriodo;
+      // Calcular porcentaje de asistencia
+      const diasLaborables = this.calcularDiasLaborables(desde, hasta);
+      const totalEsperado = usuarios.length * diasLaborables;
+      const efectivos = this.datosEstadisticas.totalPresentes + this.datosEstadisticas.totalTardanzas;
+      this.datosEstadisticas.porcentajeAsistencia = totalEsperado > 0 
+        ? parseFloat(((efectivos / totalEsperado) * 100).toFixed(1)) 
+        : 0;
 
-      // Mejor asistencia (máximo entre el porcentaje actual y registros históricos)
-      const porcentajesPorDia = this.calcularPorcentajesPorDia(
-        asistenciasFiltradas, 
-        usuarios.length,
-        desde,
-        hasta
-      );
-      
-      this.datosEstadisticas.mejorAsistencia = porcentajesPorDia.length > 0
-        ? Math.max(...porcentajesPorDia, this.datosEstadisticas.porcentajeAsistencia)
-        : this.datosEstadisticas.porcentajeAsistencia;
-
-      console.log('✅ Estadísticas cargadas:', this.datosEstadisticas);
+      console.log('✅ Estadísticas calculadas:', this.datosEstadisticas);
 
     } catch (error) {
       console.error('❌ Error al cargar estadísticas:', error);
-      alert('Error al cargar las estadísticas');
     } finally {
       this.isLoading = false;
     }
   }
 
-  // ==========================================
-  // CALCULAR DÍAS LABORABLES (LUNES A VIERNES)
-  // ==========================================
   calcularDiasLaborables(desde: Date, hasta: Date): number {
-    let diasLaborables = 0;
-    const fechaActual = new Date(desde);
-
-    while (fechaActual <= hasta) {
-      const diaSemana = fechaActual.getDay();
-      // Contar solo lunes (1) a viernes (5)
-      if (diaSemana !== 0 && diaSemana !== 6) {
-        diasLaborables++;
-      }
-      fechaActual.setDate(fechaActual.getDate() + 1);
+    let dias = 0;
+    const actual = new Date(desde);
+    while (actual <= hasta) {
+      const dia = actual.getDay();
+      if (dia !== 0 && dia !== 6) dias++;
+      actual.setDate(actual.getDate() + 1);
     }
-
-    return diasLaborables;
-  }
-
-  // ==========================================
-  // CALCULAR PORCENTAJES POR DÍA
-  // ==========================================
-  calcularPorcentajesPorDia(
-    asistencias: any[], 
-    totalUsuarios: number,
-    desde: Date,
-    hasta: Date
-  ): number[] {
-    const porcentajes: number[] = [];
-    const fechaActual = new Date(desde);
-
-    while (fechaActual <= hasta) {
-      const fechaStr = fechaActual.toISOString().split('T')[0];
-      
-      const presentesDia = asistencias.filter(a => {
-        const fechaAsistencia = new Date(a.fecha).toISOString().split('T')[0];
-        return fechaAsistencia === fechaStr && 
-               (a.estado === 'presente' || a.estado === 'tardanza');
-      }).length;
-
-      if (totalUsuarios > 0) {
-        const porcentaje = (presentesDia / totalUsuarios) * 100;
-        porcentajes.push(porcentaje);
-      }
-
-      fechaActual.setDate(fechaActual.getDate() + 1);
-    }
-
-    return porcentajes;
-  }
-
-  // ==========================================
-  // ACTUALIZAR ESTADÍSTICAS (APLICAR FILTROS)
-  // ==========================================
-  async actualizarEstadisticas(): Promise<void> {
-    // Validar que las fechas sean correctas
-    if (this.fechaDesde && this.fechaHasta) {
-      const desde = new Date(this.fechaDesde);
-      const hasta = new Date(this.fechaHasta);
-
-      if (desde > hasta) {
-        alert('⚠️ La fecha "Desde" no puede ser mayor que la fecha "Hasta"');
-        return;
-      }
-    }
-
-    console.log('🔄 Actualizando estadísticas con filtros:', {
-      periodo: this.periodo,
-      desde: this.fechaDesde,
-      hasta: this.fechaHasta
-    });
-
-    // Recargar estadísticas con los nuevos filtros
-    await this.cargarEstadisticas();
-  }
-
-  // ==========================================
-  // CALCULAR HORAS TRABAJADAS
-  // ==========================================
-  calcularHorasTrabajadas(entrada: string, salida: string): number {
-    try {
-      const [horaE, minE] = entrada.split(':').map(Number);
-      const [horaS, minS] = salida.split(':').map(Number);
-
-      let totalMinutos = (horaS * 60 + minS) - (horaE * 60 + minE);
-      
-      if (totalMinutos < 0) {
-        totalMinutos += 24 * 60;
-      }
-
-      return totalMinutos / 60;
-    } catch (error) {
-      return 0;
-    }
+    return dias;
   }
 }

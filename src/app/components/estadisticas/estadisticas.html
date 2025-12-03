@@ -7,97 +7,32 @@
 
   <!-- Contenido -->
   <div *ngIf="!isLoading">
-    <h2>Panel de Estadísticas</h2>
+    <h2>📊 Estadísticas y Resumen General</h2>
 
-    <!-- Filtros de fecha -->
-    <div class="filters-stats">
-      <label>
-        Período:
-        <select [(ngModel)]="periodo" (change)="actualizarEstadisticas()">
-          <option value="hoy">Hoy</option>
-          <option value="semana">Esta Semana</option>
-          <option value="mes">Este Mes</option>
-          <option value="anio">Este Año</option>
-        </select>
-      </label>
-      <label>
-        Desde:
-        <input type="date" [(ngModel)]="fechaDesde">
-      </label>
-      <label>
-        Hasta:
-        <input type="date" [(ngModel)]="fechaHasta">
-      </label>
-      <button class="btn-filter" (click)="actualizarEstadisticas()">🔍 Actualizar</button>
-    </div>
+    <!-- Componente: Filtros -->
+    <app-stats-filtros
+      [periodo]="periodo"
+      [fechaDesde]="fechaDesde"
+      [fechaHasta]="fechaHasta"
+      (filtrosChange)="onFiltrosChange($event)">
+    </app-stats-filtros>
 
-    <!-- Resumen en tarjetas principales -->
-    <div class="cards">
-      <div class="card">
-        <div class="card-icon">👥</div>
-        <h3>Total Usuarios</h3>
-        <p class="value">{{ datosEstadisticas.totalUsuarios }}</p>
-        <span class="card-subtitle">Registrados activos</span>
-      </div>
-      <div class="card">
-        <div class="card-icon">✅</div>
-        <h3>Asistencias Hoy</h3>
-        <p class="value success">{{ datosEstadisticas.asistenciasHoy }}</p>
-        <span class="card-subtitle">Presentes</span>
-      </div>
-      <div class="card">
-        <div class="card-icon">❌</div>
-        <h3>Faltas Hoy</h3>
-        <p class="value danger">{{ datosEstadisticas.faltasHoy }}</p>
-        <span class="card-subtitle">Ausentes</span>
-      </div>
-      <div class="card">
-        <div class="card-icon">📊</div>
-        <h3>Porcentaje Asistencia</h3>
-        <p class="value warning">{{ datosEstadisticas.porcentajeAsistencia }}%</p>
-        <span class="card-subtitle">Del período seleccionado</span>
-      </div>
-    </div>
+    <!-- Componente: Totales -->
+    <app-stats-totales
+      [datosEstadisticas]="datosEstadisticas">
+    </app-stats-totales>
 
-    <!-- Tarjetas adicionales de resumen -->
-    <div class="cards-secondary">
-      <div class="card-small">
-        <h4>Tardanzas del Período</h4>
-        <p class="value-small">{{ datosEstadisticas.tardanzasMes }}</p>
-      </div>
-      <div class="card-small">
-        <h4>Promedio Horas/Día</h4>
-        <p class="value-small">{{ datosEstadisticas.promedioHoras }}h</p>
-      </div>
-      <div class="card-small">
-        <h4>Días Laborables</h4>
-        <p class="value-small">{{ datosEstadisticas.diasLaborables }}</p>
-      </div>
-      <div class="card-small">
-        <h4>Mejor Asistencia</h4>
-        <p class="value-small">{{ datosEstadisticas.mejorAsistencia }}%</p>
-      </div>
-    </div>
+    <!-- Componente: Promedios -->
+    <app-stats-promedios
+      [datosEstadisticas]="datosEstadisticas">
+    </app-stats-promedios>
 
-    <!-- Gráficos (COMPONENTE SEPARADO con inputs) -->
-    <app-stats-charts 
-      [fechaDesde]="fechaDesde" 
-      [fechaHasta]="fechaHasta">
-    </app-stats-charts>
-    
-    <!-- Tabla de top usuarios (COMPONENTE SEPARADO con inputs) -->
-    <app-stats-top-usuarios 
-      [fechaDesde]="fechaDesde" 
-      [fechaHasta]="fechaHasta">
-    </app-stats-top-usuarios>
-
-    <!-- Resumen por estado (COMPONENTE SEPARADO con inputs) -->
-    <app-stats-resumen-estados 
-      [fechaDesde]="fechaDesde" 
-      [fechaHasta]="fechaHasta">
+    <!-- Componente: Resumen por Estados -->
+    <app-stats-resumen-estados
+      [datosEstadisticas]="datosEstadisticas">
     </app-stats-resumen-estados>
 
-    <!-- 🔥 NUEVO: Componente de acciones de exportación -->
+    <!-- Componente: Exportación -->
     <app-stats-export-actions
       [datosEstadisticas]="datosEstadisticas"
       [periodo]="periodo"
