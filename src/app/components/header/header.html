@@ -34,11 +34,7 @@
   </nav>
 
   <div class="user-actions">
-    <button class="btn-action">
-      <i class="fas fa-bell"></i>
-      <span class="notification-badge">3</span>
-    </button>
-    
+
     <!-- Botón de usuario con foto o iniciales -->
     <button class="btn-action user-avatar" (click)="toggleUserMenu()">
       <img *ngIf="photoURL" [src]="photoURL" alt="Avatar" class="avatar-img">
