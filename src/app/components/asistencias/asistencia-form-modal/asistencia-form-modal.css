@@ -1,7 +1,5 @@
-/* ========================================== */
-/* 🔥 MODAL OVERLAY - SCROLL ARREGLADO */
-/* ========================================== */
-.modal-overlay {
+ /* 🔥 MODAL OVERLAY - SCROLL ARREGLADO */
+ .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -17,10 +15,8 @@
   backdrop-filter: blur(2px); /* 🔥 Efecto blur en el fondo */
 }
 
-/* ========================================== */
-/* 🔥 MODAL CONTENT - SCROLL INTERNO */
-/* ========================================== */
-.modal-content {
+ /* 🔥 MODAL CONTENT - SCROLL INTERNO */
+ .modal-content {
   background: #fff;
   padding: 2rem;
   border-radius: 12px;
@@ -66,10 +62,8 @@
   background: #0d3a63;
 }
 
-/* ========================================== */
-/* CONTENIDO DEL MODAL */
-/* ========================================== */
-.modal-content h3 {
+ /* CONTENIDO DEL MODAL */
+ .modal-content h3 {
   color: #0a2342;
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
@@ -114,10 +108,8 @@
   min-height: 80px;
 }
 
-/* ========================================== */
-/* MENSAJES DE ERROR */
-/* ========================================== */
-.error-msg {
+ /* MENSAJES DE ERROR */
+ .error-msg {
   color: #c62828;
   font-size: 0.8rem;
   display: block;
@@ -125,10 +117,8 @@
   font-weight: 500;
 }
 
-/* ========================================== */
-/* BOTONES DEL FORMULARIO */
-/* ========================================== */
-.form-actions {
+ /* BOTONES DEL FORMULARIO */
+ .form-actions {
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
@@ -178,10 +168,8 @@
   transform: none !important;
 }
 
-/* ========================================== */
-/* LOADER */
-/* ========================================== */
-.loading-container {
+ /* LOADER */
+ .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -209,10 +197,8 @@
   font-weight: 500;
 }
 
-/* ========================================== */
-/* 🔥 RESPONSIVE */
-/* ========================================== */
-@media (max-width: 768px) {
+ /* 🔥 RESPONSIVE */
+ @media (max-width: 768px) {
   .modal-overlay {
     padding: 10px;
   }
@@ -236,10 +222,8 @@
   }
 }
 
-/* ========================================== */
-/* 🔥 SELECT MEJORADO */
-/* ========================================== */
-.asistencia-form select {
+ /* 🔥 SELECT MEJORADO */
+ .asistencia-form select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230a2342' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;

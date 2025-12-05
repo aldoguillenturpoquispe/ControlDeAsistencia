@@ -23,10 +23,8 @@ export class UsuarioService {
 
   constructor() {}
 
-  // ==========================================
-  // CREAR UN NUEVO USUARIO EN FIRESTORE
-  // ==========================================
-  async crearUsuario(usuario: Usuario): Promise<void> {
+   // CREAR UN NUEVO USUARIO EN FIRESTORE
+   async crearUsuario(usuario: Usuario): Promise<void> {
     try {
       const usuarioDoc = doc(this.usuariosCollection, usuario.uid);
       
@@ -45,10 +43,8 @@ export class UsuarioService {
     }
   }
 
-  // ==========================================
-  // OBTENER UN USUARIO POR SU UID
-  // ==========================================
-  async obtenerUsuario(uid: string): Promise<Usuario | null> {
+   // OBTENER UN USUARIO POR SU UID
+   async obtenerUsuario(uid: string): Promise<Usuario | null> {
     try {
       const usuarioDoc = doc(this.usuariosCollection, uid);
       const docSnap = await getDoc(usuarioDoc);
@@ -76,10 +72,8 @@ export class UsuarioService {
     }
   }
 
-  // ==========================================
-  // OBTENER TODOS LOS USUARIOS
-  // ==========================================
-  async obtenerTodosLosUsuarios(): Promise<Usuario[]> {
+   // OBTENER TODOS LOS USUARIOS
+   async obtenerTodosLosUsuarios(): Promise<Usuario[]> {
     try {
       const querySnapshot = await getDocs(this.usuariosCollection);
       const usuarios: Usuario[] = [];
@@ -107,10 +101,8 @@ export class UsuarioService {
     }
   }
 
-  // ==========================================
-  // OBTENER USUARIOS POR ROL
-  // ==========================================
-  async obtenerUsuariosPorRol(rol: 'admin' | 'usuario'): Promise<Usuario[]> {
+   // OBTENER USUARIOS POR ROL
+   async obtenerUsuariosPorRol(rol: 'admin' | 'usuario'): Promise<Usuario[]> {
     try {
       const q = query(this.usuariosCollection, where('rol', '==', rol));
       const querySnapshot = await getDocs(q);
@@ -139,10 +131,8 @@ export class UsuarioService {
     }
   }
 
-  // ==========================================
-  // ACTUALIZAR UN USUARIO
-  // ==========================================
-  async actualizarUsuario(uid: string, datos: Partial<Usuario>): Promise<void> {
+   // ACTUALIZAR UN USUARIO
+   async actualizarUsuario(uid: string, datos: Partial<Usuario>): Promise<void> {
     try {
       const usuarioDoc = doc(this.usuariosCollection, uid);
       
@@ -165,10 +155,8 @@ export class UsuarioService {
     }
   }
 
-  // ==========================================
-  // ELIMINAR UN USUARIO
-  // ==========================================
-  async eliminarUsuario(uid: string): Promise<void> {
+   // ELIMINAR UN USUARIO
+   async eliminarUsuario(uid: string): Promise<void> {
     try {
       const usuarioDoc = doc(this.usuariosCollection, uid);
       await deleteDoc(usuarioDoc);
@@ -179,10 +167,8 @@ export class UsuarioService {
     }
   }
 
-  // ==========================================
-  // ACTIVAR/DESACTIVAR USUARIO
-  // ==========================================
-  async cambiarEstadoUsuario(uid: string, activo: boolean): Promise<void> {
+   // ACTIVAR/DESACTIVAR USUARIO
+   async cambiarEstadoUsuario(uid: string, activo: boolean): Promise<void> {
     try {
       await this.actualizarUsuario(uid, { activo });
       console.log(`✅ Usuario ${activo ? 'activado' : 'desactivado'}:`, uid);
@@ -192,10 +178,8 @@ export class UsuarioService {
     }
   }
 
-  // ==========================================
-  // CAMBIAR ROL DE USUARIO
-  // ==========================================
-  async cambiarRolUsuario(uid: string, nuevoRol: 'admin' | 'usuario'): Promise<void> {
+   // CAMBIAR ROL DE USUARIO
+   async cambiarRolUsuario(uid: string, nuevoRol: 'admin' | 'usuario'): Promise<void> {
     try {
       await this.actualizarUsuario(uid, { rol: nuevoRol });
       console.log(`✅ Rol del usuario actualizado a "${nuevoRol}":`, uid);
@@ -204,8 +188,7 @@ export class UsuarioService {
       throw error;
     }
   }
-  // ==========================================
-// ALIAS PARA OBTENER TODOS LOS USUARIOS
+ // ALIAS PARA OBTENER TODOS LOS USUARIOS
 // ==========================================
 async obtenerUsuarios(): Promise<Usuario[]> {
   return this.obtenerTodosLosUsuarios();

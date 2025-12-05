@@ -25,10 +25,8 @@ export class AsistenciaService {
   private authService = inject(AuthService);
   private asistenciasCollection = collection(this.firestore, 'asistencias');
 
-  // ==========================================
-  // CREAR ASISTENCIA
-  // ==========================================
-  async crearAsistencia(asistencia: Asistencia): Promise<string> {
+   // CREAR ASISTENCIA
+   async crearAsistencia(asistencia: Asistencia): Promise<string> {
     try {
       const docRef = await addDoc(this.asistenciasCollection, {
         ...asistencia,
@@ -44,10 +42,8 @@ export class AsistenciaService {
     }
   }
 
-  // ==========================================
-  // 🔥 NUEVO: EDITAR ASISTENCIA (SOLO ADMIN)
-  // ==========================================
-  async editarAsistencia(id: string, asistenciaActualizada: Partial<Asistencia>): Promise<void> {
+   // 🔥 NUEVO: EDITAR ASISTENCIA (SOLO ADMIN)
+   async editarAsistencia(id: string, asistenciaActualizada: Partial<Asistencia>): Promise<void> {
     try {
       // Verificar si es admin
       if (!this.authService.esAdmin()) {
@@ -79,10 +75,8 @@ export class AsistenciaService {
     }
   }
 
-  // ==========================================
-  // 🔥 NUEVO: ELIMINAR ASISTENCIA (SOLO ADMIN)
-  // ==========================================
-  async eliminarAsistencia(id: string): Promise<void> {
+   // 🔥 NUEVO: ELIMINAR ASISTENCIA (SOLO ADMIN)
+   async eliminarAsistencia(id: string): Promise<void> {
     try {
       // Verificar si es admin
       if (!this.authService.esAdmin()) {
@@ -98,10 +92,8 @@ export class AsistenciaService {
     }
   }
 
-  // ==========================================
-  // OBTENER TODAS LAS ASISTENCIAS
-  // ==========================================
-  async obtenerAsistencias(): Promise<Asistencia[]> {
+   // OBTENER TODAS LAS ASISTENCIAS
+   async obtenerAsistencias(): Promise<Asistencia[]> {
     try {
       const q = query(this.asistenciasCollection, orderBy('fecha', 'desc'));
       const querySnapshot = await getDocs(q);
@@ -125,10 +117,8 @@ export class AsistenciaService {
     }
   }
 
-  // ==========================================
-  // OBTENER ASISTENCIAS DE HOY
-  // ==========================================
-  async obtenerAsistenciasHoy(): Promise<Asistencia[]> {
+   // OBTENER ASISTENCIAS DE HOY
+   async obtenerAsistenciasHoy(): Promise<Asistencia[]> {
     try {
       const hoy = new Date();
       hoy.setHours(0, 0, 0, 0);
@@ -161,10 +151,8 @@ export class AsistenciaService {
     }
   }
 
-  // ==========================================
-  // OBTENER ÚLTIMAS N ASISTENCIAS
-  // ==========================================
-  async obtenerUltimasAsistencias(limite: number = 5): Promise<Asistencia[]> {
+   // OBTENER ÚLTIMAS N ASISTENCIAS
+   async obtenerUltimasAsistencias(limite: number = 5): Promise<Asistencia[]> {
     try {
       const q = query(
         this.asistenciasCollection,
@@ -192,10 +180,8 @@ export class AsistenciaService {
     }
   }
 
-  // ==========================================
-  // CONTAR ASISTENCIAS POR ESTADO HOY
-  // ==========================================
-  async contarPorEstadoHoy(): Promise<{
+   // CONTAR ASISTENCIAS POR ESTADO HOY
+   async contarPorEstadoHoy(): Promise<{
     presentes: number;
     ausentes: number;
     tardanzas: number;

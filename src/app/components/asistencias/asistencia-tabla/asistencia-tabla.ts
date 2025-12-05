@@ -23,19 +23,15 @@ export class AsistenciaTabla {
   mostrarModalDetalle = false;
   asistenciaSeleccionada: Asistencia | null = null;
 
-  // ==========================================
-  // VER DETALLE DE ASISTENCIA
-  // ==========================================
-  verDetalleAsistencia(asistencia: Asistencia): void {
+   // VER DETALLE DE ASISTENCIA
+   verDetalleAsistencia(asistencia: Asistencia): void {
     console.log('Ver detalle de asistencia:', asistencia);
     this.asistenciaSeleccionada = asistencia;
     this.mostrarModalDetalle = true;
   }
 
-  // ==========================================
-  // EDITAR ASISTENCIA (solo si es admin)
-  // ==========================================
-  editarAsistencia(asistencia: Asistencia): void {
+   // EDITAR ASISTENCIA (solo si es admin)
+   editarAsistencia(asistencia: Asistencia): void {
     if (!this.esAdmin) {
       alert('⛔ Solo los administradores pueden editar asistencias');
       return;
@@ -44,10 +40,8 @@ export class AsistenciaTabla {
     this.editar.emit(asistencia);
   }
 
-  // ==========================================
-  // ELIMINAR ASISTENCIA (solo si es admin)
-  // ==========================================
-  eliminarAsistencia(id: string): void {
+   // ELIMINAR ASISTENCIA (solo si es admin)
+   eliminarAsistencia(id: string): void {
     if (!this.esAdmin) {
       alert('⛔ Solo los administradores pueden eliminar asistencias');
       return;
@@ -56,18 +50,14 @@ export class AsistenciaTabla {
     this.eliminar.emit(id);
   }
 
-  // ==========================================
-  // CERRAR MODAL DETALLE
-  // ==========================================
-  cerrarModalDetalle(): void {
+   // CERRAR MODAL DETALLE
+   cerrarModalDetalle(): void {
     this.mostrarModalDetalle = false;
     this.asistenciaSeleccionada = null;
   }
 
-  // ==========================================
-  // FORMATEAR FECHA
-  // ==========================================
-  formatearFecha(fecha: Date): string {
+   // FORMATEAR FECHA
+   formatearFecha(fecha: Date): string {
     return new Date(fecha).toLocaleDateString('es-PE', {
       day: '2-digit',
       month: '2-digit',
@@ -75,17 +65,13 @@ export class AsistenciaTabla {
     });
   }
 
-  // ==========================================
-  // FORMATEAR HORA
-  // ==========================================
-  formatearHora(hora: string | undefined): string {
+   // FORMATEAR HORA
+   formatearHora(hora: string | undefined): string {
     return hora || '--';
   }
 
-  // ==========================================
-  // CALCULAR HORAS TRABAJADAS
-  // ==========================================
-  calcularHorasTrabajadas(entrada: string, salida?: string): string {
+   // CALCULAR HORAS TRABAJADAS
+   calcularHorasTrabajadas(entrada: string, salida?: string): string {
     if (!salida) return '--';
 
     try {
@@ -108,10 +94,8 @@ export class AsistenciaTabla {
     }
   }
 
-  // ==========================================
-  // OBTENER CLASE CSS SEGÚN ESTADO
-  // ==========================================
-  obtenerClaseEstado(estado: string): string {
+   // OBTENER CLASE CSS SEGÚN ESTADO
+   obtenerClaseEstado(estado: string): string {
     const clases: { [key: string]: string } = {
       'presente': 'present',
       'ausente': 'absent',
@@ -121,10 +105,8 @@ export class AsistenciaTabla {
     return clases[estado] || '';
   }
 
-  // ==========================================
-  // OBTENER TEXTO DEL ESTADO
-  // ==========================================
-  obtenerTextoEstado(estado: string): string {
+   // OBTENER TEXTO DEL ESTADO
+   obtenerTextoEstado(estado: string): string {
     const textos: { [key: string]: string } = {
       'presente': 'Presente',
       'ausente': 'Ausente',
@@ -134,10 +116,8 @@ export class AsistenciaTabla {
     return textos[estado] || estado;
   }
 
-  // ==========================================
-  // OBTENER ÍNDICE GLOBAL PARA ID
-  // ==========================================
-  obtenerIndice(index: number): string {
+   // OBTENER ÍNDICE GLOBAL PARA ID
+   obtenerIndice(index: number): string {
     const indiceGlobal = (this.paginaActual - 1) * this.itemsPorPagina + index + 1;
     return `#${String(indiceGlobal).padStart(3, '0')}`;
   }

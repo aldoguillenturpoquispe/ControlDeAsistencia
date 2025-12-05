@@ -79,10 +79,8 @@
   transform: scale(1.2);
 }
 
-/* ========================================== */
-/* 🔥 MODALES MEJORADOS - SCROLL ARREGLADO */
-/* ========================================== */
-.modal-overlay {
+ /* 🔥 MODALES MEJORADOS - SCROLL ARREGLADO */
+ .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -218,10 +216,8 @@
   transform: translateY(-2px);
 }
 
-/* ========================================== */
-/* 🔥 DETALLE INFO MEJORADO */
-/* ========================================== */
-.detalle-info {
+ /* 🔥 DETALLE INFO MEJORADO */
+ .detalle-info {
   padding: 1rem 0;
 }
 

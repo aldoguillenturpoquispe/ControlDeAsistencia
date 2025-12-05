@@ -29,10 +29,8 @@ export class ForgotPassword implements OnInit {
     });
   }
 
-  // ==========================================
-  // ENVIAR EMAIL DE RECUPERACIÓN
-  // ==========================================
-  async enviarRecuperacion(): Promise<void> {
+   // ENVIAR EMAIL DE RECUPERACIÓN
+   async enviarRecuperacion(): Promise<void> {
     // Validar formulario
     if (this.forgotForm.invalid) {
       this.forgotForm.get('email')?.markAsTouched();
@@ -72,17 +70,13 @@ export class ForgotPassword implements OnInit {
     }
   }
 
-  // ==========================================
-  // VOLVER AL LOGIN
-  // ==========================================
-  volverAlLogin(): void {
+   // VOLVER AL LOGIN
+   volverAlLogin(): void {
     this.router.navigate(['/login']);
   }
 
-  // ==========================================
-  // HELPER PARA VALIDACIÓN DE EMAIL
-  // ==========================================
-  get emailInvalid(): boolean {
+   // HELPER PARA VALIDACIÓN DE EMAIL
+   get emailInvalid(): boolean {
     const control = this.forgotForm.get('email');
     return !!(control?.invalid && control?.touched);
   }

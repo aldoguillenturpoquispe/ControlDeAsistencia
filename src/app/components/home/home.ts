@@ -32,10 +32,8 @@ export class Home implements OnInit {
     await this.cargarDatos();
   }
 
-  // ==========================================
-  // CARGAR TODOS LOS DATOS
-  // ==========================================
-  async cargarDatos(): Promise<void> {
+   // CARGAR TODOS LOS DATOS
+   async cargarDatos(): Promise<void> {
     try {
       this.isLoading = true;
 
@@ -73,10 +71,8 @@ export class Home implements OnInit {
     }
   }
 
-  // ==========================================
-  // FORMATEAR FECHA Y HORA
-  // ==========================================
-  formatearFecha(fecha: Date): string {
+   // FORMATEAR FECHA Y HORA
+   formatearFecha(fecha: Date): string {
     return new Date(fecha).toLocaleDateString('es-PE', {
       day: '2-digit',
       month: '2-digit',
@@ -88,10 +84,8 @@ export class Home implements OnInit {
     return hora || 'Sin registro';
   }
 
-  // ==========================================
-  // OBTENER CLASE CSS SEGÚN ESTADO
-  // ==========================================
-  obtenerClaseEstado(estado: string): string {
+   // OBTENER CLASE CSS SEGÚN ESTADO
+   obtenerClaseEstado(estado: string): string {
     const clases: { [key: string]: string } = {
       'presente': 'present',
       'ausente': 'absent',
@@ -101,10 +95,8 @@ export class Home implements OnInit {
     return clases[estado] || '';
   }
 
-  // ==========================================
-  // OBTENER TEXTO DEL ESTADO
-  // ==========================================
-  obtenerTextoEstado(estado: string): string {
+   // OBTENER TEXTO DEL ESTADO
+   obtenerTextoEstado(estado: string): string {
     const textos: { [key: string]: string } = {
       'presente': 'Presente',
       'ausente': 'Ausente',

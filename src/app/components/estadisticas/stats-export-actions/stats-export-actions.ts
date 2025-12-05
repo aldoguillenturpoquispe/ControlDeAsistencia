@@ -23,10 +23,8 @@ export class StatsExportActions {
   isExportingExcel = false;
   isSendingReport = false;
 
-  // ==========================================
-  // EXPORTAR PDF
-  // ==========================================
-  exportarPDF(): void {
+   // EXPORTAR PDF
+   exportarPDF(): void {
     try {
       this.isExportingPDF = true;
       
@@ -117,10 +115,8 @@ export class StatsExportActions {
     }
   }
 
-  // ==========================================
-  // EXPORTAR EXCEL
-  // ==========================================
-  exportarExcel(): void {
+   // EXPORTAR EXCEL
+   exportarExcel(): void {
     try {
       this.isExportingExcel = true;
 
@@ -176,18 +172,14 @@ export class StatsExportActions {
       this.isExportingExcel = false;
     }
   }
-  // ==========================================
-  // VALIDAR EMAIL
-  // ==========================================
-  validarEmail(email: string): boolean {
+   // VALIDAR EMAIL
+   validarEmail(email: string): boolean {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   }
 
-  // ==========================================
-  // MOSTRAR TOAST (NOTIFICACIÓN)
-  // ==========================================
-  mostrarToast(mensaje: string, tipo: 'success' | 'error'): void {
+   // MOSTRAR TOAST (NOTIFICACIÓN)
+   mostrarToast(mensaje: string, tipo: 'success' | 'error'): void {
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
     toast.textContent = mensaje;

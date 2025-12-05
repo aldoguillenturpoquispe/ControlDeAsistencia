@@ -28,10 +28,8 @@ export class AuthService {
 
   constructor() {}
 
-  // ==========================================
-  // REGISTRO CON EMAIL Y CONTRASEÑA
-  // ==========================================
-  async registrarConEmail(nombreCompleto: string, email: string, password: string) {
+   // REGISTRO CON EMAIL Y CONTRASEÑA
+   async registrarConEmail(nombreCompleto: string, email: string, password: string) {
     try {
       // 1. Crear usuario en Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
@@ -76,10 +74,8 @@ export class AuthService {
     }
   }
 
-  // ==========================================
-  // LOGIN CON EMAIL Y CONTRASEÑA (MODIFICADO)
-  // ==========================================
-  async loginConEmail(email: string, password: string) {
+   // LOGIN CON EMAIL Y CONTRASEÑA (MODIFICADO)
+   async loginConEmail(email: string, password: string) {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       console.log('✅ Login exitoso:', userCredential.user.uid);
@@ -106,10 +102,8 @@ export class AuthService {
     }
   }
 
-  // ==========================================
-  // LOGIN CON GOOGLE (MODIFICADO)
-  // ==========================================
-  async loginWithGoogle() {
+   // LOGIN CON GOOGLE (MODIFICADO)
+   async loginWithGoogle() {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
@@ -159,10 +153,8 @@ export class AuthService {
     }
   }
 
-  // ==========================================
-  // 🔥 NUEVO: CARGAR ROL DEL USUARIO DESDE FIRESTORE
-  // ==========================================
-  async cargarRolUsuario(uid: string): Promise<void> {
+   // 🔥 NUEVO: CARGAR ROL DEL USUARIO DESDE FIRESTORE
+   async cargarRolUsuario(uid: string): Promise<void> {
     try {
       const usuario = await this.usuarioService.obtenerUsuario(uid);
       
@@ -181,25 +173,19 @@ export class AuthService {
     }
   }
 
-  // ==========================================
-  // 🔥 NUEVO: VERIFICAR SI EL USUARIO ES ADMIN
-  // ==========================================
-  esAdmin(): boolean {
+   // 🔥 NUEVO: VERIFICAR SI EL USUARIO ES ADMIN
+   esAdmin(): boolean {
     return localStorage.getItem('userRole') === 'admin';
   }
 
-  // ==========================================
-  // 🔥 NUEVO: OBTENER ROL ACTUAL
-  // ==========================================
-  getRolActual(): 'admin' | 'usuario' {
+   // 🔥 NUEVO: OBTENER ROL ACTUAL
+   getRolActual(): 'admin' | 'usuario' {
     const rol = localStorage.getItem('userRole');
     return rol === 'admin' ? 'admin' : 'usuario';
   }
 
-  // ==========================================
-  // CERRAR SESIÓN (MODIFICADO)
-  // ==========================================
-  async logout() {
+   // CERRAR SESIÓN (MODIFICADO)
+   async logout() {
     try {
       await signOut(this.auth);
       
@@ -215,24 +201,18 @@ export class AuthService {
     }
   }
 
-  // ==========================================
-  // OBTENER USUARIO ACTUAL
-  // ==========================================
-  getCurrentUser() {
+   // OBTENER USUARIO ACTUAL
+   getCurrentUser() {
     return this.auth.currentUser;
   }
 
-  // ==========================================
-  // VERIFICAR SI HAY USUARIO AUTENTICADO
-  // ==========================================
-  isAuthenticated(): boolean {
+   // VERIFICAR SI HAY USUARIO AUTENTICADO
+   isAuthenticated(): boolean {
     return this.auth.currentUser !== null;
   }
 
-  // ==========================================
-  // ENVIAR RECUPERACIÓN DE PASSWORD
-  // ==========================================
-  async enviarRecuperacionPassword(email: string) {
+   // ENVIAR RECUPERACIÓN DE PASSWORD
+   async enviarRecuperacionPassword(email: string) {
     try {
       await sendPasswordResetEmail(this.auth, email);
       console.log('✅ Email de recuperación enviado a:', email);

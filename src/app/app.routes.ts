@@ -1,20 +1,56 @@
 import { Routes } from '@angular/router';
-import { Home } from './components/home/home';
-import { Asistencias } from './components/asistencias/asistencias';
-import { Estadisticas } from './components/estadisticas/estadisticas';
-import { Reportes } from './components/reportes/reportes';
 import { Login } from './components/auth/login/login';
 import { Register } from './components/auth/register/register';
 import { ForgotPassword } from './components/auth/forgot-password/forgot-password';
 
 export const routes: Routes = [
-  {path: '', component: Login, title:'Login'},
-  {path: 'login', component: Login, title:'Login'},
-  {path: 'register', component: Register, title:'Register'},
-  {path: 'forgot-password', component: ForgotPassword, title:'Register'},
-  {path: 'inicio', component: Home, title:'Inicio'},
-  {path: 'asistencias', component: Asistencias, title: 'Asistencias'},
-  {path: 'estadisticas', component: Estadisticas, title: 'Estadísticas'},
-  {path: 'reportes', component: Reportes, title: 'Reportes'},
-  {path: '**', redirectTo: 'login'},
+   // RUTAS EAGER (carga inmediata)
+   {
+    path: '', 
+    component: Login, 
+    title: 'Login'
+  },
+  {
+    path: 'login', 
+    component: Login, 
+    title: 'Login'
+  },
+  {
+    path: 'register', 
+    component: Register, 
+    title: 'Register'
+  },
+  {
+    path: 'forgot-password', 
+    component: ForgotPassword, 
+    title: 'Recuperar Contraseña'
+  },
+
+   // RUTAS CON LAZY LOADING (carga diferida)
+   {
+    path: 'inicio',
+    loadComponent: () => import('./components/home/home').then(m => m.Home),
+    title: 'Inicio'
+  },
+  {
+    path: 'asistencias',
+    loadComponent: () => import('./components/asistencias/asistencias').then(m => m.Asistencias),
+    title: 'Asistencias'
+  },
+  {
+    path: 'estadisticas',
+    loadComponent: () => import('./components/estadisticas/estadisticas').then(m => m.Estadisticas),
+    title: 'Estadísticas'
+  },
+  {
+    path: 'reportes',
+    loadComponent: () => import('./components/reportes/reportes').then(m => m.Reportes),
+    title: 'Reportes'
+  },
+
+   // RUTA 404 - Redirigir a login
+   {
+    path: '**', 
+    redirectTo: 'login'
+  }
 ];

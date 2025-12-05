@@ -36,10 +36,8 @@ export class Register implements OnInit {
     });
   }
 
-  // ==========================================
-  // VALIDADOR PERSONALIZADO: Contraseñas coinciden
-  // ==========================================
-  passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
+   // VALIDADOR PERSONALIZADO: Contraseñas coinciden
+   passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value;
     const confirmPassword = control.get('confirmPassword')?.value;
     
@@ -57,10 +55,8 @@ export class Register implements OnInit {
     return null;
   }
 
-  // ==========================================
-  // ALTERNAR VISIBILIDAD DE CONTRASEÑA
-  // ==========================================
-  togglePasswordVisibility(): void {
+   // ALTERNAR VISIBILIDAD DE CONTRASEÑA
+   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
@@ -68,10 +64,8 @@ export class Register implements OnInit {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
-  // ==========================================
-  // REGISTRO CON EMAIL Y CONTRASEÑA
-  // ==========================================
-  async register(): Promise<void> {
+   // REGISTRO CON EMAIL Y CONTRASEÑA
+   async register(): Promise<void> {
     // Validar formulario
     if (this.registerForm.invalid) {
       // Marcar todos los campos como tocados para mostrar errores
@@ -113,10 +107,8 @@ export class Register implements OnInit {
     }
   }
 
-  // ==========================================
-  // REGISTRO CON GOOGLE
-  // ==========================================
-  async registerWithGoogle(): Promise<void> {
+   // REGISTRO CON GOOGLE
+   async registerWithGoogle(): Promise<void> {
     this.loading = true;
     this.errorMessage = '';
     this.successMessage = '';
@@ -139,10 +131,8 @@ export class Register implements OnInit {
     }
   }
 
-  // ==========================================
-  // HELPERS PARA OBTENER ERRORES DE VALIDACIÓN
-  // ==========================================
-  get nombreCompletoInvalid(): boolean {
+   // HELPERS PARA OBTENER ERRORES DE VALIDACIÓN
+   get nombreCompletoInvalid(): boolean {
     const control = this.registerForm.get('nombreCompleto');
     return !!(control?.invalid && control?.touched);
   }

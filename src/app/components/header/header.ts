@@ -27,10 +27,8 @@ export class Header implements OnInit {
     this.cargarDatosUsuario();
   }
 
-  // ==========================================
-  // CARGAR DATOS DEL USUARIO AUTENTICADO
-  // ==========================================
-  async cargarDatosUsuario(): Promise<void> {
+   // CARGAR DATOS DEL USUARIO AUTENTICADO
+   async cargarDatosUsuario(): Promise<void> {
     try {
       const currentUser = this.authService.getCurrentUser();
       
@@ -56,17 +54,13 @@ export class Header implements OnInit {
     }
   }
 
-  // ==========================================
-  // TOGGLE DEL MENÚ DE USUARIO
-  // ==========================================
-  toggleUserMenu(): void {
+   // TOGGLE DEL MENÚ DE USUARIO
+   toggleUserMenu(): void {
     this.showUserMenu = !this.showUserMenu;
   }
   
-  // ==========================================
-  // CERRAR SESIÓN
-  // ==========================================
-  async cerrarSesion(): Promise<void> {
+   // CERRAR SESIÓN
+   async cerrarSesion(): Promise<void> {
     try {
       console.log('🔒 Cerrando sesión...');
       this.showUserMenu = false;
@@ -77,10 +71,8 @@ export class Header implements OnInit {
     }
   }
 
-  // ==========================================
-  // OBTENER INICIALES DEL NOMBRE (para avatar)
-  // ==========================================
-  getIniciales(): string {
+   // OBTENER INICIALES DEL NOMBRE (para avatar)
+   getIniciales(): string {
     if (!this.nombreUsuario) return 'U';
     
     const nombres = this.nombreUsuario.trim().split(' ');

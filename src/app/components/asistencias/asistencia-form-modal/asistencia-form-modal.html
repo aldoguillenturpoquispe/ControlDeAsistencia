@@ -1,6 +1,6 @@
 <div class="modal-overlay" (click)="cerrarModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <!-- 🔥 MODIFICADO: Título dinámico según modo -->
+    <!-- Título dinámico según modo -->
     <h3>{{ modoEdicion ? '✏️ Editar Asistencia' : '➕ Nueva Asistencia' }}</h3>
 
     <!-- Loader mientras carga usuarios -->
@@ -9,46 +9,59 @@
       <p>Cargando usuarios...</p>
     </div>
 
-    <!-- Formulario -->
-    <form class="asistencia-form" *ngIf="!isLoading" (ngSubmit)="guardarAsistencia()">
+    <!-- 🔥 FORMULARIO REACTIVO -->
+    <form 
+      class="asistencia-form" 
+      *ngIf="!isLoading" 
+      [formGroup]="asistenciaForm" 
+      (ngSubmit)="guardarAsistencia()">
       
       <!-- Usuario -->
       <div class="form-group">
         <label>Usuario *</label>
-        <select [(ngModel)]="usuarioId" name="usuarioId" required>
+        <select formControlName="usuarioId">
           <option value="">Seleccionar usuario...</option>
           <option *ngFor="let usuario of usuarios" [value]="usuario.uid">
             {{ usuario.nombreCompleto }}
           </option>
         </select>
-        <span class="error-msg" *ngIf="errores.usuarioId">{{ errores.usuarioId }}</span>
+        <!-- 🔥 Mensajes de error personalizados -->
+        <span class="error-msg" *ngIf="mostrarErrorUsuario()">
+          {{ obtenerErrorUsuario() }}
+        </span>
       </div>
 
       <!-- Fecha -->
       <div class="form-group">
         <label>Fecha *</label>
-        <input type="date" [(ngModel)]="fecha" name="fecha" required>
-        <span class="error-msg" *ngIf="errores.fecha">{{ errores.fecha }}</span>
+        <input type="date" formControlName="fecha">
+        <span class="error-msg" *ngIf="mostrarErrorFecha()">
+          {{ obtenerErrorFecha() }}
+        </span>
       </div>
 
       <!-- Hora de Entrada -->
       <div class="form-group">
         <label>Hora de Entrada *</label>
-        <input type="time" [(ngModel)]="horaEntrada" name="horaEntrada" required>
-        <span class="error-msg" *ngIf="errores.horaEntrada">{{ errores.horaEntrada }}</span>
+        <input type="time" formControlName="horaEntrada">
+        <span class="error-msg" *ngIf="mostrarErrorHoraEntrada()">
+          {{ obtenerErrorHoraEntrada() }}
+        </span>
       </div>
 
       <!-- Hora de Salida -->
       <div class="form-group">
         <label>Hora de Salida</label>
-        <input type="time" [(ngModel)]="horaSalida" name="horaSalida">
-        <span class="error-msg" *ngIf="errores.horaSalida">{{ errores.horaSalida }}</span>
+        <input type="time" formControlName="horaSalida">
+        <span class="error-msg" *ngIf="mostrarErrorHoraSalida()">
+          {{ obtenerErrorHoraSalida() }}
+        </span>
       </div>
 
       <!-- Estado -->
       <div class="form-group">
         <label>Estado *</label>
-        <select [(ngModel)]="estado" name="estado" required>
+        <select formControlName="estado">
           <option value="presente">Presente</option>
           <option value="ausente">Ausente</option>
           <option value="tardanza">Tardanza</option>
@@ -60,11 +73,20 @@
       <div class="form-group">
         <label>Observaciones</label>
         <textarea 
-          [(ngModel)]="observaciones" 
-          name="observaciones" 
+          formControlName="observaciones"
           rows="3" 
-          placeholder="Comentarios adicionales (opcional)">
+          placeholder="Comentarios adicionales (opcional, máximo 500 caracteres)">
         </textarea>
+        <span class="error-msg" *ngIf="mostrarErrorObservaciones()">
+          {{ obtenerErrorObservaciones() }}
+        </span>
+      </div>
+
+      <!-- 🔥 Indicador visual del estado del formulario (opcional) -->
+      <div class="form-status" *ngIf="asistenciaForm.invalid && asistenciaForm.touched">
+        <small style="color: #e74c3c;">
+          ⚠️ Por favor, corrige los errores antes de guardar
+        </small>
       </div>
 
       <!-- Botones -->
@@ -72,7 +94,7 @@
         <button 
           type="submit" 
           class="btn primary" 
-          [disabled]="isSaving">
+          [disabled]="isSaving || asistenciaForm.invalid">
           {{ isSaving ? '⏳ Guardando...' : (modoEdicion ? '💾 Actualizar' : '💾 Guardar') }}
         </button>
         <button 

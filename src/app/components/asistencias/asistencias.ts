@@ -68,10 +68,8 @@ export class Asistencias implements OnInit {
     await this.cargarDatos();
   }
 
-  // ==========================================
-  // CARGAR DATOS INICIALES
-  // ==========================================
-  async cargarDatos(): Promise<void> {
+   // CARGAR DATOS INICIALES
+   async cargarDatos(): Promise<void> {
     try {
       this.isLoading = true;
 
@@ -99,27 +97,21 @@ export class Asistencias implements OnInit {
     }
   }
 
-  // ==========================================
-  // CALCULAR PAGINACIÓN
-  // ==========================================
-  calcularPaginacion(): void {
+   // CALCULAR PAGINACIÓN
+   calcularPaginacion(): void {
     this.totalPaginas = Math.ceil(this.asistenciasFiltradas.length / this.itemsPorPagina);
     if (this.totalPaginas === 0) this.totalPaginas = 1;
   }
 
-  // ==========================================
-  // OBTENER ASISTENCIAS DE LA PÁGINA ACTUAL
-  // ==========================================
-  get asistenciasPaginadas(): Asistencia[] {
+   // OBTENER ASISTENCIAS DE LA PÁGINA ACTUAL
+   get asistenciasPaginadas(): Asistencia[] {
     const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
     const fin = inicio + this.itemsPorPagina;
     return this.asistenciasFiltradas.slice(inicio, fin);
   }
 
-  // ==========================================
-  // APLICAR FILTROS
-  // ==========================================
-  aplicarFiltros(): void {
+   // APLICAR FILTROS
+   aplicarFiltros(): void {
     this.asistenciasFiltradas = this.asistencias.filter(asistencia => {
       let cumpleFecha = true;
       let cumpleUsuario = true;
@@ -160,10 +152,8 @@ export class Asistencias implements OnInit {
     this.calcularPaginacion();
   }
 
-  // ==========================================
-  // LIMPIAR FILTROS
-  // ==========================================
-  limpiarFiltros(): void {
+   // LIMPIAR FILTROS
+   limpiarFiltros(): void {
     this.filtroFecha = '';
     this.filtroUsuario = '';
     this.filtroEstado = '';
@@ -172,19 +162,15 @@ export class Asistencias implements OnInit {
     this.calcularPaginacion();
   }
 
-  // ==========================================
-  // MODAL - NUEVA ASISTENCIA
-  // ==========================================
-  abrirModal(): void {
+   // MODAL - NUEVA ASISTENCIA
+   abrirModal(): void {
     console.log('Abriendo modal para nueva asistencia...');
     this.asistenciaParaEditar = null;
     this.mostrarModal = true;
   }
 
-  // ==========================================
-  // 🔥 MODAL - EDITAR ASISTENCIA
-  // ==========================================
-  abrirModalEditar(asistencia: Asistencia): void {
+   // 🔥 MODAL - EDITAR ASISTENCIA
+   abrirModalEditar(asistencia: Asistencia): void {
     if (!this.esAdmin) {
       this.mostrarToast('⛔ Solo los administradores pueden editar asistencias', 'error');
       return;
@@ -204,10 +190,8 @@ export class Asistencias implements OnInit {
     }
   }
 
-  // ==========================================
-  // MODAL DE ELIMINACIÓN
-  // ==========================================
-  async eliminarAsistencia(id: string): Promise<void> {
+   // MODAL DE ELIMINACIÓN
+   async eliminarAsistencia(id: string): Promise<void> {
     if (!this.esAdmin) {
       this.mostrarToast('⛔ Solo los administradores pueden eliminar asistencias', 'error');
       return;
@@ -252,10 +236,8 @@ export class Asistencias implements OnInit {
     this.asistenciaParaEliminar = null;
   }
 
-  // ==========================================
-  // PAGINACIÓN
-  // ==========================================
-  paginaAnterior(): void {
+   // PAGINACIÓN
+   paginaAnterior(): void {
     if (this.paginaActual > 1) {
       this.paginaActual--;
     }
@@ -267,10 +249,8 @@ export class Asistencias implements OnInit {
     }
   }
 
-  // ==========================================
-  // MOSTRAR TOAST
-  // ==========================================
-  mostrarToast(mensaje: string, tipo: 'success' | 'error'): void {
+   // MOSTRAR TOAST
+   mostrarToast(mensaje: string, tipo: 'success' | 'error'): void {
     const toast = document.createElement('div');
     toast.className = `toast ${tipo}`;
     toast.textContent = mensaje;
