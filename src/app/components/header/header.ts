@@ -46,9 +46,7 @@ export class Header implements OnInit {
           this.emailUsuario = currentUser.email || 'usuario@example.com';
           this.photoURL = currentUser.photoURL;
         }
-        
-        console.log('✅ Datos del usuario cargados:', this.nombreUsuario);
-      }
+ }
     } catch (error) {
       console.error('❌ Error al cargar datos del usuario:', error);
     }
@@ -62,11 +60,9 @@ export class Header implements OnInit {
    // CERRAR SESIÓN
    async cerrarSesion(): Promise<void> {
     try {
-      console.log('🔒 Cerrando sesión...');
-      this.showUserMenu = false;
+ this.showUserMenu = false;
       await this.authService.logout();
-      console.log('✅ Sesión cerrada correctamente');
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al cerrar sesión:', error);
     }
   }

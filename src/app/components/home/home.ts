@@ -58,11 +58,8 @@ export class Home implements OnInit {
 
       // Actualizar últimas asistencias
       this.ultimasAsistencias = ultimas;
-
-      console.log('✅ Datos cargados correctamente');
-      console.log('Total empleados:', this.totalEmpleados);
-      console.log('Presentes hoy:', this.presentesHoy);
-      console.log('Últimas asistencias:', this.ultimasAsistencias);
+ console.log('Total empleados:', this.totalEmpleados);
+ console.log('Últimas asistencias:', this.ultimasAsistencias);
 
     } catch (error) {
       console.error('❌ Error al cargar datos:', error);

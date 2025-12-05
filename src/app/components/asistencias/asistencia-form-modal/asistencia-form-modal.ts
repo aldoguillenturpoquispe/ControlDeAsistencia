@@ -80,10 +80,7 @@ export class AsistenciaFormModal implements OnInit {
    // CARGAR DATOS DE ASISTENCIA PARA EDITAR
    cargarDatosAsistencia(): void {
     if (!this.asistenciaParaEditar) return;
-
-    console.log('📝 Cargando datos para editar:', this.asistenciaParaEditar);
-
-    // Formatear fecha
+ // Formatear fecha
     let fechaFormateada = '';
     if (this.asistenciaParaEditar.fecha) {
       const fecha = this.asistenciaParaEditar.fecha instanceof Date 
@@ -105,17 +102,14 @@ export class AsistenciaFormModal implements OnInit {
       estado: this.asistenciaParaEditar.estado || 'presente',
       observaciones: this.asistenciaParaEditar.observaciones || ''
     });
-
-    console.log('✅ Datos cargados en formulario reactivo');
-  }
+ }
 
    // CARGAR LISTA DE USUARIOS
    async cargarUsuarios(): Promise<void> {
     try {
       this.isLoading = true;
       this.usuarios = await this.usuarioService.obtenerUsuarios();
-      console.log('✅ Usuarios cargados:', this.usuarios.length);
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al cargar usuarios:', error);
       alert('Error al cargar la lista de usuarios');
     } finally {
@@ -236,8 +230,7 @@ export class AsistenciaFormModal implements OnInit {
 
     // Validar formulario
     if (this.asistenciaForm.invalid) {
-      console.log('⚠️ Formulario inválido');
-      return;
+ return;
     }
 
     try {
@@ -276,13 +269,11 @@ export class AsistenciaFormModal implements OnInit {
           this.asistenciaParaEditar.id, 
           datosAsistencia
         );
-        console.log('✅ Asistencia actualizada');
-        alert('✅ Asistencia actualizada correctamente');
+ alert('✅ Asistencia actualizada correctamente');
       } else {
         // CREAR nueva asistencia
         const id = await this.asistenciaService.crearAsistencia(datosAsistencia);
-        console.log('✅ Asistencia creada con ID:', id);
-        alert('✅ Asistencia registrada correctamente');
+ alert('✅ Asistencia registrada correctamente');
       }
       
       // Cerrar modal e indicar que se guardó

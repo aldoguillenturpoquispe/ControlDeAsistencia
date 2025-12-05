@@ -32,8 +32,7 @@ export class AsistenciaTabla {
 
   // VER DETALLE DE ASISTENCIA
   verDetalleAsistencia(asistencia: Asistencia): void {
-    console.log('Ver detalle de asistencia:', asistencia);
-    this.asistenciaSeleccionada = asistencia;
+ this.asistenciaSeleccionada = asistencia;
     this.mostrarModalDetalle = true;
   }
 
@@ -43,8 +42,7 @@ export class AsistenciaTabla {
       alert('⛔ Solo los administradores pueden editar asistencias');
       return;
     }
-    console.log('✏️ Editar asistencia:', asistencia);
-    this.editar.emit(asistencia);
+ this.editar.emit(asistencia);
   }
 
   // ELIMINAR ASISTENCIA (solo si es admin)
@@ -53,8 +51,7 @@ export class AsistenciaTabla {
       alert('⛔ Solo los administradores pueden eliminar asistencias');
       return;
     }
-    console.log('🗑️ Solicitud de eliminar asistencia:', id);
-    this.eliminar.emit(id);
+ this.eliminar.emit(id);
   }
 
   // CERRAR MODAL DETALLE

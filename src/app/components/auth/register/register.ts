@@ -82,13 +82,10 @@ export class Register implements OnInit {
     const { nombreCompleto, email, password } = this.registerForm.value;
 
     try {
-      console.log('📝 Registrando usuario...');
-      await this.authService.registrarConEmail(nombreCompleto, email, password);
+ await this.authService.registrarConEmail(nombreCompleto, email, password);
       
       this.successMessage = '¡Cuenta creada exitosamente! Redirigiendo...';
-      console.log('✅ Registro exitoso');
-      
-      // El servicio ya redirige a /inicio, pero por si acaso:
+ // El servicio ya redirige a /inicio, pero por si acaso:
       setTimeout(() => {
         this.router.navigate(['/inicio']);
       }, 1500);
@@ -114,13 +111,10 @@ export class Register implements OnInit {
     this.successMessage = '';
 
     try {
-      console.log('📝 Registrando con Google...');
-      await this.authService.loginWithGoogle();
+ await this.authService.loginWithGoogle();
       
       this.successMessage = '¡Registro exitoso con Google!';
-      console.log('✅ Registro con Google exitoso');
-      
-    } catch (error: any) {
+ } catch (error: any) {
       console.error('❌ Error en el registro con Google:', error);
       
       if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {

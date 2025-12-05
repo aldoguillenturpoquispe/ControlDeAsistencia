@@ -40,8 +40,7 @@ export class App implements OnInit, OnDestroy {
     try {
       const ok = await this.testService.testConnection();
       if (ok) {
-        console.log("✅ Firebase conectado correctamente");
-      }
+ }
     } catch (e) {
       console.error("❌ Error al conectar con Firebase:", e);
     }

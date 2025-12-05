@@ -34,8 +34,7 @@ export class AsistenciaService {
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now()
       });
-      console.log('✅ Asistencia creada con ID:', docRef.id);
-      return docRef.id;
+ return docRef.id;
     } catch (error) {
       console.error('❌ Error al crear asistencia:', error);
       throw error;
@@ -68,8 +67,7 @@ export class AsistenciaService {
       dataToUpdate.updatedAt = Timestamp.now();
 
       await updateDoc(asistenciaRef, dataToUpdate);
-      console.log('✅ Asistencia editada correctamente:', id);
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al editar asistencia:', error);
       throw error;
     }
@@ -85,8 +83,7 @@ export class AsistenciaService {
 
       const asistenciaRef = doc(this.firestore, 'asistencias', id);
       await deleteDoc(asistenciaRef);
-      console.log('✅ Asistencia eliminada correctamente:', id);
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al eliminar asistencia:', error);
       throw error;
     }

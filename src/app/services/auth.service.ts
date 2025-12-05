@@ -34,10 +34,7 @@ export class AuthService {
       // 1. Crear usuario en Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       const user = userCredential.user;
-      
-      console.log('✅ Usuario creado en Authentication:', user.uid);
-      
-      // 2. Crear documento en Firestore
+ // 2. Crear documento en Firestore
       const nuevoUsuario: Usuario = {
         uid: user.uid,
         nombreCompleto: nombreCompleto,
@@ -51,10 +48,7 @@ export class AuthService {
       };
       
       await this.usuarioService.crearUsuario(nuevoUsuario);
-      
-      console.log('✅ Registro completo exitoso');
-      
-      // 3. Navegar a inicio
+ // 3. Navegar a inicio
       this.router.navigate(['/inicio']);
       
       return userCredential;
@@ -78,9 +72,7 @@ export class AuthService {
    async loginConEmail(email: string, password: string) {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      console.log('✅ Login exitoso:', userCredential.user.uid);
-      
-      // 🔥 NUEVO: Obtener y guardar el rol del usuario
+ // 🔥 NUEVO: Obtener y guardar el rol del usuario
       await this.cargarRolUsuario(userCredential.user.uid);
       
       this.router.navigate(['/inicio']);
@@ -112,10 +104,7 @@ export class AuthService {
       
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
-      
-      console.log('✅ Usuario autenticado con Google:', user.uid);
-      
-      // Verificar si el usuario ya existe en Firestore
+ // Verificar si el usuario ya existe en Firestore
       const usuarioExistente = await this.usuarioService.obtenerUsuario(user.uid);
       
       if (!usuarioExistente) {
@@ -144,10 +133,8 @@ export class AuthService {
       console.error('❌ Error al iniciar sesión con Google:', error);
       
       if (error.code === 'auth/popup-closed-by-user') {
-        console.log('El usuario cerró la ventana de inicio de sesión');
-      } else if (error.code === 'auth/cancelled-popup-request') {
-        console.log('Se canceló la solicitud de popup');
-      }
+ } else if (error.code === 'auth/cancelled-popup-request') {
+ }
       
       throw error;
     }
@@ -162,8 +149,7 @@ export class AuthService {
         // Guardar rol en localStorage
         localStorage.setItem('userRole', usuario.rol);
         localStorage.setItem('userName', usuario.nombreCompleto);
-        console.log('✅ Rol cargado:', usuario.rol);
-      } else {
+ } else {
         console.warn('⚠️ Usuario no encontrado en Firestore');
         localStorage.setItem('userRole', 'usuario'); // Por defecto
       }
@@ -192,9 +178,7 @@ export class AuthService {
       // 🔥 NUEVO: Limpiar localStorage
       localStorage.removeItem('userRole');
       localStorage.removeItem('userName');
-      
-      console.log('✅ Sesión cerrada correctamente');
-      this.router.navigate(['/login']);
+ this.router.navigate(['/login']);
     } catch (error) {
       console.error('❌ Error al cerrar sesión:', error);
       throw error;
@@ -215,8 +199,7 @@ export class AuthService {
    async enviarRecuperacionPassword(email: string) {
     try {
       await sendPasswordResetEmail(this.auth, email);
-      console.log('✅ Email de recuperación enviado a:', email);
-    } catch (error: any) {
+ } catch (error: any) {
       console.error('❌ Error al enviar email de recuperación:', error);
       
       // Manejo de errores específicos

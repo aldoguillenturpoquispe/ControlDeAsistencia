@@ -127,9 +127,7 @@ aplicarFiltros() {
   this.calcularResumen();
   this.calcularPaginacion();
   this.actualizarPagina();
-  
-  console.log('Filtros aplicados:', this.filtros);
-  console.log('Registros filtrados:', this.reportesFiltrados.length);
+ console.log('Registros filtrados:', this.reportesFiltrados.length);
 }
 
   /**

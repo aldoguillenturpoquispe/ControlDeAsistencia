@@ -36,8 +36,7 @@ export class UsuarioService {
       };
       
       await setDoc(usuarioDoc, usuarioData);
-      console.log('✅ Usuario guardado en Firestore:', usuario.uid);
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al crear usuario en Firestore:', error);
       throw error;
     }
@@ -63,9 +62,7 @@ export class UsuarioService {
           proveedorAuth: data['proveedorAuth']
         } as Usuario;
       }
-      
-      console.log('⚠️ Usuario no encontrado:', uid);
-      return null;
+ return null;
     } catch (error) {
       console.error('❌ Error al obtener usuario:', error);
       throw error;
@@ -92,9 +89,7 @@ export class UsuarioService {
           proveedorAuth: data['proveedorAuth']
         } as Usuario);
       });
-      
-      console.log('✅ Usuarios obtenidos:', usuarios.length);
-      return usuarios;
+ return usuarios;
     } catch (error) {
       console.error('❌ Error al obtener usuarios:', error);
       throw error;
@@ -122,9 +117,7 @@ export class UsuarioService {
           proveedorAuth: data['proveedorAuth']
         } as Usuario);
       });
-      
-      console.log(`✅ Usuarios con rol "${rol}":`, usuarios.length);
-      return usuarios;
+ return usuarios;
     } catch (error) {
       console.error('❌ Error al obtener usuarios por rol:', error);
       throw error;
@@ -148,8 +141,7 @@ export class UsuarioService {
       }
       
       await updateDoc(usuarioDoc, datosActualizados);
-      console.log('✅ Usuario actualizado:', uid);
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al actualizar usuario:', error);
       throw error;
     }
@@ -160,8 +152,7 @@ export class UsuarioService {
     try {
       const usuarioDoc = doc(this.usuariosCollection, uid);
       await deleteDoc(usuarioDoc);
-      console.log('✅ Usuario eliminado:', uid);
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al eliminar usuario:', error);
       throw error;
     }
@@ -171,8 +162,7 @@ export class UsuarioService {
    async cambiarEstadoUsuario(uid: string, activo: boolean): Promise<void> {
     try {
       await this.actualizarUsuario(uid, { activo });
-      console.log(`✅ Usuario ${activo ? 'activado' : 'desactivado'}:`, uid);
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al cambiar estado del usuario:', error);
       throw error;
     }
@@ -182,8 +172,7 @@ export class UsuarioService {
    async cambiarRolUsuario(uid: string, nuevoRol: 'admin' | 'usuario'): Promise<void> {
     try {
       await this.actualizarUsuario(uid, { rol: nuevoRol });
-      console.log(`✅ Rol del usuario actualizado a "${nuevoRol}":`, uid);
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al cambiar rol del usuario:', error);
       throw error;
     }

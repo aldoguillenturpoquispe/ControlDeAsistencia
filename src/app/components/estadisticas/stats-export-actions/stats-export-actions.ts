@@ -103,9 +103,7 @@ export class StatsExportActions {
       // Guardar PDF
       const nombreArchivo = `estadisticas_${fechaActual.replace(/\//g, '-')}.pdf`;
       doc.save(nombreArchivo);
-      
-      console.log('✅ PDF exportado correctamente');
-      this.mostrarToast('✅ PDF descargado correctamente', 'success');
+ this.mostrarToast('✅ PDF descargado correctamente', 'success');
 
     } catch (error) {
       console.error('❌ Error al exportar PDF:', error);
@@ -161,9 +159,7 @@ export class StatsExportActions {
       // Guardar archivo
       const nombreArchivo = `Estadisticas_${this.periodo}_${fechaActual.replace(/\//g, '-')}.xlsx`;
       XLSX.writeFile(wb, nombreArchivo);
-      
-      console.log('✅ Excel exportado correctamente');
-      this.mostrarToast('✅ Excel descargado correctamente', 'success');
+ this.mostrarToast('✅ Excel descargado correctamente', 'success');
 
     } catch (error) {
       console.error('❌ Error al exportar Excel:', error);

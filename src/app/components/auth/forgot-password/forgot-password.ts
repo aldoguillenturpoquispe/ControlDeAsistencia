@@ -44,14 +44,11 @@ export class ForgotPassword implements OnInit {
     const { email } = this.forgotForm.value;
 
     try {
-      console.log('📧 Enviando email de recuperación a:', email);
-      await this.authService.enviarRecuperacionPassword(email);
+ await this.authService.enviarRecuperacionPassword(email);
       
       this.successMessage = '¡Correo enviado! Revisa tu bandeja de entrada para restablecer tu contraseña.';
       this.emailEnviado = true;
-      console.log('✅ Email de recuperación enviado exitosamente');
-      
-      // Opcional: Limpiar el formulario
+ // Opcional: Limpiar el formulario
       this.forgotForm.reset();
       
     } catch (error: any) {

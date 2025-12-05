@@ -63,9 +63,7 @@ export class Asistencias implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.esAdmin = this.authService.esAdmin();
-    console.log('🔐 Usuario es admin:', this.esAdmin);
-    
-    await this.cargarDatos();
+ await this.cargarDatos();
   }
 
    // CARGAR DATOS INICIALES
@@ -87,10 +85,7 @@ export class Asistencias implements OnInit {
       this.tardanzasHoy = estadisticas.tardanzas;
 
       this.calcularPaginacion();
-
-      console.log('✅ Datos de asistencias cargados');
-
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al cargar datos:', error);
     } finally {
       this.isLoading = false;
@@ -164,8 +159,7 @@ export class Asistencias implements OnInit {
 
    // MODAL - NUEVA ASISTENCIA
    abrirModal(): void {
-    console.log('Abriendo modal para nueva asistencia...');
-    this.asistenciaParaEditar = null;
+ this.asistenciaParaEditar = null;
     this.mostrarModal = true;
   }
 
@@ -175,9 +169,7 @@ export class Asistencias implements OnInit {
       this.mostrarToast('⛔ Solo los administradores pueden editar asistencias', 'error');
       return;
     }
-
-    console.log('📝 Abriendo modal para editar asistencia:', asistencia);
-    this.asistenciaParaEditar = asistencia;
+ this.asistenciaParaEditar = asistencia;
     this.mostrarModal = true;
   }
 

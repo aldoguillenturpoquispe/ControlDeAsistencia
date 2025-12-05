@@ -51,10 +51,8 @@ export class Login implements OnInit {
     const { email, password } = this.loginForm.value;
 
     try {
-      console.log('🔄 Iniciando sesión con email...');
-      await this.authService.loginConEmail(email, password);
-      console.log('✅ Login exitoso');
-    } catch (error: any) {
+ await this.authService.loginConEmail(email, password);
+ } catch (error: any) {
       console.error('❌ Error en el login:', error);
       
       // Mostrar mensaje de error al usuario
@@ -74,10 +72,8 @@ export class Login implements OnInit {
     this.errorMessage = '';
 
     try {
-      console.log('🔄 Iniciando sesión con Google...');
-      await this.authService.loginWithGoogle();
-      console.log('✅ Login exitoso con Google');
-    } catch (error: any) {
+ await this.authService.loginWithGoogle();
+ } catch (error: any) {
       console.error('❌ Error en el login con Google:', error);
       
       if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {

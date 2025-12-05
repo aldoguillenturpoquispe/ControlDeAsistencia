@@ -61,9 +61,7 @@ export class Estadisticas implements OnInit {
 
   // 🔥 SIMPLIFICADO: Solo actualizar y recargar
   async onFiltrosChange(filtros: any): Promise<void> {
-    console.log('📥 Filtros recibidos:', filtros);
-
-    this.periodo = filtros.periodo;
+ this.periodo = filtros.periodo;
     this.fechaDesde = filtros.fechaDesde;
     this.fechaHasta = filtros.fechaHasta;
     
@@ -88,18 +86,12 @@ export class Estadisticas implements OnInit {
         this.usuarioService.obtenerUsuarios(),
         this.asistenciaService.obtenerAsistencias()
       ]);
-
-      console.log('📊 Total asistencias en BD:', todasAsistencias.length);
-
-      const asistenciasFiltradas = todasAsistencias.filter(a => {
+ const asistenciasFiltradas = todasAsistencias.filter(a => {
         const fechaAsistencia = new Date(a.fecha);
         fechaAsistencia.setHours(0, 0, 0, 0);
         return fechaAsistencia >= desde && fechaAsistencia <= hasta;
       });
-
-      console.log('✅ Asistencias filtradas:', asistenciasFiltradas.length);
-
-      // Calcular totales
+ // Calcular totales
       this.datosEstadisticas.totalUsuarios = usuarios.length;
       this.datosEstadisticas.totalAsistencias = asistenciasFiltradas.length;
       this.datosEstadisticas.totalPresentes = asistenciasFiltradas.filter(a => a.estado === 'presente').length;
@@ -128,10 +120,7 @@ export class Estadisticas implements OnInit {
       this.datosEstadisticas.porcentajeAsistencia = totalEsperado > 0 
         ? parseFloat(((efectivos / totalEsperado) * 100).toFixed(1)) 
         : 0;
-
-      console.log('✅ Estadísticas calculadas:', this.datosEstadisticas);
-
-    } catch (error) {
+ } catch (error) {
       console.error('❌ Error al cargar estadísticas:', error);
     } finally {
       this.isLoading = false;

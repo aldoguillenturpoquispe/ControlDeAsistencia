@@ -11,8 +11,7 @@ export class TestService {
     try {
       const testCollection = collection(this.firestore, 'test');
       await addDoc(testCollection, { mensaje: 'Conexión exitosa', fecha: new Date() });
-      console.log('✅ Firebase conectado correctamente');
-      return true;
+ return true;
     } catch (error) {
       console.error('❌ Error al conectar con Firebase:', error);
       return false;
