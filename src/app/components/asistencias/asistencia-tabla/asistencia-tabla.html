@@ -15,19 +15,28 @@
     <tbody>
       <tr *ngFor="let asistencia of asistencias; let i = index">
         <td>{{ obtenerIndice(i) }}</td>
-        <td>{{ asistencia.nombreCompleto }}</td>
-        <td>{{ formatearFecha(asistencia.fecha) }}</td>
-        <td>{{ formatearHora(asistencia.horaEntrada) }}</td>
-        <td>{{ formatearHora(asistencia.horaSalida) }}</td>
-        <td>{{ calcularHorasTrabajadas(asistencia.horaEntrada, asistencia.horaSalida) }}</td>
+        
+        <!-- PIPE NATIVO: uppercase -->
+        <td>{{ asistencia.nombreCompleto | uppercase }}</td>
+        
+        <!-- PIPE PERSONALIZADO: fechaFormato -->
+        <td>{{ asistencia.fecha | fechaFormato }}</td>
+        
+        <!-- Mostrar hora o guión -->
+        <td>{{ asistencia.horaEntrada || '--' }}</td>
+        <td>{{ asistencia.horaSalida || '--' }}</td>
+        
+        <!-- PIPE PERSONALIZADO: horasTrabajadas -->
+        <td>{{ asistencia.horaEntrada | horasTrabajadas:asistencia.horaSalida }}</td>
+        
+        <!-- PIPE PERSONALIZADO: estadoTexto -->
         <td>
           <span class="status" [ngClass]="obtenerClaseEstado(asistencia.estado)">
-            {{ obtenerTextoEstado(asistencia.estado) }}
+            {{ asistencia.estado | estadoTexto }}
           </span>
         </td>
+        
         <td>
-          <!-- 🔥 NUEVO: Botones según rol -->
-          
           <!-- ADMIN: ve todos los botones -->
           <ng-container *ngIf="esAdmin">
             <button class="btn-action edit" title="Editar" (click)="editarAsistencia(asistencia)">
@@ -60,28 +69,32 @@
     <div class="detalle-info">
       <div class="info-row">
         <strong>Usuario:</strong>
-        <span>{{ asistenciaSeleccionada.nombreCompleto }}</span>
+        <!-- PIPE NATIVO: titlecase -->
+        <span>{{ asistenciaSeleccionada.nombreCompleto | titlecase }}</span>
       </div>
       <div class="info-row">
         <strong>Fecha:</strong>
-        <span>{{ formatearFecha(asistenciaSeleccionada.fecha) }}</span>
+        <!-- PIPE PERSONALIZADO: fechaFormato con formato largo -->
+        <span>{{ asistenciaSeleccionada.fecha | fechaFormato:'largo' }}</span>
       </div>
       <div class="info-row">
         <strong>Hora de Entrada:</strong>
-        <span>{{ formatearHora(asistenciaSeleccionada.horaEntrada) }}</span>
+        <span>{{ asistenciaSeleccionada.horaEntrada || '--' }}</span>
       </div>
       <div class="info-row">
         <strong>Hora de Salida:</strong>
-        <span>{{ formatearHora(asistenciaSeleccionada.horaSalida) }}</span>
+        <span>{{ asistenciaSeleccionada.horaSalida || '--' }}</span>
       </div>
       <div class="info-row">
         <strong>Horas Totales:</strong>
-        <span>{{ calcularHorasTrabajadas(asistenciaSeleccionada.horaEntrada, asistenciaSeleccionada.horaSalida) }}</span>
+        <!-- PIPE PERSONALIZADO: horasTrabajadas -->
+        <span>{{ asistenciaSeleccionada.horaEntrada | horasTrabajadas:asistenciaSeleccionada.horaSalida }}</span>
       </div>
       <div class="info-row">
         <strong>Estado:</strong>
+        <!-- PIPE PERSONALIZADO: estadoTexto -->
         <span class="status" [ngClass]="obtenerClaseEstado(asistenciaSeleccionada.estado)">
-          {{ obtenerTextoEstado(asistenciaSeleccionada.estado) }}
+          {{ asistenciaSeleccionada.estado | estadoTexto }}
         </span>
       </div>
       <div class="info-row" *ngIf="asistenciaSeleccionada.observaciones">
