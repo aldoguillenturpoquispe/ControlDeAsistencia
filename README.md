@@ -123,7 +123,7 @@ src/app/
 ## 🌐 Deploy
 
 ### URL de la Aplicación
-**Firebase Hosting:** [https://tu-proyecto.web.app](https://tu-proyecto.web.app)
+**Firebase Hosting:** [https://control-de-asistencia-41bb2.web.app](https://control-de-asistencia-41bb2.web.app)
 
 ### Comandos para Deploy
 ```bash
@@ -140,19 +140,6 @@ firebase init hosting
 ng build --configuration production
 firebase deploy --only hosting
 ```
-
-## 🎥 Video Demostración
-
-**URL del Video:** [https://youtu.be/tu-video-id](https://youtu.be/tu-video-id)
-
-**Contenido del video (5-8 minutos):**
-- Introducción al proyecto
-- Flujo de autenticación (login/register)
-- Dashboard y estadísticas en tiempo real
-- CRUD de asistencias
-- Generación de reportes y filtros
-- Explicación de componentes y servicios clave
-- Demostración de guards y protección de rutas
 
 ## 📱 Manual de Usuario
 

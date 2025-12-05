@@ -1,6 +1,7 @@
 {
   "projects": {
-    "controldeasistencia": "control-de-asistencia-41bb2"
+    "controldeasistencia": "control-de-asistencia-41bb2",
+    "default": "control-de-asistencia-41bb2"
   },
   "targets": {},
   "etags": {}
