@@ -8,7 +8,8 @@ import {
   sendPasswordResetEmail,
   signOut, 
   user,
-  User
+  User,
+  onAuthStateChanged
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -26,15 +27,39 @@ export class AuthService {
   // Observable del usuario actual
   user$: Observable<User | null> = user(this.auth);
 
-  constructor() {}
+  constructor() {
+    // Inicializar listener de sesión persistente
+    this.inicializarSesionPersistente();
+  }
 
-   // REGISTRO CON EMAIL Y CONTRASEÑA
-   async registrarConEmail(nombreCompleto: string, email: string, password: string) {
+  // VERIFICAR Y RESTAURAR SESIÓN AL INICIAR
+  private inicializarSesionPersistente(): void {
+    onAuthStateChanged(this.auth, async (user) => {
+      if (user) {
+        // Usuario autenticado, cargar su rol
+        await this.cargarRolUsuario(user.uid);
+        
+        // Si está en login/register, redirigir a inicio
+        const currentUrl = this.router.url;
+        if (currentUrl === '/login' || currentUrl === '/register' || currentUrl === '/' || currentUrl === '') {
+          this.router.navigate(['/inicio']);
+        }
+      } else {
+        // No hay usuario, limpiar localStorage
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userName');
+      }
+    });
+  }
+
+  // REGISTRO CON EMAIL Y CONTRASEÑA
+  async registrarConEmail(nombreCompleto: string, email: string, password: string) {
     try {
       // 1. Crear usuario en Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       const user = userCredential.user;
- // 2. Crear documento en Firestore
+
+      // 2. Crear documento en Firestore
       const nuevoUsuario: Usuario = {
         uid: user.uid,
         nombreCompleto: nombreCompleto,
@@ -48,7 +73,9 @@ export class AuthService {
       };
       
       await this.usuarioService.crearUsuario(nuevoUsuario);
- // 3. Navegar a inicio
+
+      // 3. Cargar rol y navegar
+      await this.cargarRolUsuario(user.uid);
       this.router.navigate(['/inicio']);
       
       return userCredential;
@@ -68,11 +95,12 @@ export class AuthService {
     }
   }
 
-   // LOGIN CON EMAIL Y CONTRASEÑA (MODIFICADO)
-   async loginConEmail(email: string, password: string) {
+  // LOGIN CON EMAIL Y CONTRASEÑA
+  async loginConEmail(email: string, password: string) {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
- // 🔥 NUEVO: Obtener y guardar el rol del usuario
+
+      // Obtener y guardar el rol del usuario
       await this.cargarRolUsuario(userCredential.user.uid);
       
       this.router.navigate(['/inicio']);
@@ -94,8 +122,8 @@ export class AuthService {
     }
   }
 
-   // LOGIN CON GOOGLE (MODIFICADO)
-   async loginWithGoogle() {
+  // LOGIN CON GOOGLE
+  async loginWithGoogle() {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
@@ -104,7 +132,8 @@ export class AuthService {
       
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
- // Verificar si el usuario ya existe en Firestore
+
+      // Verificar si el usuario ya existe en Firestore
       const usuarioExistente = await this.usuarioService.obtenerUsuario(user.uid);
       
       if (!usuarioExistente) {
@@ -124,7 +153,7 @@ export class AuthService {
         await this.usuarioService.crearUsuario(nuevoUsuario);
       }
       
-      // 🔥 NUEVO: Cargar rol del usuario
+      // Cargar rol del usuario
       await this.cargarRolUsuario(user.uid);
       
       this.router.navigate(['/inicio']);
@@ -133,15 +162,17 @@ export class AuthService {
       console.error('❌ Error al iniciar sesión con Google:', error);
       
       if (error.code === 'auth/popup-closed-by-user') {
- } else if (error.code === 'auth/cancelled-popup-request') {
- }
+        // Usuario cerró el popup
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        // Popup cancelado
+      }
       
       throw error;
     }
   }
 
-   // 🔥 NUEVO: CARGAR ROL DEL USUARIO DESDE FIRESTORE
-   async cargarRolUsuario(uid: string): Promise<void> {
+  // CARGAR ROL DEL USUARIO DESDE FIRESTORE
+  async cargarRolUsuario(uid: string): Promise<void> {
     try {
       const usuario = await this.usuarioService.obtenerUsuario(uid);
       
@@ -149,7 +180,7 @@ export class AuthService {
         // Guardar rol en localStorage
         localStorage.setItem('userRole', usuario.rol);
         localStorage.setItem('userName', usuario.nombreCompleto);
- } else {
+      } else {
         console.warn('⚠️ Usuario no encontrado en Firestore');
         localStorage.setItem('userRole', 'usuario'); // Por defecto
       }
@@ -159,47 +190,48 @@ export class AuthService {
     }
   }
 
-   // 🔥 NUEVO: VERIFICAR SI EL USUARIO ES ADMIN
-   esAdmin(): boolean {
+  // VERIFICAR SI EL USUARIO ES ADMIN
+  esAdmin(): boolean {
     return localStorage.getItem('userRole') === 'admin';
   }
 
-   // 🔥 NUEVO: OBTENER ROL ACTUAL
-   getRolActual(): 'admin' | 'usuario' {
+  // OBTENER ROL ACTUAL
+  getRolActual(): 'admin' | 'usuario' {
     const rol = localStorage.getItem('userRole');
     return rol === 'admin' ? 'admin' : 'usuario';
   }
 
-   // CERRAR SESIÓN (MODIFICADO)
-   async logout() {
+  // CERRAR SESIÓN
+  async logout() {
     try {
       await signOut(this.auth);
       
-      // 🔥 NUEVO: Limpiar localStorage
+      // Limpiar localStorage
       localStorage.removeItem('userRole');
       localStorage.removeItem('userName');
- this.router.navigate(['/login']);
+
+      this.router.navigate(['/login']);
     } catch (error) {
       console.error('❌ Error al cerrar sesión:', error);
       throw error;
     }
   }
 
-   // OBTENER USUARIO ACTUAL
-   getCurrentUser() {
+  // OBTENER USUARIO ACTUAL
+  getCurrentUser() {
     return this.auth.currentUser;
   }
 
-   // VERIFICAR SI HAY USUARIO AUTENTICADO
-   isAuthenticated(): boolean {
+  // VERIFICAR SI HAY USUARIO AUTENTICADO
+  isAuthenticated(): boolean {
     return this.auth.currentUser !== null;
   }
 
-   // ENVIAR RECUPERACIÓN DE PASSWORD
-   async enviarRecuperacionPassword(email: string) {
+  // ENVIAR RECUPERACIÓN DE PASSWORD
+  async enviarRecuperacionPassword(email: string) {
     try {
       await sendPasswordResetEmail(this.auth, email);
- } catch (error: any) {
+    } catch (error: any) {
       console.error('❌ Error al enviar email de recuperación:', error);
       
       // Manejo de errores específicos
