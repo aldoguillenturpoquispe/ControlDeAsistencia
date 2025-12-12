@@ -1,7 +1,7 @@
 <div class="register-container">
   <div class="register-card">
     <div class="register-header">
-      <img src="iconos/controldeasistencia.png" alt="Logo">
+      <img src="iconos/controldeasistencia.png" alt="Logo" />
       <h1>Crear Cuenta</h1>
       <p>Completa tus datos para registrarte</p>
     </div>
@@ -13,13 +13,13 @@
           <i class="fas fa-user"></i>
           Nombre Completo
         </label>
-        <input 
-          type="text" 
-          id="nombreCompleto" 
+        <input
+          type="text"
+          id="nombreCompleto"
           formControlName="nombreCompleto"
           placeholder="Juan Pérez"
           [class.error]="nombreCompletoInvalid"
-        >
+        />
         <span class="error-message" *ngIf="nombreCompletoInvalid">
           <span *ngIf="registerForm.get('nombreCompleto')?.hasError('required')">
             El nombre completo es requerido
@@ -36,13 +36,13 @@
           <i class="fas fa-envelope"></i>
           Correo Electrónico
         </label>
-        <input 
-          type="email" 
-          id="email" 
+        <input
+          type="email"
+          id="email"
           formControlName="email"
           placeholder="ejemplo@correo.com"
           [class.error]="emailInvalid"
-        >
+        />
         <span class="error-message" *ngIf="emailInvalid">
           <span *ngIf="registerForm.get('email')?.hasError('required')">
             El correo electrónico es requerido
@@ -60,13 +60,13 @@
           Contraseña
         </label>
         <div class="password-input">
-          <input 
+          <input
             [type]="showPassword ? 'text' : 'password'"
-            id="password" 
+            id="password"
             formControlName="password"
             placeholder="••••••••"
             [class.error]="passwordInvalid"
-          >
+          />
           <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
             <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
           </button>
@@ -88,13 +88,13 @@
           Confirmar Contraseña
         </label>
         <div class="password-input">
-          <input 
+          <input
             [type]="showConfirmPassword ? 'text' : 'password'"
-            id="confirmPassword" 
+            id="confirmPassword"
             formControlName="confirmPassword"
             placeholder="••••••••"
             [class.error]="confirmPasswordInvalid || passwordMismatch"
-          >
+          />
           <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
             <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
           </button>
@@ -103,19 +103,32 @@
           <span *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
             Debes confirmar tu contraseña
           </span>
-          <span *ngIf="passwordMismatch">
-            Las contraseñas no coinciden
-          </span>
+          <span *ngIf="passwordMismatch"> Las contraseñas no coinciden </span>
         </span>
       </div>
 
       <!-- TÉRMINOS Y CONDICIONES -->
       <div class="form-options">
         <label class="terms">
-          <input type="checkbox" formControlName="aceptarTerminos">
-          <span>Acepto los <a href="#" (click)="$event.preventDefault()">términos y condiciones</a></span>
+          <input type="checkbox" formControlName="aceptarTerminos" />
+          <span
+            >Acepto los
+            <a
+              routerLink="/terminos-condiciones"
+              target="_blank"
+              title="Ver términos y condiciones"
+              aria-label="Ver términos y condiciones en nueva ventana"
+              >términos y condiciones</a
+            ></span
+          >
         </label>
-        <span class="error-message" *ngIf="registerForm.get('aceptarTerminos')?.invalid && registerForm.get('aceptarTerminos')?.touched">
+        <span
+          class="error-message"
+          *ngIf="
+            registerForm.get('aceptarTerminos')?.invalid &&
+            registerForm.get('aceptarTerminos')?.touched
+          "
+        >
           Debes aceptar los términos y condiciones
         </span>
       </div>

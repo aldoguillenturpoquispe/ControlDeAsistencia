@@ -15,6 +15,7 @@ import { Usuario } from '../../models/usuario.model';
 export class Header implements OnInit {
   private authService = inject(AuthService);
   private usuarioService = inject(UsuarioService);
+  // Sin servicio de imagen; mantenemos solo visualización
   private router = inject(Router);
 
   showUserMenu = false;
@@ -31,11 +32,11 @@ export class Header implements OnInit {
    async cargarDatosUsuario(): Promise<void> {
     try {
       const currentUser = this.authService.getCurrentUser();
-      
+
       if (currentUser) {
         // Obtener datos del usuario desde Firestore
         this.usuario = await this.usuarioService.obtenerUsuario(currentUser.uid);
-        
+
         if (this.usuario) {
           this.nombreUsuario = this.usuario.nombreCompleto;
           this.emailUsuario = this.usuario.email;
@@ -56,7 +57,9 @@ export class Header implements OnInit {
    toggleUserMenu(): void {
     this.showUserMenu = !this.showUserMenu;
   }
-  
+
+  // Eliminar solo opciones de foto; mantener avatar visual
+
    // CERRAR SESIÓN
    async cerrarSesion(): Promise<void> {
     try {
@@ -70,7 +73,7 @@ export class Header implements OnInit {
    // OBTENER INICIALES DEL NOMBRE (para avatar)
    getIniciales(): string {
     if (!this.nombreUsuario) return 'U';
-    
+
     const nombres = this.nombreUsuario.trim().split(' ');
     if (nombres.length >= 2) {
       return (nombres[0][0] + nombres[1][0]).toUpperCase();

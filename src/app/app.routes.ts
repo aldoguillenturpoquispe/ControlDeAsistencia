@@ -2,30 +2,36 @@ import { Routes } from '@angular/router';
 import { Login } from './components/auth/login/login';
 import { Register } from './components/auth/register/register';
 import { ForgotPassword } from './components/auth/forgot-password/forgot-password';
+import { TerminosCondiciones } from './components/auth/terminos-condiciones/terminos-condiciones';
 import { NotFound } from './components/not-found/not-found';
 import { adminGuardGuard } from './guards/admin.guard-guard';
 
 export const routes: Routes = [
   // RUTAS PÚBLICAS (sin autenticación)
   {
-    path: '', 
-    component: Login, 
+    path: '',
+    component: Login,
     title: 'Login'
   },
   {
-    path: 'login', 
-    component: Login, 
+    path: 'login',
+    component: Login,
     title: 'Login'
   },
   {
-    path: 'register', 
-    component: Register, 
+    path: 'register',
+    component: Register,
     title: 'Register'
   },
   {
-    path: 'forgot-password', 
-    component: ForgotPassword, 
+    path: 'forgot-password',
+    component: ForgotPassword,
     title: 'Recuperar Contraseña'
+  },
+  {
+    path: 'terminos-condiciones',
+    component: TerminosCondiciones,
+    title: 'Términos y Condiciones'
   },
 
   // RUTAS PROTEGIDAS (requieren autenticación)
@@ -56,7 +62,7 @@ export const routes: Routes = [
 
   // RUTA 404 - Página no encontrada
   {
-    path: '**', 
+    path: '**',
     component: NotFound,  // 👈 Muestra el componente 404
     title: 'Página no encontrada'
   }

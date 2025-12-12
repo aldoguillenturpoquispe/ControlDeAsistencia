@@ -1,16 +1,16 @@
 import { Injectable, inject } from '@angular/core';
-import { 
-  Firestore, 
-  collection, 
-  doc, 
-  setDoc, 
-  getDoc, 
+import {
+  Firestore,
+  collection,
+  doc,
+  setDoc,
+  getDoc,
   getDocs,
   updateDoc,
   deleteDoc,
   query,
   where,
-  Timestamp 
+  Timestamp
 } from '@angular/fire/firestore';
 import { Usuario } from '../models/usuario.model';
 
@@ -27,14 +27,14 @@ export class UsuarioService {
    async crearUsuario(usuario: Usuario): Promise<void> {
     try {
       const usuarioDoc = doc(this.usuariosCollection, usuario.uid);
-      
+
       // Convertir las fechas a Timestamp de Firestore
       const usuarioData = {
         ...usuario,
         fechaRegistro: Timestamp.fromDate(usuario.fechaRegistro),
         fechaUltimaActualizacion: Timestamp.fromDate(usuario.fechaUltimaActualizacion)
       };
-      
+
       await setDoc(usuarioDoc, usuarioData);
  } catch (error) {
       console.error('❌ Error al crear usuario en Firestore:', error);
@@ -47,7 +47,7 @@ export class UsuarioService {
     try {
       const usuarioDoc = doc(this.usuariosCollection, uid);
       const docSnap = await getDoc(usuarioDoc);
-      
+
       if (docSnap.exists()) {
         const data = docSnap.data();
         return {
@@ -74,7 +74,7 @@ export class UsuarioService {
     try {
       const querySnapshot = await getDocs(this.usuariosCollection);
       const usuarios: Usuario[] = [];
-      
+
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         usuarios.push({
@@ -102,7 +102,7 @@ export class UsuarioService {
       const q = query(this.usuariosCollection, where('rol', '==', rol));
       const querySnapshot = await getDocs(q);
       const usuarios: Usuario[] = [];
-      
+
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         usuarios.push({
@@ -128,18 +128,18 @@ export class UsuarioService {
    async actualizarUsuario(uid: string, datos: Partial<Usuario>): Promise<void> {
     try {
       const usuarioDoc = doc(this.usuariosCollection, uid);
-      
+
       // Crear objeto con los datos a actualizar
       const datosActualizados: any = {
         ...datos,
         fechaUltimaActualizacion: Timestamp.now()
       };
-      
+
       // Si se están actualizando fechas, convertirlas a Timestamp
       if (datos.fechaRegistro) {
         datosActualizados.fechaRegistro = Timestamp.fromDate(datos.fechaRegistro);
       }
-      
+
       await updateDoc(usuarioDoc, datosActualizados);
  } catch (error) {
       console.error('❌ Error al actualizar usuario:', error);

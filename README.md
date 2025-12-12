@@ -123,7 +123,7 @@ src/app/
 ## 🌐 Deploy
 
 ### URL de la Aplicación
-**Firebase Hosting:** [https://control-de-asistencia-41bb2.web.app](https://control-de-asistencia-41bb2.web.app)
+**Firebase Hosting:** [https://control-de-asistencias-8bb3c.web.app/](https://control-de-asistencias-8bb3c.web.app/)
 
 ### Comandos para Deploy
 ```bash

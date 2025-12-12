@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { 
-  Auth, 
-  signInWithPopup, 
+import {
+  Auth,
+  signInWithPopup,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
-  signOut, 
+  signOut,
   user,
   User,
   onAuthStateChanged
@@ -23,7 +23,7 @@ export class AuthService {
   private auth = inject(Auth);
   private router = inject(Router);
   private usuarioService = inject(UsuarioService);
-  
+
   // Observable del usuario actual
   user$: Observable<User | null> = user(this.auth);
 
@@ -38,7 +38,7 @@ export class AuthService {
       if (user) {
         // Usuario autenticado, cargar su rol
         await this.cargarRolUsuario(user.uid);
-        
+
         // Si está en login/register, redirigir a inicio
         const currentUrl = this.router.url;
         if (currentUrl === '/login' || currentUrl === '/register' || currentUrl === '/' || currentUrl === '') {
@@ -71,17 +71,17 @@ export class AuthService {
         fechaUltimaActualizacion: new Date(),
         proveedorAuth: 'email'
       };
-      
+
       await this.usuarioService.crearUsuario(nuevoUsuario);
 
       // 3. Cargar rol y navegar
       await this.cargarRolUsuario(user.uid);
       this.router.navigate(['/inicio']);
-      
+
       return userCredential;
     } catch (error: any) {
       console.error('❌ Error en el registro:', error);
-      
+
       // Manejo de errores específicos
       if (error.code === 'auth/email-already-in-use') {
         throw new Error('Este correo ya está registrado');
@@ -90,7 +90,7 @@ export class AuthService {
       } else if (error.code === 'auth/invalid-email') {
         throw new Error('El correo electrónico no es válido');
       }
-      
+
       throw error;
     }
   }
@@ -102,12 +102,12 @@ export class AuthService {
 
       // Obtener y guardar el rol del usuario
       await this.cargarRolUsuario(userCredential.user.uid);
-      
+
       this.router.navigate(['/inicio']);
       return userCredential;
     } catch (error: any) {
       console.error('❌ Error al iniciar sesión:', error);
-      
+
       if (error.code === 'auth/user-not-found') {
         throw new Error('Usuario no encontrado');
       } else if (error.code === 'auth/wrong-password') {
@@ -117,7 +117,7 @@ export class AuthService {
       } else if (error.code === 'auth/invalid-credential') {
         throw new Error('Credenciales inválidas');
       }
-      
+
       throw error;
     }
   }
@@ -129,13 +129,13 @@ export class AuthService {
       provider.setCustomParameters({
         prompt: 'select_account'
       });
-      
+
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
 
       // Verificar si el usuario ya existe en Firestore
       const usuarioExistente = await this.usuarioService.obtenerUsuario(user.uid);
-      
+
       if (!usuarioExistente) {
         // Si es la primera vez, crear el documento en Firestore
         const nuevoUsuario: Usuario = {
@@ -149,24 +149,24 @@ export class AuthService {
           fechaUltimaActualizacion: new Date(),
           proveedorAuth: 'google'
         };
-        
+
         await this.usuarioService.crearUsuario(nuevoUsuario);
       }
-      
+
       // Cargar rol del usuario
       await this.cargarRolUsuario(user.uid);
-      
+
       this.router.navigate(['/inicio']);
       return result;
     } catch (error: any) {
       console.error('❌ Error al iniciar sesión con Google:', error);
-      
+
       if (error.code === 'auth/popup-closed-by-user') {
         // Usuario cerró el popup
       } else if (error.code === 'auth/cancelled-popup-request') {
         // Popup cancelado
       }
-      
+
       throw error;
     }
   }
@@ -175,7 +175,7 @@ export class AuthService {
   async cargarRolUsuario(uid: string): Promise<void> {
     try {
       const usuario = await this.usuarioService.obtenerUsuario(uid);
-      
+
       if (usuario) {
         // Guardar rol en localStorage
         localStorage.setItem('userRole', usuario.rol);
@@ -205,7 +205,7 @@ export class AuthService {
   async logout() {
     try {
       await signOut(this.auth);
-      
+
       // Limpiar localStorage
       localStorage.removeItem('userRole');
       localStorage.removeItem('userName');
@@ -233,7 +233,7 @@ export class AuthService {
       await sendPasswordResetEmail(this.auth, email);
     } catch (error: any) {
       console.error('❌ Error al enviar email de recuperación:', error);
-      
+
       // Manejo de errores específicos
       if (error.code === 'auth/user-not-found') {
         throw new Error('No existe una cuenta con este correo electrónico');
@@ -242,7 +242,7 @@ export class AuthService {
       } else if (error.code === 'auth/too-many-requests') {
         throw new Error('Demasiados intentos. Por favor, intenta más tarde');
       }
-      
+
       throw error;
     }
   }
