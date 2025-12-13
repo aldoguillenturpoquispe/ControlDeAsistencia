@@ -17,6 +17,8 @@
 body {
     /* ¡ELIMINADO! Esta línea causaba el espacio blanco cuando el Header no estaba:
     padding-top: 100px; */ 
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8f9fa;
     margin: 0;

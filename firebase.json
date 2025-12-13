@@ -1,4 +1,8 @@
 {
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
   "hosting": {
     "site": "control-de-asistencia-41bb2",
     "public": "dist/ControlDeAsistencia/browser",

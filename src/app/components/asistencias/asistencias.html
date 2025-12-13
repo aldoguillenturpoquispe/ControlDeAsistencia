@@ -11,7 +11,7 @@
     <div class="user-info" *ngIf="esAdmin">
       <span class="badge-admin">👑 Modo Administrador</span>
     </div>
-    
+
     <h2>Panel de Asistencias</h2>
 
     <!-- Barra de acciones -->
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Tabla de asistencias -->
-    <app-asistencia-tabla 
+    <app-asistencia-tabla
       *ngIf="asistenciasFiltradas.length > 0"
       [asistencias]="asistenciasPaginadas"
       [paginaActual]="paginaActual"
@@ -87,21 +87,21 @@
         « Anterior
       </button>
       <span class="page-info">Página {{ paginaActual }} de {{ totalPaginas }}</span>
-      <button class="btn secondary" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">
+      <button class="bt<<an secondary" (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">
         Siguiente »
       </button>
     </div>
   </div>
 
   <!-- 🔥 MODIFICADO: Modal formulario con asistencia para editar -->
-  <app-asistencia-form-modal 
-    *ngIf="mostrarModal" 
+  <app-asistencia-form-modal
+    *ngIf="mostrarModal"
     [asistenciaParaEditar]="asistenciaParaEditar"
     (cerrar)="cerrarModal($event)">
   </app-asistencia-form-modal>
 
   <!-- Modal de confirmación de eliminación -->
-  <app-asistencia-delete-modal 
+  <app-asistencia-delete-modal
     *ngIf="mostrarModalEliminar && asistenciaParaEliminar"
     [asistencia]="asistenciaParaEliminar"
     (confirmar)="confirmarEliminacion()"

@@ -20,6 +20,7 @@ Aplicación CRUD completa que permite administrar el registro de asistencias de 
 ## 📋 Requisitos para Instalar y Ejecutar
 
 ### Prerequisitos
+
 - Node.js v18 o superior
 - npm v9 o superior
 - Angular CLI v18 (`npm install -g @angular/cli`)
@@ -28,50 +29,55 @@ Aplicación CRUD completa que permite administrar el registro de asistencias de 
 ### Instalación
 
 1. **Clonar el repositorio:**
-```bash
-git clone https://github.com/tu-usuario/control-asistencias.git
-cd control-asistencias
-```
 
-2. **Instalar dependencias:**
-```bash
-npm install
-```
+  ```bash
+  git clone https://github.com/tu-usuario/control-asistencias.git
+  cd control-asistencias
+  ```
 
-3. **Configurar Firebase:**
+1. **Instalar dependencias:**
+
+  ```bash
+  npm install
+  ```
+
+1. **Configurar Firebase:**
 
 Crear archivo `src/environments/environment.ts`:
-```typescript
-export const environment = {
-  production: false,
-  firebase: {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_AUTH_DOMAIN",
-    projectId: "TU_PROJECT_ID",
-    storageBucket: "TU_STORAGE_BUCKET",
-    messagingSenderId: "TU_MESSAGING_SENDER_ID",
-    appId: "TU_APP_ID"
-  }
-};
-```
 
-4. **Ejecutar en modo desarrollo:**
-```bash
-ng serve
-```
+  ```typescript
+  export const environment = {
+    production: false,
+    firebase: {
+     apiKey: "TU_API_KEY",
+     authDomain: "TU_AUTH_DOMAIN",
+     projectId: "TU_PROJECT_ID",
+     storageBucket: "TU_STORAGE_BUCKET",
+     messagingSenderId: "TU_MESSAGING_SENDER_ID",
+     appId: "TU_APP_ID"
+    }
+  };
+  ```
+
+1. **Ejecutar en modo desarrollo:**
+
+  ```bash
+  ng serve
+  ```
 
 Navegar a `http://localhost:4200/`
 
-5. **Compilar para producción:**
-```bash
-ng build --configuration production
-```
+1. **Compilar para producción:**
+
+  ```bash
+  ng build --configuration production
+  ```
 
 ## 🏗️ Arquitectura del Proyecto
 
 ### Estructura de Componentes Principales
 
-```
+```text
 src/app/
 ├── components/
 │   ├── auth/              # Autenticación (login, register, forgot-password)
@@ -99,16 +105,19 @@ src/app/
 ### Servicios Principales
 
 #### **AuthService**
+
 - Gestiona autenticación con Firebase (Email/Password y Google)
 - Manejo de sesiones y roles de usuario
 - Métodos: `loginConEmail()`, `registrarConEmail()`, `loginWithGoogle()`, `logout()`
 
 #### **AsistenciaService**
+
 - CRUD completo de asistencias en Firestore
 - Consultas filtradas y estadísticas
 - Métodos: `crearAsistencia()`, `obtenerAsistencias()`, `editarAsistencia()`, `eliminarAsistencia()`
 
 #### **UsuarioService**
+
 - Gestión de usuarios en Firestore
 - Consultas por rol y estado
 - Métodos: `crearUsuario()`, `obtenerUsuarios()`, `actualizarUsuario()`, `eliminarUsuario()`
@@ -116,6 +125,7 @@ src/app/
 ### Guards
 
 #### **AdminGuard**
+
 - Protege rutas que requieren rol de administrador
 - Redirige a usuarios sin permisos
 - Implementa `CanActivate`
@@ -123,9 +133,15 @@ src/app/
 ## 🌐 Deploy
 
 ### URL de la Aplicación
+
 **Firebase Hosting:** [https://control-de-asistencia-41bb2.web.app/](https://control-de-asistencia-41bb2.web.app/)
 
+### Video de Demostración
+
+- URL: [Ver video](https://youtu.be/h4BmAY2wxc8?si=jEVEeixPO3wED5Au)
+
 ### Comandos para Deploy
+
 ```bash
 # Instalar Firebase CLI
 npm install -g firebase-tools
@@ -146,6 +162,7 @@ firebase deploy --only hosting
 ### 1. Registro e Inicio de Sesión
 
 **Registro de nuevo usuario:**
+
 1. Acceder a la aplicación
 2. Hacer clic en "Registrarse"
 3. Completar formulario con nombre completo, email y contraseña
@@ -153,12 +170,14 @@ firebase deploy --only hosting
 5. Automáticamente redirige al dashboard
 
 **Inicio de sesión:**
+
 - **Con email:** Ingresar credenciales y hacer clic en "Iniciar Sesión"
 - **Con Google:** Hacer clic en "Continuar con Google" y seleccionar cuenta
 
 ### 2. Dashboard Principal
 
 Al iniciar sesión, se muestra:
+
 - **Tarjetas de resumen:** Total empleados, presentes hoy, ausentes hoy, % asistencia
 - **Accesos rápidos:** Enlaces directos a secciones principales
 - **Últimas asistencias:** Lista de los 5 registros más recientes
@@ -166,6 +185,7 @@ Al iniciar sesión, se muestra:
 ### 3. Gestión de Asistencias
 
 **Registrar nueva asistencia (Admin):**
+
 1. Ir a sección "Asistencias"
 2. Clic en "➕ Nueva Asistencia"
 3. Seleccionar usuario del dropdown
@@ -176,33 +196,39 @@ Al iniciar sesión, se muestra:
 8. Clic en "💾 Guardar"
 
 **Filtrar asistencias:**
+
 - **Por fecha:** Seleccionar fecha en el filtro
 - **Por usuario:** Escribir nombre en el campo de búsqueda
 - **Por estado:** Seleccionar estado del dropdown
 - Clic en "🔍 Filtrar" o "🔄 Limpiar" para resetear
 
 **Ver detalle de asistencia:**
+
 1. Localizar registro en la tabla
 2. Clic en botón "👁️ Ver Detalle"
 3. Se muestra modal con información completa
 
 **Editar asistencia (Solo Admin):**
+
 1. Clic en botón "✏️" en la fila deseada
 2. Modificar campos necesarios
 3. Clic en "💾 Actualizar"
 
 **Eliminar asistencia (Solo Admin):**
+
 1. Clic en botón "🗑️" en la fila deseada
 2. Confirmar eliminación en el modal
 3. Clic en "🗑️ Eliminar"
 
 **Navegación por páginas:**
+
 - Usar botones "« Anterior" y "Siguiente »"
 - Visualizar página actual de total de páginas
 
 ### 4. Estadísticas
 
 **Ver estadísticas generales:**
+
 1. Ir a sección "Estadísticas"
 2. Se muestran automáticamente:
    - Total de usuarios y asistencias
@@ -211,17 +237,20 @@ Al iniciar sesión, se muestra:
    - Porcentaje de asistencia
 
 **Filtrar por período:**
+
 - Seleccionar período: Hoy, Semana, Mes o Personalizado
 - Para personalizado: ingresar fechas de inicio y fin
 - Clic en "Aplicar Filtros"
 
 **Exportar estadísticas:**
+
 - Clic en "Descargar CSV" para exportar datos
 - Clic en "Imprimir" para generar versión imprimible
 
 ### 5. Reportes
 
 **Generar reporte:**
+
 1. Ir a sección "Reportes"
 2. Configurar filtros:
    - Rango de fechas (inicio - fin)
@@ -231,6 +260,7 @@ Al iniciar sesión, se muestra:
 4. Se muestra tabla con resultados y resumen estadístico
 
 **Resumen del reporte incluye:**
+
 - Total de registros
 - Cantidad de presentes
 - Cantidad de ausentes
@@ -240,6 +270,7 @@ Al iniciar sesión, se muestra:
 ### 6. Perfil de Usuario
 
 **Ver información del perfil:**
+
 - Clic en avatar/iniciales en esquina superior derecha
 - Se despliega menú con:
   - Nombre completo
@@ -247,6 +278,7 @@ Al iniciar sesión, se muestra:
   - Opción de cerrar sesión
 
 **Cerrar sesión:**
+
 1. Clic en avatar
 2. Clic en "Cerrar Sesión"
 3. Redirige automáticamente al login
@@ -254,6 +286,7 @@ Al iniciar sesión, se muestra:
 ### 7. Roles y Permisos
 
 **Usuario Normal:**
+
 - ✅ Ver dashboard
 - ✅ Ver listado de asistencias
 - ✅ Ver detalle de asistencias
@@ -262,6 +295,7 @@ Al iniciar sesión, se muestra:
 - ❌ Crear/editar/eliminar asistencias
 
 **Administrador:**
+
 - ✅ Todas las funciones de usuario normal
 - ✅ Crear nuevas asistencias
 - ✅ Editar asistencias existentes
@@ -271,15 +305,18 @@ Al iniciar sesión, se muestra:
 ### 8. Características Adicionales
 
 **Validaciones de formularios:**
+
 - Todos los campos obligatorios están marcados con *
 - Mensajes de error específicos para cada campo
 - Validación en tiempo real al escribir
 
 **Mensajes del sistema:**
+
 - ✅ Confirmaciones de acciones exitosas
 - ❌ Alertas de errores con descripción
 - ⏳ Indicadores de carga durante procesos
 
 **Diseño responsivo:**
+
 - Compatible con dispositivos móviles
 - Adaptación automática a diferentes tamaños de pantalla
