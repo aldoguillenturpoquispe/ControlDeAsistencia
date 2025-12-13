@@ -67,8 +67,14 @@
             placeholder="••••••••"
             [class.error]="passwordInvalid"
           />
-          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
-            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            title="Mostrar/Ocultar contraseña"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" aria-hidden="true"></i>
           </button>
         </div>
         <span class="error-message" *ngIf="passwordInvalid">
@@ -95,8 +101,17 @@
             placeholder="••••••••"
             [class.error]="confirmPasswordInvalid || passwordMismatch"
           />
-          <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
-            <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="toggleConfirmPasswordVisibility()"
+            title="Mostrar/Ocultar contraseña"
+            [attr.aria-label]="showConfirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <i
+              [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+              aria-hidden="true"
+            ></i>
           </button>
         </div>
         <span class="error-message" *ngIf="confirmPasswordInvalid || passwordMismatch">

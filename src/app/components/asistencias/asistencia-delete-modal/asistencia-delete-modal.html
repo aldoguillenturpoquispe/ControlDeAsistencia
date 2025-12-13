@@ -42,7 +42,7 @@
         <span class="detail-value">{{ asistencia.horaEntrada || 'No registrada' }}</span>
       </div>
 
-      <div class="detail-row" *ngIf="asistencia?.horaSalida">
+      <div class="detail-row" *ngIf="asistencia.horaSalida">
         <span class="detail-label">🏁 Hora salida:</span>
         <span class="detail-value">{{ asistencia.horaSalida }}</span>
       </div>
@@ -52,7 +52,7 @@
         <span [class]="getEstadoClass()">{{ getEstadoTexto() }}</span>
       </div>
 
-      <div class="detail-row" *ngIf="asistencia?.observaciones">
+      <div class="detail-row" *ngIf="asistencia.observaciones">
         <span class="detail-label">📝 Observaciones:</span>
         <span class="detail-value">{{ asistencia.observaciones }}</span>
       </div>

@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "control-de-asistencia-41bb2",
     "public": "dist/ControlDeAsistencia/browser",
     "ignore": [
       "firebase.json",
